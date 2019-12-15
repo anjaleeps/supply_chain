@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manager index{% endblock %}
+
+{% block body %}
+    <h1>Manager index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>First_name</th>
+                <th>Last_name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for manager in managers %}
+            <tr>
+                <td>{{ manager.id }}</td>
+                <td>{{ manager.email }}</td>
+                <td>{{ manager.roles ? manager.roles|json_encode : '' }}</td>
+                <td>{{ manager.password }}</td>
+                <td>{{ manager.firstName }}</td>
+                <td>{{ manager.lastName }}</td>
+                <td>
+                    <a href="{{ path('manager_show', {'id': manager.id}) }}">show</a>
+                    <a href="{{ path('manager_edit', {'id': manager.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('manager_new') }}">Create new</a>
+{% endblock %}

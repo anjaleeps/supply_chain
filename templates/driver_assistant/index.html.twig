@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DriverAssistant index{% endblock %}
+
+{% block body %}
+    <h1>DriverAssistant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>First_name</th>
+                <th>Last_name</th>
+                <th>Work_hours</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for driver_assistant in driver_assistants %}
+            <tr>
+                <td>{{ driver_assistant.id }}</td>
+                <td>{{ driver_assistant.email }}</td>
+                <td>{{ driver_assistant.roles ? driver_assistant.roles|json_encode : '' }}</td>
+                <td>{{ driver_assistant.password }}</td>
+                <td>{{ driver_assistant.firstName }}</td>
+                <td>{{ driver_assistant.lastName }}</td>
+                <td>{{ driver_assistant.workHours ? driver_assistant.workHours|date('H:i:s') : '' }}</td>
+                <td>{{ driver_assistant.status }}</td>
+                <td>
+                    <a href="{{ path('driver_assistant_show', {'id': driver_assistant.id}) }}">show</a>
+                    <a href="{{ path('driver_assistant_edit', {'id': driver_assistant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('driver_assistant_new') }}">Create new</a>
+{% endblock %}

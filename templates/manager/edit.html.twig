@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Manager{% endblock %}
+
+{% block body %}
+    <h1>Edit Manager</h1>
+
+    {{ include('manager/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('manager_index') }}">back to list</a>
+
+    {{ include('manager/_delete_form.html.twig') }}
+{% endblock %}

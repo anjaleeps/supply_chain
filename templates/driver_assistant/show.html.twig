@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DriverAssistant{% endblock %}
+
+{% block body %}
+    <h1>DriverAssistant</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ driver_assistant.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ driver_assistant.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ driver_assistant.roles ? driver_assistant.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ driver_assistant.password }}</td>
+            </tr>
+            <tr>
+                <th>First_name</th>
+                <td>{{ driver_assistant.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Last_name</th>
+                <td>{{ driver_assistant.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Work_hours</th>
+                <td>{{ driver_assistant.workHours ? driver_assistant.workHours|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ driver_assistant.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('driver_assistant_index') }}">back to list</a>
+
+    <a href="{{ path('driver_assistant_edit', {'id': driver_assistant.id}) }}">edit</a>
+
+    {{ include('driver_assistant/_delete_form.html.twig') }}
+{% endblock %}

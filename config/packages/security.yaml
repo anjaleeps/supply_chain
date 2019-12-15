@@ -1,0 +1,103 @@
+security:
+    encoders:
+        App\Entity\Customer:
+            algorithm: bcrypt
+        App\Entity\Manager:
+            algorithm: bcrypt
+        App\Entity\Driver:
+            algorithm: bcrypt
+        App\Entity\DriverAssistant:
+            algorithm: bcrypt
+
+
+
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        driver_assistant_users:
+            entity:
+                class: App\Entity\DriverAssistant
+                property: email
+        driver_users: 
+            entity:
+                class: App\Entity\Driver
+                property: email
+        manager_users: 
+            entity:
+                class: App\Entity\Manager
+                property: email
+        customer_users: 
+            entity:
+                class: App\Entity\Customer
+                property: email
+        all_users:
+            chain:
+                providers: ['customer_users', 'driver_assistant_users', 'driver_users', 'manager_users']
+        
+        # used to reload user from session & other features (e.g. switch_user)
+        # used to reload user from session & other features (e.g. switch_user)
+        # used to reload user from session & other features (e.g. switch_user)
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        driver_assistant_area:
+            anonymous: lazy
+            pattern:   ^/driver_assistant
+            provider: driver_assistant_users
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+        driver_area:
+            anonymous: lazy
+            pattern:   ^/driver
+            provider: driver_users
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+        manager_area:
+            anonymous: lazy
+            pattern:   ^/manager
+            provider: manager_users
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+        customer_area:
+            anonymous: lazy
+            pattern:   ^/
+            provider: customer_users
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/manager, roles: ROLE_MANAGER }
+        - { path: ^/driver, roles: ROLE_DRIVER }
+        - { path: ^/driver_assistant, roles: ROLE_DRIVER_ASSISTANT }

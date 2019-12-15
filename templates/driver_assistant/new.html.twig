@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New DriverAssistant{% endblock %}
+
+{% block body %}
+    <h1>Create new DriverAssistant</h1>
+
+    {{ include('driver_assistant/_form.html.twig') }}
+
+    <a href="{{ path('driver_assistant_index') }}">back to list</a>
+{% endblock %}
