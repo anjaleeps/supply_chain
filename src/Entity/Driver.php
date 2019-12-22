@@ -63,7 +63,7 @@ class Driver implements UserInterface
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\store", inversedBy="drivers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Store", inversedBy="drivers")
      * @ORM\JoinColumn(nullable=false)
      */
     private $store;

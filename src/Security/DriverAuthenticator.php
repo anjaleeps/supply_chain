@@ -2,10 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\DriverAssistant;
 use App\Entity\Driver;
-use App\Entity\Manager;
-use App\Entity\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +20,7 @@ use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticato
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
+class DriverAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
     use TargetPathTrait;
 
@@ -42,20 +39,13 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
     public function supports(Request $request)
     {
-        return ('app_login_driver_assistant' === $request->attributes->get('_route')
-            || 'app_login_driver'=== $request->attributes->get('_route')
-            || 'app_login_manager' === $request->attributes->get('_route')
-            || 'app_login_customer' === $request->attributes->get('_route'))
+        return 'login_driver' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
     public function getCredentials(Request $request)
     {
-
-        $user_type = $this->getUserType($request);
-
         $credentials = [
-            'user_type' => $user_type,
             'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
@@ -75,21 +65,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             throw new InvalidCsrfTokenException();
         }
 
-        $user_type = $credentials['user_type'];
-
-        if ($user_type == 1){
-            $user = $this->entityManager->getRepository(Manager::class)->findOneBy(['email' => $credentials['email']]);
-        }
-        elseif ($user_type == 2){
-            $user = $this->entityManager->getRepository(Driver::class)->findOneBy(['email' => $credentials['email']]);
-        }
-        elseif ($user_type == 3){
-            $user = $this->entityManager->getRepository(DriverAssistant::class)->findOneBy(['email' => $credentials['email']]);
-        }
-        
-        elseif ($user_type == 4){
-            $user = $this->entityManager->getRepository(Customer::class)->findOneBy(['email' => $credentials['email']]);
-        }
+        $user = $this->entityManager->getRepository(Driver::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
             // fail authentication with a custom error
@@ -97,24 +73,6 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         }
 
         return $user;
-    }
-
-    public function getUserType(Request $request){
-        $path = \strtolower($request->getRequestUri());
-
-        if (strstr($path, 'manager')){
-            $user_type = 1;
-        }
-        elseif (strstr($path, 'driver')){
-            $user_type = 2;
-        }
-        elseif (strstr($path, 'driver_assistant')){
-            $user_type = 3;
-        }
-        else{
-            $user_type = 4;
-        }
-        return $user_type;
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -142,6 +100,6 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate('app_login_customer');
+        return $this->urlGenerator->generate('login_driver');
     }
 }

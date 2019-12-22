@@ -9,9 +9,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @Route("/driver/assistant")
+ * @Route("/driver_assistant")
  */
 class DriverAssistantController extends AbstractController
 {
@@ -23,6 +26,57 @@ class DriverAssistantController extends AbstractController
         return $this->render('driver_assistant/index.html.twig', [
             'driver_assistants' => $driverAssistantRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/register", name="driver_assistant_registration")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $driverAssistant = new DriverAssistant();
+        $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($driverAssistant, $driverAssistant->getPlainPassword());
+            $driverAssistant->setPassword($password);
+            $driverAssistant->setRoles(array('ROLE_DRIVER_ASSISTANT'));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($driverAssistant);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('index');
+        }
+        return $this->render(
+            'registration/registerDriverAssistant.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * @Route("/login", name="login_driver_assistant")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // if ($this->getUser()) {
+        //     return $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/driverAssistantLogin.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/logout", name="logout_driver_assistant")
+     */
+    public function logout()
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
     /**
@@ -83,7 +137,7 @@ class DriverAssistantController extends AbstractController
      */
     public function delete(Request $request, DriverAssistant $driverAssistant): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$driverAssistant->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $driverAssistant->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($driverAssistant);
             $entityManager->flush();

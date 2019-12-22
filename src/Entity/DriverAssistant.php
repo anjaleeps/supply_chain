@@ -63,7 +63,7 @@ class DriverAssistant implements UserInterface
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\store", inversedBy="driverAssistants")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Store", inversedBy="driverAssistants")
      * @ORM\JoinColumn(nullable=false)
      */
     private $store;

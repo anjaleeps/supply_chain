@@ -9,10 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/manager")
- */
+*/
 class ManagerController extends AbstractController
 {
     /**
@@ -23,6 +26,53 @@ class ManagerController extends AbstractController
         return $this->render('manager/index.html.twig', [
             'managers' => $managerRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/register", name="manager_registration")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $manager = new Manager();
+        $form = $this->createForm(ManagerType::class, $manager);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($manager, $manager->getPlainPassword());
+            $manager->setPassword($password);
+            $manager->setRoles(array('ROLE_MANAGER'));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($manager);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('index');
+        }
+
+        return $this->render(
+            'registration/registerManager.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+    
+    /**
+    * @Route("/login", name="login_manager")
+    */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/managerLogin.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+     /**
+     * @Route("/logout", name="logout_manager")
+     */
+    public function logout()
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
     /**
@@ -91,4 +141,6 @@ class ManagerController extends AbstractController
 
         return $this->redirectToRoute('manager_index');
     }
+
+    
 }

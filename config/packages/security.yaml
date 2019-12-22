@@ -10,8 +10,6 @@ security:
             algorithm: bcrypt
 
 
-
-
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -31,9 +29,9 @@ security:
             entity:
                 class: App\Entity\Customer
                 property: email
-        all_users:
-            chain:
-                providers: ['customer_users', 'driver_assistant_users', 'driver_users', 'manager_users']
+        # all_users:
+        #     chain:
+        #         providers: ['customer_users', 'driver_assistant_users', 'driver_users', 'manager_users']
         
         # used to reload user from session & other features (e.g. switch_user)
         # used to reload user from session & other features (e.g. switch_user)
@@ -44,46 +42,51 @@ security:
             security: false
         driver_assistant_area:
             anonymous: lazy
-            pattern:   ^/driver_assistant
+            pattern: ^/driver_assistant
             provider: driver_assistant_users
             guard:
                 authenticators:
-                    - App\Security\LoginAuthenticator
+                    - App\Security\DriverAssistantAuthenticator
+                entry_point: App\Security\DriverAssistantAuthenticator
+
             logout:
-                path: app_logout
+                path: logout_driver_assistant
                 # where to redirect after logout
                 # target: app_any_route
         driver_area:
             anonymous: lazy
-            pattern:   ^/driver
+            pattern: ^/driver
             provider: driver_users
             guard:
                 authenticators:
-                    - App\Security\LoginAuthenticator
+                    - App\Security\DriverAuthenticator
+                entry_point: App\Security\DriverAuthenticator
             logout:
-                path: app_logout
+                path: logout_driver
                 # where to redirect after logout
                 # target: app_any_route
         manager_area:
             anonymous: lazy
-            pattern:   ^/manager
+            pattern: ^/manager
             provider: manager_users
             guard:
                 authenticators:
-                    - App\Security\LoginAuthenticator
+                    - App\Security\ManagerAuthenticator
+                entry_point: App\Security\ManagerAuthenticator
             logout:
-                path: app_logout
+                path: logout_manager
                 # where to redirect after logout
                 # target: app_any_route
         customer_area:
             anonymous: lazy
-            pattern:   ^/
+            pattern: ^/
             provider: customer_users
             guard:
                 authenticators:
-                    - App\Security\LoginAuthenticator
+                    - App\Security\CustomerAuthenticator
+                entry_point: App\Security\CustomerAuthenticator
             logout:
-                path: app_logout
+                path: logout_customer
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -96,8 +99,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/manager, roles: ROLE_MANAGER }
-        - { path: ^/driver, roles: ROLE_DRIVER }
-        - { path: ^/driver_assistant, roles: ROLE_DRIVER_ASSISTANT }
+        # - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/manager/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/driver/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/driver_assistant/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/manager, roles: ROLE_MANAGER }
+        # - { path: ^/driver, roles: ROLE_DRIVER }
+        # - { path: ^/driver_assistant, roles: ROLE_DRIVER_ASSISTANT }
+
+    

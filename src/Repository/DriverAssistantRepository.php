@@ -27,7 +27,7 @@ class DriverAssistantRepository extends ServiceEntityRepository implements Passw
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof DriverAssistant) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 

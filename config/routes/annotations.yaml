@@ -1,3 +1,13 @@
-controllers:
-    resource: ../../src/Controller/
+manager:
+    resource: App\Controller\ManagerController
     type: annotation
+driver:
+    resource: App\Controller\DriverController
+    type: annotation
+driver_assistant:
+    resource: App\Controller\DriverAssistantController
+    type: annotation
+customer:
+    resource: App\Controller\CustomerController
+    type: annotation
+

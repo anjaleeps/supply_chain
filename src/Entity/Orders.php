@@ -45,7 +45,7 @@ class Orders
     private $orderProducts;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\route", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Route", inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
     private $route;
