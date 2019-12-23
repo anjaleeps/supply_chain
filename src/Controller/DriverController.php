@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Driver;
+use App\Entity\TruckSchedule;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
+use App\Repository\TruckScheduleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,14 +24,14 @@ class DriverController extends AbstractController
 
     /**
      * @Route("/", name="driver_index", methods={"GET"})
-     * 
-     * @IsGranted("ROLE_DRIVER")
+     *
      */
     public function index(DriverRepository $driverRepository): Response
     {
         return $this->render('driver/index.html.twig', [
             'drivers' => $driverRepository->findAll(),
         ]);
+
     }
 
      /**
@@ -104,6 +106,21 @@ class DriverController extends AbstractController
         return $this->render('driver/new.html.twig', [
             'driver' => $driver,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     */
+    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
+    {
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver_id' => $id,
+            'status' => 'ready',
+        ]);
+        return $this->render('driver/home.html.twig', [
+            'driver' => $driver,
+            'truckSchedule' => $truckSchedule,
         ]);
     }
 
