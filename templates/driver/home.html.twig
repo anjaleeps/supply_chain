@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<h3>Welcome {{ driver.firstName }}!</h3>
+
+    {% if truckSchedule!=null %}
+        <h1>You have a delivery!</h1>
+        <p>Your truck number: {{ truckSchedule.truck }}</p><br>
+    <p>Route: {{ truckSchedule.route }}</p><br>
+    <a href="https://www.w3schools.com" class="w3-button w3-black">Picked up</a>
+    <a href="https://www.w3schools.com" class="w3-button w3-black">Delivered</a>
+{% endblock %}
