@@ -125,6 +125,21 @@ class DriverController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/driver_home/picked", name="picked", methods={"GET"})
+     */
+    public function scheduleStatusPicked($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
+    {
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver_id' => $id,
+            'status' => 'ready',
+        ]);
+        return $this->render('driver/home.html.twig', [
+            'driver' => $driver,
+            'truckSchedule' => $truckSchedule,
+        ]);
+    }
+
+    /**
      * @Route("/{id}", name="driver_show", methods={"GET"})
      */
     public function show(Driver $driver): Response
