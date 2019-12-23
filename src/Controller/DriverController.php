@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Driver;
+use App\Entity\Store;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,8 +45,9 @@ class DriverController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($driver, $driver->getPlainPassword());
             $driver->setPassword($password);
-            $driver->setRoles(array('ROLE_DRIVER'));
 
+            $driver->setRoles(array('ROLE_DRIVER'));
+            $driver->setStatus('idle');
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($driver);
             $entityManager->flush();

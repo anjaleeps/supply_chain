@@ -25,7 +25,7 @@ class CustomerType extends AbstractType
                     'Wholesaler'=>null,
                     'Retailer'=> false,
                     'End Customer' => true
-                ),
+                )
             ))
             ->add('place_no', TextType::class)
             ->add('street', TextType::class)
@@ -41,9 +41,12 @@ class CustomerType extends AbstractType
             ))
             ->add('plainPassword', RepeatedType::class, array(
                 'type'=> PasswordType::class,
+                'attr' => ['class'=>'form-control'],
                 'first_options' => array('label'=>'Password'),
-                'second_options' => array('label' => 'Confirm Password')
-            ))
+                'second_options' => array('label'=>'Password')
+            ), [
+                'attr'=> ['class'=>'form-control']
+            ])
         ;
     }
 

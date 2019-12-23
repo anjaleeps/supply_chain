@@ -1,9 +1,58 @@
-{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.first_name) }}
-    {{ form_row(form.last_name) }}
-    {{ form_row(form.plainPassword.first) }}
-    {{ form_row(form.plainPassword.second) }}
+{% extends 'base.html.twig' %}
 
-    <button type="submit">Register!</button>
-{{ form_end(form) }}
+{% block title %} Register | Driver {% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="../css/signin.css">
+{% endblock %}
+
+{% block body %}
+
+<div class="container register-form w-50">
+
+    {{ form_start(form) }}
+    <div class="form">
+
+        <div class="note">
+            <p>Register</p>
+        </div>
+
+        <div class="form-content">
+            <div class="row">
+                <div class="col-md-6 pr-4">
+
+                    <div class="form-group">
+                        {{ form_row(form.first_name, {'label':false, 'attr':{'class':'form-control', 'placeholder': 'First Name'}})
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.last_name, {'label':false, 'attr':{'class':'form-control', 'placeholder': 'Last Name'}})
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.email, {'label':false, 'attr':{'class':'form-control', 'placeholder': 'Email'}})
+                        }}
+                    </div>
+                </div>
+
+                <div class="col-md-6 pl-4">
+
+                    <div class="form-group">
+                        {{ form_row(form.plainPassword.first, {'label':false, 'attr':{'class':'form-control', 'placeholder': 'Password'}}
+                        )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.plainPassword.second, {'label':false, 'attr':{'class':'form-control', 'placeholder': 'Confirm Password'}})
+                        }}
+                    </div>
+
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Register</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
