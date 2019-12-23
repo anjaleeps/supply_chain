@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Log in{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="css/signin.css">
+{% endblock %}
 
 {% block body %}
 <form method="post">
@@ -8,21 +13,48 @@
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    {% if is_granted('ROLE_DRIVER')  %}
-        <div class="mb-3">
+    {% if is_granted('ROLE_CUSTOMER')  %}
+        <div class="note mb-3">
             You are logged in as {{ app.user.username }}, <a href="{{ path('logout_customer') }}">Logout</a>
         </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
+    {% if !is_granted('ROLE_CUSTOMER') %}
+        <div class="note mb-3">
+           
+        </div>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
+            autofocus>
+        <label for="inputPassword">Password</label>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="form">
+
+            <div class="note">
+                <p> Please sign in</p>
+            </div>
+    
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6 pr-4">
+                    
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
+                            autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" name="password" id="inputPassword" class="form-control" required>
+                        </div>
+                       
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Register</button>
+            </div>
+        </div>
+    
+    {% endif %}
+
 
     {#
         Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -35,7 +67,7 @@
         </div>
     #}
 
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button class="btn-submit" type="submit">
         Sign in
     </button>
 </form>
