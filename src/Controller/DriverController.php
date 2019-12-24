@@ -172,15 +172,7 @@ class DriverController extends AbstractController
         $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
     }
 
-    /**
-     * @Route("/{id}", name="orderlist_show", methods={"GET"})
-     */
-    public function showOders(Driver $driver): Response
-    {
-        return $this->render('driver/show.html.twig', [
-            'driver' => $driver,
-        ]);
-    }
+
 
     /**
      * @Route("/{id}", name="driver_show", methods={"GET"})
