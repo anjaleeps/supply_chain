@@ -340,4 +340,13 @@ class Customer implements UserInterface
         ]));
 
     }
+    public function __toString()
+    {
+        return $this->first_name;
+        return $this->last_name;
+        return $this->email;
+        return $this->city;
+        return $this->street;
+
+    }
 }
