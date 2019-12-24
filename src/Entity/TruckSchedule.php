@@ -19,7 +19,7 @@ class TruckSchedule
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\truck", inversedBy="truckSchedules")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Truck", inversedBy="truckSchedules")
      * @ORM\JoinColumn(nullable=false)
      */
     private $truck;
@@ -31,13 +31,13 @@ class TruckSchedule
     private $driver;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\driverAssistant", inversedBy="truckSchedules")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DriverAssistant", inversedBy="truckSchedules")
      * @ORM\JoinColumn(nullable=false)
      */
     private $driver_assistant;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\route", inversedBy="truckSchedules")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Route", inversedBy="truckSchedules")
      * @ORM\JoinColumn(nullable=false)
      */
     private $route;
@@ -72,12 +72,12 @@ class TruckSchedule
         return $this->id;
     }
 
-    public function getTruck(): ?truck
+    public function getTruck(): ?Truck
     {
         return $this->truck;
     }
 
-    public function setTruck(?truck $truck): self
+    public function setTruck(?Truck $truck): self
     {
         $this->truck = $truck;
 
@@ -96,24 +96,24 @@ class TruckSchedule
         return $this;
     }
 
-    public function getDriverAssistant(): ?driverAssistant
+    public function getDriverAssistant(): ?DriverAssistant
     {
         return $this->driver_assistant;
     }
 
-    public function setDriverAssistant(?driverAssistant $driver_assistant): self
+    public function setDriverAssistant(?DriverAssistant $driver_assistant): self
     {
         $this->driver_assistant = $driver_assistant;
 
         return $this;
     }
 
-    public function getRoute(): ?route
+    public function getRoute(): ?Route
     {
         return $this->route;
     }
 
-    public function setRoute(?route $route): self
+    public function setRoute(?Route $route): self
     {
         $this->route = $route;
 

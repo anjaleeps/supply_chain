@@ -12,7 +12,7 @@ class Transports
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="App\Entity\trainSchedule", inversedBy="scheduledTransports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TrainSchedule", inversedBy="scheduledTransports")
      * @ORM\JoinColumn(nullable=false)
      */
     private $train_schedule;
@@ -29,12 +29,12 @@ class Transports
      */
     private $orders;
 
-    public function getTrainSchedule(): ?trainSchedule
+    public function getTrainSchedule(): ?TrainSchedule
     {
         return $this->train_schedule;
     }
 
-    public function setTrainSchedule(?trainSchedule $train_schedule): self
+    public function setTrainSchedule(?TrainSchedule $train_schedule): self
     {
         $this->train_schedule = $train_schedule;
 

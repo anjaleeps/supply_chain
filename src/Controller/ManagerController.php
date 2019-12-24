@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Manager;
+use App\Entity\Orders;
 use App\Form\ManagerType;
 use App\Repository\ManagerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -73,6 +74,26 @@ class ManagerController extends AbstractController
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/dashboard", name="manager_dashboard", methods={"GET"})
+     */
+    public function getDashboard(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Orders::class);
+        $orders_placed = $repository->findBy(
+            ['order_status' => 'Placed']
+        );
+        $orders_on_sore = $repository->findBy(
+            ['order_status' => 'On Store']
+        );
+
+
+        return $this->render('manager/dashboard.html.twig', [
+            'placed' => $orders_placed,
+            'on_sore' => $orders_on_sore
+        ]);
     }
 
     /**

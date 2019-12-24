@@ -22,7 +22,7 @@ class Truck
     private $truck_no;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\store", inversedBy="trucks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Store", inversedBy="trucks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $store;
@@ -54,12 +54,12 @@ class Truck
         return $this;
     }
 
-    public function getStore(): ?store
+    public function getStore(): ?Store
     {
         return $this->store;
     }
 
-    public function setStore(?store $store): self
+    public function setStore(?Store $store): self
     {
         $this->store = $store;
 

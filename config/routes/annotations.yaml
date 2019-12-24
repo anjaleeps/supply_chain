@@ -10,6 +10,9 @@ driver_assistant:
 product:
     resource: App\Controller\ProductController
     type: annotation
+Orders:
+    resource: App\Controller\OrdersController
+    type: annotation
 customer:
     resource: App\Controller\CustomerController
     type: annotation

@@ -146,12 +146,12 @@ class Orders
         return $this;
     }
 
-    public function getRoute(): ?route
+    public function getRoute(): ?Route
     {
         return $this->route;
     }
 
-    public function setRoute(?route $route): self
+    public function setRoute(?Route $route): self
     {
         $this->route = $route;
 
