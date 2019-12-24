@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DriverRepository")
@@ -255,5 +256,23 @@ class Driver implements UserInterface
         }
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata){
+
+        $metadata->addPropertyConstraint('email', new Assert\Email([
+            'message' => 'The email "{{ value }}" is not a valid email.',
+        ]));
+
+        $metadata->addPropertyConstraint('first_name', new Assert\NotBlank());
+        $metadata->addPropertyConstraint('last_name',  new Assert\NotBlank());
+        
+        $metadata->addPropertyConstraint('plainPassword', new Assert\Length([
+            'min' => 8,
+            'max' => 20,    
+            'minMessage' => 'Password should be at least 8 characters long',
+            'maxMessage' => 'Password cannot be longer than 20 characters'
+        ]));
+
     }
 }

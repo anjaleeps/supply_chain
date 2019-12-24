@@ -3,57 +3,59 @@
 {% block title %}Log in{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="css/signin.css">
+{{ parent() }}
+<link rel="stylesheet" href="css/signin.css">
 {% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<div class="container register-form w-50">
+    <div class="form">
+        <form method="post">
+            {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-    {% if is_granted('ROLE_CUSTOMER')  %}
-        <div class="note mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('logout_customer') }}">Logout</a>
-        </div>
-    {% endif %}
-
-    {% if not is_granted('ROLE_CUSTOMER') %}
-        <div class="note mb-3">
-           
-        </div>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
-            autofocus>
-        <label for="inputPassword">Password</label>
-
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <div class="form">
-
-            <div class="note">
-                <p> Please sign in</p>
-            </div>
-    
-            <div class="form-content">
-                <div class="row">
-                    <div class="col-md-6 pr-4">
-                    
-                        <div class="form-group">
-                            <input type="email" placeholder="Email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
-                            autofocus>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" placeholder="Password" name="password" id="inputPassword" class="form-control" required>
-                        </div>
-                       
+            {% if is_granted('ROLE_CUSTOMER')  %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <div class="lead">
+                            <p>You are logged in as {{ app.user.username }}</p> 
+                        </div c>
+                        <a class="btn btn-submit" href="{{ path('logout_customer') }}">Logout</a>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">Register</button>
             </div>
-        </div>
-    
-    {% endif %}
+
+
+            {% else %}
+
+            <div class="note">
+                <p> Please Log In</p>
+            </div>
+
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-12 pr-4">
+
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" value="{{ last_username }}" name="email"
+                                id="inputEmail" class="form-control" required autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" name="password" id="inputPassword"
+                                class="form-control" required>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-submit">Log In</button>
+            </div>
+            {% endif %}
+
+    </div>
+
 
 
     {#
@@ -66,9 +68,6 @@
             </label>
         </div>
     #}
-
-    <button class="btn-submit" type="submit">
-        Sign in
-    </button>
-</form>
+    </form>
+</div>
 {% endblock %}

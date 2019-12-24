@@ -23,5 +23,21 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    app.security.driver_assistant_authenticator:
+        class: AppBundle\Security\DriverAssistantAuthenticator
+        autowire: true
+    
+    app.security.driver_authenticator:
+        class: AppBundle\Security\DriverAuthenticator
+        autowire: true
+
+    app.security.customer_authenticator:
+        class: AppBundle\Security\CustomerAuthenticator
+        autowire: true
+    
+    app.security.manager_authenticator:
+        class: AppBundle\Security\ManagerAuthenticator
+        autowire: true
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

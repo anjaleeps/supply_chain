@@ -22,21 +22,21 @@ class CustomerType extends AbstractType
             ->add('last_name', TextType::class)
             ->add('customer_type', ChoiceType::class, array(
                 'choices' => array(
-                    'Wholesaler'=>null,
-                    'Retailer'=> false,
-                    'End Customer' => true
+                    'Wholesaler'=> 'Wholesaler',
+                    'Retailer'=> 'Retailer',
+                    'End Customer' => 'End Customer'
                 )
             ))
             ->add('place_no', TextType::class)
             ->add('street', TextType::class)
             ->add('city', ChoiceType::class, array(
                 'choices' => array(
-                    'Colombo'=>1,
-                    'Negombo'=>2,
-                    'Galle'=>3,
-                    'Jaffna'=>4,
-                    'Matara'=>5,
-                    'Trinco'=>6
+                    'Colombo' => 'Colombo',
+                    'Negombo'=> 'Negombo',
+                    'Galle' => 'Galle',
+                    'Jaffna' => 'Jaffna', 
+                    'Matara' => 'Matara',
+                    'Trincomalee' => 'Trincomalee'
                 )
             ))
             ->add('plainPassword', RepeatedType::class, array(

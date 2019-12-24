@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
+use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
 use App\Repository\TruckScheduleRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Route("/driver")
@@ -38,7 +40,7 @@ class DriverController extends AbstractController
      /**
      * @Route("/register", name="driver_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
         $driver = new Driver();
         $form = $this->createForm(DriverType::class, $driver);
@@ -54,8 +56,14 @@ class DriverController extends AbstractController
             $entityManager->persist($driver);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $driver,
+                $request,
+                $authenticator,
+                'driver_users'
+            );
         }
+
         return $this->render(
             'registration/registerDriver.html.twig',
             array('form' => $form->createView())
@@ -117,29 +125,35 @@ class DriverController extends AbstractController
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
     {
         $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_id' => $id,
+            'driver' => $id,
+//            'driver' => $driver->getId(),
             'status' => 'ready',
         ]);
+
+        $truck_schedule_id=$truckSchedule->getId();
+        $truck_no=$truckSchedule->getTruck()->getTruckNo();
+        $route=$truckSchedule->getRoute()->getDecription();
+
         return $this->render('driver/home.html.twig', [
+            'truck_schedule_id'=> $truck_schedule_id,
             'driver' => $driver,
-            'truckSchedule' => $truckSchedule,
+            'truck_no'=>$truck_no,
+            'route'=>$route,
         ]);
     }
 
-//    /**
-//     * @Route("/{id}/driver_home/picked", name="picked", methods={"GET"})
-//     */
-//    public function scheduleStatusPicked($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
-//    {
+    /**
+     * @Route("/{truck_schedule_id}/picked", name="picked", methods={"GET"})
+     */
+    public function scheduleStatusPicked($truck_schedule_id,TruckScheduleRepository $truckScheduleRepository): void
+    {
 //        $truckSchedule = $truckScheduleRepository->findOneBy([
 //            'driver_id' => $id,
 //            'status' => 'ready',
 //        ]);
-//        return $this->render('driver/home.html.twig', [
-//            'driver' => $driver,
-//            'truckSchedule' => $truckSchedule,
-//        ]);
-//    }
+
+        $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
+    }
 
     /**
      * @Route("/{id}", name="driver_show", methods={"GET"})

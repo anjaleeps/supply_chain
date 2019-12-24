@@ -6,6 +6,7 @@ use App\Entity\Manager;
 use App\Entity\Orders;
 use App\Form\ManagerType;
 use App\Repository\ManagerRepository;
+use App\Security\ManagerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,14 +14,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Route("/manager")
-*/
+ */
 class ManagerController extends AbstractController
 {
     /**
      * @Route("/", name="manager_index", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function index(ManagerRepository $managerRepository): Response
     {
@@ -32,7 +36,7 @@ class ManagerController extends AbstractController
     /**
      * @Route("/register", name="manager_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, ManagerAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
         $manager = new Manager();
         $form = $this->createForm(ManagerType::class, $manager);
@@ -47,7 +51,12 @@ class ManagerController extends AbstractController
             $entityManager->persist($manager);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $manager,
+                $request,
+                $authenticator,
+                'manager_users'
+            );
         }
 
         return $this->render(
@@ -55,10 +64,10 @@ class ManagerController extends AbstractController
             array('form' => $form->createView())
         );
     }
-    
+
     /**
-    * @Route("/login", name="login_manager")
-    */
+     * @Route("/login", name="login_manager")
+     */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -68,7 +77,7 @@ class ManagerController extends AbstractController
         return $this->render('security/managerLogin.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-     /**
+    /**
      * @Route("/logout", name="logout_manager")
      */
     public function logout()
@@ -154,7 +163,7 @@ class ManagerController extends AbstractController
      */
     public function delete(Request $request, Manager $manager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$manager->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $manager->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($manager);
             $entityManager->flush();
@@ -162,6 +171,4 @@ class ManagerController extends AbstractController
 
         return $this->redirectToRoute('manager_index');
     }
-
-    
 }

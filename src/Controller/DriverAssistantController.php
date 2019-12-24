@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DriverAssistant;
 use App\Form\DriverAssistantType;
 use App\Repository\DriverAssistantRepository;
+use App\Security\DriverAssistantAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Route("/driver_assistant")
@@ -31,7 +33,7 @@ class DriverAssistantController extends AbstractController
     /**
      * @Route("/register", name="driver_assistant_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAssistantAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
         $driverAssistant = new DriverAssistant();
         $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
@@ -46,7 +48,12 @@ class DriverAssistantController extends AbstractController
             $entityManager->persist($driverAssistant);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                    $driverAssistant,
+                    $request,
+                    $authenticator,
+                    'driver_assistant_users'
+                );
         }
         return $this->render(
             'registration/registerDriverAssistant.html.twig',
