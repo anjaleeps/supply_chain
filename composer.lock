@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "db3c3e2f2afcda5d0ced4896de9baad5",
-=======
-    "content-hash": "7e1d68c652dbef918509125a0153b806",
->>>>>>> 4dd434a169cc38cdde63e66d2ce298b86b91b4b9
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4487,7 +4483,6 @@
             "time": "2019-12-01T08:39:58+00:00"
         },
         {
-<<<<<<< HEAD
             "name": "symfony/web-profiler-bundle",
             "version": "v4.4.1",
             "source": {
@@ -4605,8 +4600,6 @@
             "time": "2019-11-26T14:48:41+00:00"
         },
         {
-=======
->>>>>>> 4dd434a169cc38cdde63e66d2ce298b86b91b4b9
             "name": "symfony/yaml",
             "version": "v4.4.1",
             "source": {

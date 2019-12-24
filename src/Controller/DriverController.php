@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
+use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
 use App\Repository\TruckScheduleRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Route("/driver")
@@ -38,7 +40,7 @@ class DriverController extends AbstractController
      /**
      * @Route("/register", name="driver_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
         $driver = new Driver();
         $form = $this->createForm(DriverType::class, $driver);
@@ -54,8 +56,14 @@ class DriverController extends AbstractController
             $entityManager->persist($driver);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $driver,
+                $request,
+                $authenticator,
+                'driver_users'
+            );
         }
+
         return $this->render(
             'registration/registerDriver.html.twig',
             array('form' => $form->createView())

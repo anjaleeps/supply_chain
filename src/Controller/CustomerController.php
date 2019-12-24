@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
+use App\Security\CustomerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Route("/")
@@ -29,11 +31,11 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * @Route("/register", name="customer_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  CustomerAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class, $customer);
@@ -48,8 +50,14 @@ class CustomerController extends AbstractController
             $entityManager->persist($customer);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                    $customer,
+                    $request,
+                    $authenticator,
+                    'customer_users'
+                );
         }
+
         return $this->render(
             'registration/registerCustomer.html.twig',
             array('form' => $form->createView())
