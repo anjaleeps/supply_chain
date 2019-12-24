@@ -7,6 +7,7 @@ use App\Entity\Store;
 use App\Entity\TruckSchedule;
 use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
+use App\Form\DriverButtonType;
 use App\Repository\DriverRepository;
 use App\Repository\TruckScheduleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+
 
 /**
  * @Route("/driver")
@@ -124,6 +127,7 @@ class DriverController extends AbstractController
      */
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
     {
+
         $truckSchedule = $truckScheduleRepository->findOneBy([
             'driver' => $id,
 //            'driver' => $driver->getId(),
@@ -134,11 +138,24 @@ class DriverController extends AbstractController
         $truck_no=$truckSchedule->getTruck()->getTruckNo();
         $route=$truckSchedule->getRoute()->getDecription();
 
+//
+//        $form = $this->createFormBuilder()
+//            ->add('picked', SubmitType::class, ['label' => 'Picked up'])
+//            ->add('delivered', SubmitType::class, ['label' => 'Delivered'])
+//            ->getForm();
+        $form = $this->createForm(DriverButtonType::class);
+
+        if($form->get('picked')->isClicked()){
+            $truckScheduleRepository->changeStatusPicked('1');
+        }
+
+
         return $this->render('driver/home.html.twig', [
             'truck_schedule_id'=> $truck_schedule_id,
             'driver' => $driver,
             'truck_no'=>$truck_no,
             'route'=>$route,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -153,6 +170,16 @@ class DriverController extends AbstractController
 //        ]);
 
         $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
+    }
+
+    /**
+     * @Route("/{id}", name="orderlist_show", methods={"GET"})
+     */
+    public function showOders(Driver $driver): Response
+    {
+        return $this->render('driver/show.html.twig', [
+            'driver' => $driver,
+        ]);
     }
 
     /**
