@@ -55,6 +55,8 @@ class Orders
      */
     private $truck_schedule;
 
+
+
     public function __construct()
     {
         $this->orderProducts = new ArrayCollection();
@@ -172,4 +174,6 @@ class Orders
 
         return $this;
     }
+
+
 }
