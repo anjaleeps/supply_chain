@@ -9,13 +9,22 @@
         <h1>You have a delivery!</h1>
         <p>Your truck number: {{ truck_no }}</p><br>
     <p>Route: {{ route }}</p><br>
+
 {#   <a href="{{ path('picked', {'id':driver.id,'truck_schedule_id': truck_schedule_id }) }}" class="w3-button w3-black">Picked up</a>#}
         <a href="#" class="w3-button w3-black">Picked up</a><br> {#on click: count time until delivered -> workhours, change schedule status to picked up #}
         <a href="#" class="w3-button w3-black">Delivered</a><br>
         <a href="#" class="w3-button w3-black">View orders</a>
+        {{ form(form) }}
     {% else %}
     <h1>You do not have any deliveries yet!</h1>
     {% endif %}
 
+{#    {{ render(controller(#}
+{#        'App\\Controller\\ArticleController::recentArticles',#}
+{#        { 'max': 3 }#}
+{#    )) }}#}
+
+{% endblock %}
+{% block javascripts %}
 
 {% endblock %}
