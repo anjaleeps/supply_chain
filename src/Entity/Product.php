@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
+
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -57,6 +59,7 @@ class Product
     {
         $this->orders = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {

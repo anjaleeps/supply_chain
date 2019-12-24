@@ -12,20 +12,20 @@ class TruckOrder
 
     /**
      * @ORM\Id()
-     * @ORM\OneToOne(targetEntity="App\Entity\orders", inversedBy="truck_schedule", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Orders", inversedBy="truck_schedule", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $orders;
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="App\Entity\truckSchedule", inversedBy="truckOrders")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TruckSchedule", inversedBy="truckOrders")
      * @ORM\JoinColumn(nullable=false)
      */
     private $truck_schedule;
 
    
-    public function getOrders(): ?orders
+    public function getOrders(): ?Orders
     {
         return $this->orders;
     }
@@ -37,12 +37,12 @@ class TruckOrder
         return $this;
     }
 
-    public function getTruckSchedule(): ?truckSchedule
+    public function getTruckSchedule(): ?TruckSchedule
     {
         return $this->truck_schedule;
     }
 
-    public function setTruckSchedule(?truckSchedule $truck_schedule): self
+    public function setTruckSchedule(?TruckSchedule $truck_schedule): self
     {
         $this->truck_schedule = $truck_schedule;
 
