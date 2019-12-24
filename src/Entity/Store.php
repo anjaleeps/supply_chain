@@ -64,7 +64,6 @@ class Store
     public function setCity(string $city): self
     {
         $this->city = $city;
-
         return $this;
     }
 
@@ -190,5 +189,10 @@ class Store
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this-> city;
+
     }
 }

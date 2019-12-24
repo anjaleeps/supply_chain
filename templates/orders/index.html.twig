@@ -10,6 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Order_status</th>
+                <th>Route</th>
                 <th>Date_placed</th>
                 <th>Date_completed</th>
                 <th>actions</th>
@@ -20,6 +21,7 @@
             <tr>
                 <td>{{ order.id }}</td>
                 <td>{{ order.orderStatus }}</td>
+                <td>{{ order.route }}</td>
                 <td>{{ order.datePlaced ? order.datePlaced|date('Y-m-d') : '' }}</td>
                 <td>{{ order.dateCompleted ? order.dateCompleted|date('Y-m-d') : '' }}</td>
                 <td>

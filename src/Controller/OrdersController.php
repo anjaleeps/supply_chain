@@ -35,7 +35,7 @@ class OrdersController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order.setOrderStatus('Placed');
+            $order ->setOrderStatus('Placed');
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($order);
             $entityManager->flush();

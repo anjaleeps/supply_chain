@@ -3,35 +3,43 @@
 {% block title %}Placed Orders{% endblock %}
 
 {% block body %}
-    <h1>Orders index</h1>
+    <h1>Placed Orders</h1>
 
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Order_status</th>
-            <th>Date_placed</th>
-            <th>Date_completed</th>
-            <th>actions</th>
+            <th>Customer</th>
+            <th>Products</th>
+            <th>City</th>
+            <th>Route</th>
+            <th>Train Date</th>
+
         </tr>
         </thead>
         <tbody>
         {% for order in placed %}
             <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.orderStatus }}</td>
-                <td>{{ order.datePlaced ? order.datePlaced|date('Y-m-d') : '' }}</td>
-                <td>{{ order.dateCompleted ? order.dateCompleted|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('orders_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('orders_edit', {'id': order.id}) }}">edit</a>
+                <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                <td>{% for product in order.getOrderProducts() %}
+                    {{product.getProduct().getName()}}
+                    {% endfor %}
                 </td>
+                <td>{{ order.getRoute().getStore().getCity()}}</td>
+                <td>{{ order.getRoute().getDecription()}}</td>
+
+
+
+
             </tr>
         {% else %}
             <tr>
                 <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
+        {% block stylesheets %}
+            {{ parent() }}
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+        {% endblock %}
         </tbody>
     </table>
 

@@ -13,8 +13,15 @@ product:
 Orders:
     resource: App\Controller\OrdersController
     type: annotation
+
 truckOrder:
     resource: App\Controller\TruckOrderController
+
+Route:
+    resource: App\Controller\RouteController
+    type: annotation
+Store:
+    resource: App\Controller\StoreController
     type: annotation
 customer:
     resource: App\Controller\CustomerController
