@@ -125,28 +125,34 @@ class DriverController extends AbstractController
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
     {
         $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_id' => $id,
+            'driver' => $id,
+//            'driver' => $driver->getId(),
             'status' => 'ready',
         ]);
+
+        $truck_schedule_id=$truckSchedule->getId();
+        $truck_no=$truckSchedule->getTruck()->getTruckNo();
+        $route=$truckSchedule->getRoute()->getDecription();
+
         return $this->render('driver/home.html.twig', [
+            'truck_schedule_id'=> $truck_schedule_id,
             'driver' => $driver,
-            'truckSchedule' => $truckSchedule,
+            'truck_no'=>$truck_no,
+            'route'=>$route,
         ]);
     }
 
     /**
-     * @Route("/{id}/driver_home/picked", name="picked", methods={"GET"})
+     * @Route("/{truck_schedule_id}/picked", name="picked", methods={"GET"})
      */
-    public function scheduleStatusPicked($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
+    public function scheduleStatusPicked($truck_schedule_id,TruckScheduleRepository $truckScheduleRepository): void
     {
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_id' => $id,
-            'status' => 'ready',
-        ]);
-        return $this->render('driver/home.html.twig', [
-            'driver' => $driver,
-            'truckSchedule' => $truckSchedule,
-        ]);
+//        $truckSchedule = $truckScheduleRepository->findOneBy([
+//            'driver_id' => $id,
+//            'status' => 'ready',
+//        ]);
+
+        $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
     }
 
     /**
