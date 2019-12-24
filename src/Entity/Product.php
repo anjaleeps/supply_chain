@@ -48,6 +48,11 @@ class Product
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -145,6 +150,18 @@ class Product
     public function setCategory(string $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
