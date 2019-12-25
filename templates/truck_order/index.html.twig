@@ -15,8 +15,8 @@
         {% for truck_order in truck_orders %}
             <tr>
                 <td>
-                    <a href="{{ path('truck_order_show', {'orders': truck_order.orders}) }}">show</a>
-                    <a href="{{ path('truck_order_edit', {'orders': truck_order.orders}) }}">edit</a>
+                    <a href="{{ path('truck_order_show', {'orders': truck_order.orders.getId()}) }}">show</a>
+                    <a href="{{ path('truck_order_edit', {'orders': truck_order.orders.getId()}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

@@ -8,40 +8,27 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Password</th>
-            <th>First_name</th>
-            <th>Last_name</th>
-            <th>Work_hours</th>
-            <th>Status</th>
-            <th>actions</th>
+            <th>Order Id</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Phone number</th>
+            <th>Delivered</th>
         </tr>
         </thead>
         <tbody>
-{#        {% for driver in drivers %}#}
-{#            <tr>#}
-{#                <td>{{ driver.id }}</td>#}
-{#                <td>{{ driver.email }}</td>#}
-{#                <td>{{ driver.roles ? driver.roles|json_encode : '' }}</td>#}
-{#                <td>{{ driver.password }}</td>#}
-{#                <td>{{ driver.firstName }}</td>#}
-{#                <td>{{ driver.lastName }}</td>#}
-{#                <td>{{ driver.workHours ? driver.workHours|date('H:i:s') : '' }}</td>#}
-{#                <td>{{ driver.status }}</td>#}
-{#                <td>#}
-{#                    <a href="{{ path('driver_show', {'id': driver.id}) }}">show</a>#}
-{#                    <a href="{{ path('driver_edit', {'id': driver.id}) }}">edit</a>#}
-{#                </td>#}
-{#            </tr>#}
-{#        {% else %}#}
-{#            <tr>#}
-{#                <td colspan="9">no records found</td>#}
-{#            </tr>#}
-{#        {% endfor %}#}
+        {% for truckOrder in truckOrders %}
+            <tr>
+                <td>{{ truckOrder.getOrders().getId() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getAddress() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">No records found</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('driver_new') }}">Create new</a>
 {% endblock %}

@@ -194,6 +194,11 @@ class Customer implements UserInterface
         return $this->last_name;
     }
 
+    public function getFullName(): ?string
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
     public function setLastName(string $last_name): self
     {
         $this->last_name = $last_name;
@@ -237,6 +242,11 @@ class Customer implements UserInterface
         return $this;
     }
 
+    public function getAddress(): ?string
+    {
+        return $this->getPlaceNo().', '.$this->getStreet().', '.$this->getCity();
+    }
+
     public function getCity(): ?string
     {
         return $this->city;
@@ -247,6 +257,16 @@ class Customer implements UserInterface
         $this->city = $city;
 
         return $this;
+    }
+    public function getPhoneNumbersAsString(): ?string{
+
+        $phoneNumberList=array();
+        foreach ($this->getPhoneNumbers() as $phoneNumber){
+            $phoneNumberList[] = $phoneNumber->getPhoneNumber();
+        }
+
+        $phoneNumberAsString= implode( ' / ', $phoneNumberList);
+        return $phoneNumberAsString;
     }
 
     /**
@@ -310,6 +330,8 @@ class Customer implements UserInterface
 
         return $this;
     }
+
+
 
     public static function loadValidatorMetadata(ClassMetadata $metadata){
 
