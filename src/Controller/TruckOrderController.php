@@ -94,15 +94,16 @@ class TruckOrderController extends AbstractController
     }
 
     /**
-     * @Route("/{truck_schedule_id}", name="orderList_show", methods={"GET"})
+     * @Route("/driver/{truck_schedule_id}", name="orderList_show", methods={"GET"})
      */
-    public function showOrdersToDriver($truck_schedule_id, TruckOrderRepository $truckOrderRepository): Response
+    public function showOrdersToDriver( $truck_schedule_id,TruckOrderRepository $truckOrderRepository): Response
     {
-        $orderList = $truckOrderRepository->findBy([
-            'truck_schedule_id' => $truck_schedule_id,
+        $truckOrders = $truckOrderRepository->findBy([
+            'truck_schedule' => $truck_schedule_id,
         ]);
+
         return $this->render('driver/view_order_list.html.twig', [
-            'orderList' => $orderList,
+            'truckOrders' => $truckOrders,
         ]);
     }
 }

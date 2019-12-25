@@ -15,7 +15,7 @@ class TruckOrder
      * @ORM\OneToOne(targetEntity="App\Entity\Orders", inversedBy="truck_schedule", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $orders;
+    private $orders; //defines a single order related to a certain schedule id
 
     /**
      * @ORM\Id()
@@ -48,4 +48,9 @@ class TruckOrder
 
         return $this;
     }
+//    public function __toString()
+//    {
+//        return $this-> city;
+//
+//    }
 }
