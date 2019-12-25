@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Manager;
+use App\Entity\Orders;
+use App\Entity\Transports;
 use App\Form\ManagerType;
 use App\Repository\ManagerRepository;
+use App\Repository\TransportsRepository;
 use App\Security\ManagerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/manager")
@@ -85,6 +89,32 @@ class ManagerController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard", name="manager_dashboard", methods={"GET"})
+     */
+    public function getDashboard(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Orders::class);
+        $orders_placed = $repository->findBy(
+            ['order_status' => 'Placed']
+        );
+        $orders_on_sore = $repository->findBy(
+            ['order_status' => 'On Store']
+        );
+
+
+        return $this->render('manager/dashboard.html.twig', [
+            'placed' => $orders_placed,
+            'on_sore' => $orders_on_sore,
+        ]);
+    }
+    /**
+     * @Route("/dashboard/status", name="manager_change_transport",methods={"POST"})
+     */
+    public function changeTransport(TransportsRepository $transportsRepository){
+        $transportsRepository->scheduleTrainTransport(order_id,date);
+    }
+
+    /**
      * @Route("/new", name="manager_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -150,4 +180,6 @@ class ManagerController extends AbstractController
 
         return $this->redirectToRoute('manager_index');
     }
+
+
 }

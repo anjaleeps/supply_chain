@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Placed Orders{% endblock %}
+
+{% block body %}
+    <h1>Placed Orders</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Products</th>
+            <th>City</th>
+            <th>Route</th>
+            <th>Train Date</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for order in placed %}
+            <tr>
+                <td class="order_id">{{ order.getId() }}</td>
+                <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                <td>{% for product in order.getOrderProducts() %}
+                    {{product.getProduct().getName()}}
+                    {% endfor %}
+                </td>
+                <td>{{ order.getRoute().getStore().getCity()}}</td>
+                <td>{{ order.getRoute().getDecription()}}</td>
+                <td>
+
+                    <form >
+                        Train Date: <input type="date" name="TrainDate" id="TrainDate">
+                        <button class="ajax">Submit</button>
+                        <div id="ajax-results">here comes the result</div>
+                    </form>
+
+
+                </td>
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../js/button.js"></script>
+{% endblock %}
+
+
+

@@ -12,12 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/product")
+ * @Route("/")
  */
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/", name="product_index", methods={"GET"})
+     * @Route("/product", name="product_index", methods={"GET"})
      *
      */
     public function index(ProductRepository $productRepository): Response
@@ -63,9 +63,9 @@ class ProductController extends AbstractController
 
 
     /**
-     * @Route("/new", name="product_new", methods={"GET","POST"})
+     * @Route("/manager/product/new", name="product_new", methods={"GET","POST"})
+     *@IsGranted("ROLE_MANAGER")
      *
-     * @IsGranted("ROLE_MANAGER")
      */
     public function new(Request $request): Response
     {
@@ -88,7 +88,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="product_show", methods={"GET"})
+     * @Route("/product/{id}", name="product_show", methods={"GET"})
      */
     public function show(Product $product): Response
     {
@@ -98,9 +98,9 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="product_edit", methods={"GET","POST"})
+     * @Route("/manager/product/{id}/edit", name="product_edit", methods={"GET","POST"})
      *
-     * @IsGranted("ROLE_MANAGER")
+     *@IsGranted("ROLE_MANAGER")
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -119,20 +119,19 @@ class ProductController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="product_delete", methods={"DELETE"})
-     *
-     * @IsGranted("ROLE_MANAGER")
-     */
-    public function delete(Request $request, Product $product): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($product);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('product_index');
-    }
-
+//    /**
+//     * @Route("/manager/product/{id}", name="product_delete", methods={"DELETE"})
+//     *
+//     *@IsGranted("ROLE_MANAGER")
+//     */
+//    public function delete(Request $request, Product $product): Response
+//    {
+//        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->remove($product);
+//            $entityManager->flush();
+//        }
+//
+//        return $this->redirectToRoute('product_index');
+//    }
 }

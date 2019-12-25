@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TrainSchedule{% endblock %}
+
+{% block body %}
+    <h1>TrainSchedule</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ train_schedule.id }}</td>
+            </tr>
+            <tr>
+                <th>Destination</th>
+                <td>{{ train_schedule.destination }}</td>
+            </tr>
+            <tr>
+                <th>Capacity</th>
+                <td>{{ train_schedule.capacity }}</td>
+            </tr>
+            <tr>
+                <th>Start_time</th>
+                <td>{{ train_schedule.startTime ? train_schedule.startTime|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Journey_time</th>
+                <td>{{ train_schedule.journeyTime ? train_schedule.journeyTime|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Day</th>
+                <td>{{ train_schedule.day }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('train_schedule_index') }}">back to list</a>
+
+    <a href="{{ path('train_schedule_edit', {'id': train_schedule.id}) }}">edit</a>
+
+    {{ include('train_schedule/_delete_form.html.twig') }}
+{% endblock %}

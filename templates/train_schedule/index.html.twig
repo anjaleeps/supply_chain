@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TrainSchedule index{% endblock %}
+
+{% block body %}
+    <h1>TrainSchedule index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Destination</th>
+                <th>Capacity</th>
+                <th>Start_time</th>
+                <th>Journey_time</th>
+                <th>Day</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for train_schedule in train_schedules %}
+            <tr>
+                <td>{{ train_schedule.id }}</td>
+                <td>{{ train_schedule.destination }}</td>
+                <td>{{ train_schedule.capacity }}</td>
+                <td>{{ train_schedule.startTime ? train_schedule.startTime|date('H:i:s') : '' }}</td>
+                <td>{{ train_schedule.journeyTime ? train_schedule.journeyTime|date('H:i:s') : '' }}</td>
+                <td>{{ train_schedule.day }}</td>
+                <td>
+                    <a href="{{ path('train_schedule_show', {'id': train_schedule.id}) }}">show</a>
+                    <a href="{{ path('train_schedule_edit', {'id': train_schedule.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('train_schedule_new') }}">Create new</a>
+{% endblock %}
