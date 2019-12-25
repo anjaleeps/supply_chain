@@ -22,7 +22,9 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
+    App\EventListener\CorsListener:
+        tags:
+            - { name: kernel.event_subscriber }
     app.security.driver_assistant_authenticator:
         class: AppBundle\Security\DriverAssistantAuthenticator
         autowire: true
@@ -38,6 +40,8 @@ services:
     app.security.manager_authenticator:
         class: AppBundle\Security\ManagerAuthenticator
         autowire: true
+
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

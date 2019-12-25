@@ -8,6 +8,7 @@
     <table class="table">
         <thead>
         <tr>
+            <th>Order ID</th>
             <th>Customer</th>
             <th>Products</th>
             <th>City</th>
@@ -20,6 +21,7 @@
 
         {% for order in placed %}
             <tr>
+                <td class="order_id">{{ order.getId() }}</td>
                 <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
                 <td>{% for product in order.getOrderProducts() %}
                     {{product.getProduct().getName()}}
@@ -28,15 +30,14 @@
                 <td>{{ order.getRoute().getStore().getCity()}}</td>
                 <td>{{ order.getRoute().getDecription()}}</td>
                 <td>
-                    <html>
-                    <body>
-                    <form action="{{ path('manager_dashboard') }}">
-                        Train Date: <input type="date" name="TrainDate">
-                        <input type="submit">
+
+                    <form >
+                        Train Date: <input type="date" name="TrainDate" id="TrainDate">
+                        <button class="ajax">Submit</button>
+                        <div id="ajax-results">here comes the result</div>
                     </form>
 
-                    </body>
-                    </html>
+
                 </td>
             </tr>
 
@@ -52,6 +53,10 @@
 
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../js/button.js"></script>
+{% endblock %}
 
 
 
