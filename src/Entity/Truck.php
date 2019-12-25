@@ -54,12 +54,12 @@ class Truck
         return $this;
     }
 
-    public function getStore(): ?store
+    public function getStore(): ?Store
     {
         return $this->store;
     }
 
-    public function setStore(?store $store): self
+    public function setStore(?Store $store): self
     {
         $this->store = $store;
 

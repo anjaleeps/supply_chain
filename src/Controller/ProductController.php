@@ -29,8 +29,8 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/manager/product/new", name="product_new", methods={"GET","POST"})
+     *@IsGranted("ROLE_MANAGER")
      *
-     * @IsGranted("ROLE_MANAGER")
      */
     public function new(Request $request): Response
     {
@@ -63,9 +63,9 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("manager/product/{id}/edit", name="product_edit", methods={"GET","POST"})
+     * @Route("/manager/product/{id}/edit", name="product_edit", methods={"GET","POST"})
      *
-     * @IsGranted("ROLE_MANAGER")
+     *@IsGranted("ROLE_MANAGER")
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -84,24 +84,19 @@ class ProductController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/product/{id}", name="product_delete", methods={"DELETE"})
-     *
-     * @IsGranted("ROLE_MANAGER")
-     */
-    public function delete(Request $request, Product $product): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($product);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('product_index');
-    }
-
-    public function productReport(ProductRepository $productRepository){
-        $productSales = $productRepository->getProductOrderCount();
-        
-    }
+//    /**
+//     * @Route("/manager/product/{id}", name="product_delete", methods={"DELETE"})
+//     *
+//     *@IsGranted("ROLE_MANAGER")
+//     */
+//    public function delete(Request $request, Product $product): Response
+//    {
+//        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->remove($product);
+//            $entityManager->flush();
+//        }
+//
+//        return $this->redirectToRoute('product_index');
+//    }
 }

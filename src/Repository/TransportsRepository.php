@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\DriverAssistant;
 use App\Entity\Transports;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -17,6 +18,16 @@ class TransportsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Transports::class);
+    }
+
+    public function scheduleTrainTransport(int $order_id, Date $date){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "CALL schedule_train_transportation(?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$order_id);
+        $stmt ->bindParam(2,$date);
+        $stmt->execute();
+
     }
 
     // /**
