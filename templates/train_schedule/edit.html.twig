@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TrainSchedule{% endblock %}
+
+{% block body %}
+    <h1>Edit TrainSchedule</h1>
+
+    {{ include('train_schedule/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('train_schedule_index') }}">back to list</a>
+
+    {{ include('train_schedule/_delete_form.html.twig') }}
+{% endblock %}

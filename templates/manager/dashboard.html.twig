@@ -17,6 +17,7 @@
         </tr>
         </thead>
         <tbody>
+
         {% for order in placed %}
             <tr>
                 <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
@@ -26,21 +27,31 @@
                 </td>
                 <td>{{ order.getRoute().getStore().getCity()}}</td>
                 <td>{{ order.getRoute().getDecription()}}</td>
+                <td>
+                    <html>
+                    <body>
+                    <form action="{{ path('manager_dashboard') }}">
+                        Train Date: <input type="date" name="TrainDate">
+                        <input type="submit">
+                    </form>
 
-
-
-
+                    </body>
+                    </html>
+                </td>
             </tr>
+
         {% else %}
             <tr>
                 <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
-        {% block stylesheets %}
-            {{ parent() }}
-            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
-        {% endblock %}
+
         </tbody>
     </table>
 
+
 {% endblock %}
+
+
+
+
