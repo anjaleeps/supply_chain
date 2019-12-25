@@ -14,6 +14,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use App\Repository\ProductRepository;
+use App\Repository\DriverRepository;
+use App\Repository\DriverAssistantRepository;
+use App\Repository\OrdersRepository;
+use App\Repository\TruckRepository;
 
 /**
  * @Route("/manager")
@@ -150,4 +155,101 @@ class ManagerController extends AbstractController
 
         return $this->redirectToRoute('manager_index');
     }
+
+    /**
+     * @Route("/report/products", name="products_report", methods={"GET"})
+     */
+    public function generateProductReport(ProductRepository $productRepository)
+    {
+        $productSales = $productRepository->getProductOrderCount();
+        return $this->render('report/product.html.twig', [
+            'products'=> $productSales,
+        ]);
+    }
+
+    
+    /**
+     * @Route("/report/drivers", name="drivers_report", methods={"GET"})
+     */
+    public function generateDriverReport( DriverRepository $driverRepository){
+        $driverData = $driverRepository->getWorkedHours();
+        $drivers = [];
+       
+        foreach ( $driverData as $driver){
+            if (!(\array_key_exists($driver['city'], $drivers))){
+                $drivers[$driver['city']] = [];
+            }
+            array_push($drivers[$driver['city']], $driver);
+        }
+
+        return $this->render('report/driver.html.twig', [
+            'drivers'=> $drivers,
+        ]);
+    }
+
+     /**
+     * @Route("/report/driver_assistants", name="driver_assistants_report", methods={"GET"})
+     */
+    public function generateDriverAssistantReport( DriverAssistantRepository $driverAssistantRepository){
+        $driverAssistantData = $driverAssistantRepository->getWorkedHours();
+        $driverAssistants = [];
+    
+        foreach ( $driverAssistantData as $driverAssistant){
+            if (!(\array_key_exists($driverAssistant['city'], $driverAssistants))){
+                $driverAssistants[$driverAssistant['city']] = [];
+            }
+            array_push($driverAssistants[$driverAssistant['city']], $driverAssistant);
+        }
+    
+       
+        return $this->render('report/driver_assistant.html.twig', [
+            'driverAssistants'=> $driverAssistants,
+        ]);
+    }
+
+     /**
+     * @Route("/report/trucks", name="trucks_report", methods={"GET"})
+     */
+    public function generateTruckReport( TruckRepository $truckRepository){
+        $truckData = $truckRepository->getWorkedHours();
+        $trucks = [];
+    
+        foreach ( $truckData as $truck){
+            if (!(\array_key_exists($truck['city'], $trucks))){
+                $trucks[$truck['city']] = [];
+            }
+            array_push($trucks[$truck['city']], $truck);
+        }
+    
+        return $this->render('report/truck.html.twig', [
+            'trucks'=> $trucks,
+        ]);
+    }
+
+    
+     /**
+     * @Route("/report/sales", name="sales_report", methods={"GET"})
+     */
+    public function generateSalesReport(OrdersRepository $ordersRepository){
+        $salesData = $ordersRepository->getSalesReport();
+        $data=[];
+    
+        foreach ($salesData as $sd){
+ 
+            if (!(\array_key_exists($sd['city'], $data))){
+                $data[$sd['city']] = [];
+            }
+            if (!( \array_key_exists($sd['route_id'], $data[$sd['city']]))){
+                $data[$sd['city']][$sd['route_id']] = [];
+                
+            }
+            array_push( $data[$sd['city']][$sd['route_id']], $sd);
+        }
+
+        return $this->render('report/sales.html.twig', [
+            'sales' => $data,
+        ]);
+    }
+
+     
 }
