@@ -19,6 +19,9 @@ Route:
 Store:
     resource: App\Controller\StoreController
     type: annotation
+TrainSchedule:
+    resource: App\Controller\TrainScheduleController
+    type: annotation
 customer:
     resource: App\Controller\CustomerController
     type: annotation
