@@ -28,6 +28,41 @@ class ProductController extends AbstractController
     }
 
     /**
+     * @Route("/all", name="product_display", methods={"GET"})
+     *
+     */
+    public function allProducts(ProductRepository $productRepository): Response
+    {
+        return $this->render('product/all_products.html.twig', [
+            'products' => $productRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/cart", name="cart")
+     * 
+     * @IsGranted("ROLE_CUSTOMER")
+     */
+    public function cart()
+    {
+        return $this->render('product/cart.html.twig');
+
+    }
+
+    /**
+     * @Route("/addToCart/{id}", name="add_to_cart", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_CUSTOMER")
+     */
+    public function addToCart(Product $product): Response
+    {
+        return $this->render('product/cart.html.twig', [
+            'product' => $product,
+        ]);
+    }
+
+
+    /**
      * @Route("/new", name="product_new", methods={"GET","POST"})
      *
      * @IsGranted("ROLE_MANAGER")
@@ -99,4 +134,5 @@ class ProductController extends AbstractController
 
         return $this->redirectToRoute('product_index');
     }
+
 }
