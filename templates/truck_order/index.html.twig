@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TruckOrder index{% endblock %}
+
+{% block body %}
+    <h1>TruckOrder index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for truck_order in truck_orders %}
+            <tr>
+                <td>
+                    <a href="{{ path('truck_order_show', {'orders': truck_order.orders}) }}">show</a>
+                    <a href="{{ path('truck_order_edit', {'orders': truck_order.orders}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="1">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('truck_order_new') }}">Create new</a>
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Drivers{% endblock %}
+{% block title %}Orders{% endblock %}
 
 {% block body %}
     <h3>Your orders</h3>
@@ -20,26 +20,26 @@
         </tr>
         </thead>
         <tbody>
-        {% for driver in drivers %}
-            <tr>
-                <td>{{ driver.id }}</td>
-                <td>{{ driver.email }}</td>
-                <td>{{ driver.roles ? driver.roles|json_encode : '' }}</td>
-                <td>{{ driver.password }}</td>
-                <td>{{ driver.firstName }}</td>
-                <td>{{ driver.lastName }}</td>
-                <td>{{ driver.workHours ? driver.workHours|date('H:i:s') : '' }}</td>
-                <td>{{ driver.status }}</td>
-                <td>
-                    <a href="{{ path('driver_show', {'id': driver.id}) }}">show</a>
-                    <a href="{{ path('driver_edit', {'id': driver.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
+{#        {% for driver in drivers %}#}
+{#            <tr>#}
+{#                <td>{{ driver.id }}</td>#}
+{#                <td>{{ driver.email }}</td>#}
+{#                <td>{{ driver.roles ? driver.roles|json_encode : '' }}</td>#}
+{#                <td>{{ driver.password }}</td>#}
+{#                <td>{{ driver.firstName }}</td>#}
+{#                <td>{{ driver.lastName }}</td>#}
+{#                <td>{{ driver.workHours ? driver.workHours|date('H:i:s') : '' }}</td>#}
+{#                <td>{{ driver.status }}</td>#}
+{#                <td>#}
+{#                    <a href="{{ path('driver_show', {'id': driver.id}) }}">show</a>#}
+{#                    <a href="{{ path('driver_edit', {'id': driver.id}) }}">edit</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <td colspan="9">no records found</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
         </tbody>
     </table>
 

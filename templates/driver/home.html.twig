@@ -13,7 +13,7 @@
 {#   <a href="{{ path('picked', {'id':driver.id,'truck_schedule_id': truck_schedule_id }) }}" class="w3-button w3-black">Picked up</a>#}
         <a href="#" class="w3-button w3-black">Picked up</a><br> {#on click: count time until delivered -> workhours, change schedule status to picked up #}
         <a href="#" class="w3-button w3-black">Delivered</a><br>
-        <a href="#" class="w3-button w3-black">View orders</a>
+        <a href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
         {{ form(form) }}
     {% else %}
     <h1>You do not have any deliveries yet!</h1>
