@@ -47,4 +47,12 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getProductOrderCount(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM product_order_count LIMIT 20";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

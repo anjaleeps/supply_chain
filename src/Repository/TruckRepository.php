@@ -47,4 +47,13 @@ class TruckRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getWorkedHours(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM truck_details";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    
 }

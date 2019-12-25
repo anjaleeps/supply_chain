@@ -27,7 +27,7 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof Driver) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
@@ -50,4 +50,14 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $stmt -> bindParam(1,$ID);
         $stmt->execute();
     }
+
+
+    public function getWorkedHours(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM driver_details";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 }
