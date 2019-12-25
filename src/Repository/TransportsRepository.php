@@ -22,8 +22,10 @@ class TransportsRepository extends ServiceEntityRepository
 
     public function scheduleTrainTransport(int $order_id, Date $date){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "CALL schedule_train_transportation($order_id,$date)";
+        $sql = "CALL schedule_train_transportation(?,?)";
         $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$order_id);
+        $stmt ->bindParam(2,$date);
         $stmt->execute();
 
     }
