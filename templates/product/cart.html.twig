@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}cart{% endblock %}
+
+{% block body %}
+
+    <script>
+
+        function myFunction() {
+            alert("I am an alert box!");
+        }
+
+        const CART = {
+            KEY: 'cartkey',
+            contents: [],
+            init(){
+                let _contents = localStorage.getItem(CART.KEY);
+                if(_contents){
+                    CART.contents = JSON.parse(_contents);
+                }
+            },
+            async sync(){
+                let _cart = JSON.stringify(CART.contents);
+                await localStorage.setItem(CART.KEY, _cart);
+            },
+            add(){
+                        let obj = {
+                            id: "12",
+                            title: "name",
+                            qty: 1,
+                            itemPrice: 120
+                        };
+                        CART.contents.push(obj);
+                        CART.sync();
+            }
+            remove(id){
+                //remove an item entirely from CART.contents based on its id
+                CART.contents = CART.contents.filter(item=>{
+                    if(item.id !== id)
+                        return true;
+                });
+                CART.sync()
+            },
+            empty(){
+                //empty whole cart
+                CART.contents = [];
+                CART.sync()
+            }
+        }
+
+    </script>
+
+{% endblock %}
