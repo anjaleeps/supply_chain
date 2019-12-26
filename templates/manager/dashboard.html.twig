@@ -13,12 +13,12 @@
             <span></span>
         </div>
         <ul>
-            <li>Home</li>
-            <li>Product +</li>
+            <li><a href="{{ path('manager_dashboard') }}">Home</a></li>
+            <li><a href="{{ path('product_index') }}">Product +</a></li>
             <li>Reports</li>
         </ul>
     </div>
-
+    <div style="margin-left:5%">
         <h1>Placed Orders</h1>
 
         <table class="table">
@@ -109,6 +109,7 @@
 
             </tbody>
         </table>
+    </div>
 
 
 {% endblock %}
