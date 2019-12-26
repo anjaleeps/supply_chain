@@ -2,18 +2,18 @@ $(document).on('click','button.ajax',function(e){
     e.preventDefault();
     console.log('jer');
 
-    $that = $(this).parent().parent().parent().find('.order_id').text();
-    $day= new Date($(this).parent().find('input').val());
-    console.log($that);
-    console.log($day);
+    $order_id = $(this).parent().parent().parent().find('.order_id').text();
+    $date= $(this).parent().find('input').val();
+    console.log($order_id);
+    console.log($date);
 
     $.ajax({
-        url:"{{(path('manager_change_transport'))}}",
+        url: "/manager/dashboard/status",
         type: "POST",
         dataType: "json",
         data: {
-            'order_id':$that,
-            'date':$day
+            'order_id':$order_id,
+            'date':$date
             // you can pass some parameters to the controller here
         },
         success: function(data) {
