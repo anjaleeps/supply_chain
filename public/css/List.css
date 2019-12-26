@@ -1,0 +1,17 @@
+  .product-list-style{
+    display:block; 
+    border:solid; 
+    border-width:0 0 0 0; 
+    display:inline-block; 
+    margin:5px;
+    padding-top: 15px !important;
+    width:285px!important;
+    height: 375px!important;
+    /*box-shadow: 0 2px 3px #c1939e;*/
+  }
+
+
+  .product-list-style:hover{
+    color: #7f4956;
+    box-shadow: 0 10px 15px #c1939e;
+  }

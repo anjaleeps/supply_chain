@@ -109,7 +109,7 @@ class ManagerController extends AbstractController
 
         return $this->render('manager/dashboard.html.twig', [
             'placed' => $orders_placed,
-            'on_sore' => $orders_on_sore,
+            'on_store' => $orders_on_sore,
         ]);
     }
     /**

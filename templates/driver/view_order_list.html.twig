@@ -11,7 +11,7 @@
             <th>Order Id</th>
             <th>Customer Name</th>
             <th>Address</th>
-            <th>Phone number</th>
+            <th>Phone Number</th>
             <th>Delivered</th>
         </tr>
         </thead>
@@ -22,6 +22,7 @@
                 <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
                 <td>{{ truckOrder.getOrders().getCustomer().getAddress() }}</td>
                 <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
+                <td><div class="checkbox"><input type="checkbox" name="choices" ></div></td>
             </tr>
         {% else %}
             <tr>

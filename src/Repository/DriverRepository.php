@@ -36,34 +36,21 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return Driver[] Returns an array of Driver objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function calculateWorkHours(int $ID){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "CREATE EVENT 'zero_work_hours'
+                ON SCHEDULE
+                EVERY 168 HOUR STARTS '2019-12-25 00:00:00'
+                ON COMPLETION PRESERVE
+                ENABLE
+                DO BEGIN
+                    UPDATE driver SET work_hours = 0 WHERE ID=?;
+                END";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$ID);
+        $stmt->execute();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Driver
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 
     public function getWorkedHours(){
         $conn= $this->getEntityManager()->getConnection();
@@ -72,4 +59,5 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
 }

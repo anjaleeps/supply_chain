@@ -19,6 +19,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 
 /**
@@ -123,6 +124,43 @@ class DriverController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/edit", name="driver_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Driver $driver): Response
+    {
+        $form = $this->createForm(DriverType::class, $driver);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('driver_index');
+        }
+
+        return $this->render('driver/edit.html.twig', [
+            'driver' => $driver,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="driver_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Driver $driver): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $driver->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($driver);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('driver_index');
+    }
+
+
+
+
+    /**
      * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
      */
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
@@ -175,7 +213,7 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="driver_show", methods={"GET"})
+     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
      */
     public function show(Driver $driver): Response
     {
@@ -185,36 +223,16 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="driver_edit", methods={"GET","POST"})
+     * @Route("/{id}/updateWorkHours", name="driver_show", methods={"GET"})
      */
-    public function edit(Request $request, Driver $driver): Response
-    {
-        $form = $this->createForm(DriverType::class, $driver);
-        $form->handleRequest($request);
+//    public function updateWorkHours(Driver $driver): Response
+//    {
+//        $stopwatch = new Stopwatch();
+//// starts event named 'eventName'
+//        $stopwatch->start('eventName');
+//// ... some code goes here
+//        $event = $stopwatch->stop('eventName');
+//        ]);
+//    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('driver_index');
-        }
-
-        return $this->render('driver/edit.html.twig', [
-            'driver' => $driver,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="driver_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Driver $driver): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $driver->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($driver);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('driver_index');
-    }
 }
