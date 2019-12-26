@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
+    <link rel="stylesheet" type="text/css" href="../css/toggle_button.css">
+{% endblock %}
+
+{% block body %}
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Manager Options</h3>
+        </div>
+        <div class="toggle-btn" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="list-unstyled components">
+            <li class="active"><a href="{{ path('manager_dashboard') }}">Home</a></li>
+            <li><a href="{{ path('product_index') }}">Product +</a></li>
+            <li>Reports</li>
+            <li>
+                <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Accounts</a>
+                <ul class="collapse list-unstyled" id="accountSubmenu">
+                    <li>
+                        <a href="#">Driver</a>
+                    </li>
+                    <li>
+                        <a href="#">Driver Assistant</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../js/button.js"></script>
+    <script src="../js/side_bar.js"></script>
+{% endblock %}
