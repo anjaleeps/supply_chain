@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\DriverAssistant;
 use App\Entity\Transports;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -20,7 +21,7 @@ class TransportsRepository extends ServiceEntityRepository
         parent::__construct($registry, Transports::class);
     }
 
-    public function scheduleTrainTransport(int $order_id, Date $date){
+    public function scheduleTrainTransport(int $order_id, string $date){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "CALL schedule_train_transportation(?,?)";
         $stmt = $conn->prepare($sql);
