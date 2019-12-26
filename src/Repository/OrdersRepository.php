@@ -62,4 +62,21 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function getQuarterlyReport(string $year){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select count(distinct(c.id)) as customer_count, count(distinct(o.id)) as order_count,
+                sum(op.quantity) as product_count, sum(op.quantity*p.unit_price) as revenue, 
+                quarter(o.date_completed) as quarter, o.date_completed from orders o 
+                inner join customer c on c.id=o.customer_id
+                inner join order_product op on op.orders_id=o.id
+                inner join product p on p.id=op.product_id
+                group by quarter(o.date_completed) 
+                having year(o.date_completed) = ? 
+                order by quarter(o.date_completed)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $year);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

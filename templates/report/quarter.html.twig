@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="../../css/report.css">
+{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive report-table">
+                {% if sales|length > 0 %}
+                    <table class="table table-striped">
+                        <thead class="col-names">
+                            <tr>
+                                <th scope="col">Quarter</th>
+                                <th scope="col">Number of Sold Products</th>
+                                <th scope="col"> Number of Completed Orders </th>
+                                <th scope="col">Number of Served Customers</th>
+                                <th scope="col">Revenue</th>
+                               
+                            </tr>
+
+                        </thead>
+                        <tbody class="col-body">              
+                            {% for row in sales %}
+                            <tr>
+                                <td class="text-center">{{ loop.index }}</td>
+                                <td>{{ row['product_count']? row['product_count']: 'Not recorded'}}</td>
+                                <td>{{ row['order_count'] ? row['order_count'] : 'Not Recorded' }}</td>
+                                <td>{{ row['customer_count'] ? row['customer_count'] : 'Not Recorded' }}</td>
+                                <td>{{ row['revenue'] ?  row['revenue'] : 'Not recorder' }}</td>
+                            </tr>
+                            {% endfor %}                    
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="lead">No Products available</p>
+                {% endif %} 
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+   {{ parent() }} 
+{% endblock %}

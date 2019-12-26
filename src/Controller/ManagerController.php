@@ -22,6 +22,7 @@ use App\Repository\DriverRepository;
 use App\Repository\DriverAssistantRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\TruckRepository;
+use App\Repository\CustomerRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -123,7 +124,7 @@ class ManagerController extends AbstractController
         //$date = \DateTime::createFromFormat('Y-m-d', $date);
         //dd($date);
         $transportsRepository->scheduleTrainTransport($order_id, $date);
-        return new Response( 'success');
+        return new Response('success');
     }
 
     /**
@@ -288,6 +289,68 @@ class ManagerController extends AbstractController
 
         return $this->render('report/sales.html.twig', [
             'sales' => $data,
+        ]);
+    }
+
+    /**
+     * @Route("/report/highest", name="highest_report", methods={"GET"})
+     */
+    public function generateHighestSaleData(ProductRepository $productRepository)
+    {
+        $highestSoldProducts = $productRepository->getHighestSoldProducts();
+        $highestSoldCategories = $productRepository->getHighestSoldCategories();
+        $data = [];
+
+        for ($i = 0; $i < count($highestSoldProducts); $i++) {
+            $data[$i]['year']=$highestSoldProducts[$i]['year'];
+            $data[$i]['month']=$highestSoldProducts[$i]['month'];
+            $data[$i]['product_name']=$highestSoldProducts[$i]['product_name'];
+            $data[$i]['product_sales_quantity']=$highestSoldProducts[$i]['max_sales_quantity'];
+            $data[$i]['category_name']=$highestSoldCategories[$i]['category_name'];
+            $data[$i]['category_sales_quantity']=$highestSoldCategories[$i]['max_sales_quantity'];
+        }
+    
+        return $this->render('report/highest.html.twig', [
+            'sales'=>$data
+        ]);
+    }
+
+    /**
+     * @Route("/report/quarter", name="quarterly_report", methods={"GET"})
+     */
+    public function generateQuarterlyReport($year='2019', OrdersRepository $ordersRepository, Request $request){
+        if ($request->request->get('year')){
+            $year = $request->request->get('year');
+        }
+        $quarterReportData = $ordersRepository->getQuarterlyReport($year);
+        $data=[
+            1=> [],
+            2=> [],
+            3=> [],
+            4=> []
+        ];
+        
+        foreach ($quarterReportData as $row){
+            $quarter = $row['quarter'];
+            $data[$quarter] = $row;
+        }
+
+       
+
+        return $this->render('report/quarter.html.twig', [
+            'sales' => $quarterReportData
+        ]);
+
+    }
+
+     /**
+     * @Route("/report/customer", name="customer_report", methods={"GET"})
+     */
+    public function generateCustomerReport(CustomerRepository $customerRepository){
+        $customerData = $customerRepository->getCustomerReport();
+        
+        return $this->render('report/customer.html.twig', [
+            'customers'=> $customerData
         ]);
     }
 }
