@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TransportsRepository")
  */
@@ -28,6 +29,7 @@ class Transports
      * @ORM\JoinColumn(nullable=false)
      */
     private $orders;
+
 
     public function getTrainSchedule(): ?TrainSchedule
     {
