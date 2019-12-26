@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Driver;
 use App\Entity\DriverAssistant;
 use App\Form\DriverAssistantType;
+use App\Form\DriverButtonType;
 use App\Repository\DriverAssistantRepository;
+use App\Repository\TruckScheduleRepository;
 use App\Security\DriverAssistantAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -110,16 +113,6 @@ class DriverAssistantController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="driver_assistant_show", methods={"GET"})
-     */
-    public function show(DriverAssistant $driverAssistant): Response
-    {
-        return $this->render('driver_assistant/show.html.twig', [
-            'driver_assistant' => $driverAssistant,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="driver_assistant_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, DriverAssistant $driverAssistant): Response
@@ -152,4 +145,46 @@ class DriverAssistantController extends AbstractController
 
         return $this->redirectToRoute('driver_assistant_index');
     }
+    /**
+     * @Route("/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
+     */
+    public function home($id, DriverAssistant $driverAssistant, TruckScheduleRepository $truckScheduleRepository): Response
+    {
+
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver_assistant' => $id,
+//            'driver_assistant' => $driverAssistant->getId(),
+            'status' => 'ready',
+        ]);
+
+        $truck_schedule_id=$truckSchedule->getId();
+        $truck_no=$truckSchedule->getTruck()->getTruckNo();
+        $route=$truckSchedule->getRoute()->getDecription();
+
+        $form = $this->createForm(DriverButtonType::class);
+
+        if($form->get('picked')->isClicked()){
+            $truckScheduleRepository->changeStatusPicked('1');
+        }
+
+
+        return $this->render('driver_assistant/home.html.twig', [
+            'truck_schedule_id'=> $truck_schedule_id,
+            'driver_assistant' => $driverAssistant,
+            'truck_no'=>$truck_no,
+            'route'=>$route,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
+     */
+    public function show(DriverAssistant $driverAssistant): Response
+    {
+        return $this->render('driver_assistant/show.html.twig', [
+            'driver_assistant' => $driverAssistant,
+        ]);
+    }
+
 }

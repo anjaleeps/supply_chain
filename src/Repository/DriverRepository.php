@@ -47,8 +47,9 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
                     UPDATE driver SET work_hours = 0 WHERE ID=?;
                 END";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$ID);
+        $stmt -> bindParam("i",$_POST[$ID]);
         $stmt->execute();
+        return $stmt->fetchAll();
     }
 
 

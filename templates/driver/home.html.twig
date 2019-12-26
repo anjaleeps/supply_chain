@@ -16,7 +16,9 @@
         <a href="#" class="w3-button w3-black">Delivered</a><br>
 
         <a href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
-        <div class="checkbox"><label><input type="button" name="choices" id={{"Picked"}} ></label></div>
+{#        <div class="checkbox"><label><input type="button" name="choices" id={{"Picked"}} ></label></div>#}
+{#        <input type="submit" name="picked" class="button" value="Picked" />#}
+
 
         {{ form(form) }}
     {% else %}

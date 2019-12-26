@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 
@@ -161,7 +161,7 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     * @Route("/{id}/driver_home", name="driver_home", methods={"POST"})
      */
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
     {
@@ -176,15 +176,15 @@ class DriverController extends AbstractController
         $truck_no=$truckSchedule->getTruck()->getTruckNo();
         $route=$truckSchedule->getRoute()->getDecription();
 
-//
-//        $form = $this->createFormBuilder()
-//            ->add('picked', SubmitType::class, ['label' => 'Picked up'])
-//            ->add('delivered', SubmitType::class, ['label' => 'Delivered'])
-//            ->getForm();
-        $form = $this->createForm(DriverButtonType::class);
+
+        $form = $this->createFormBuilder()
+            ->add('picked', SubmitType::class, ['label' => 'Picked up'])
+            ->add('delivered', SubmitType::class, ['label' => 'Delivered'])
+            ->getForm();
+//        $form = $this->createForm(DriverButtonType::class);
 
         if($form->get('picked')->isClicked()){
-            $truckScheduleRepository->changeStatusPicked('1');
+            echo "yay";
         }
 
 
