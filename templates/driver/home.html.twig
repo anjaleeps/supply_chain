@@ -6,31 +6,25 @@
 <h4>Welcome {{ driver.firstName }}!</h4>
     <a href="{{ path('driver_show',{'id': driver.id}) }}" class="w3-button w3-black">My profile</a>
 
-    {% if truck_no!=null %}
+    {% if truck_no!='null' %}
         <h1>You have a delivery!</h1>
         <p>Your truck number: {{ truck_no }}</p><br>
-    <p>Route: {{ route }}</p><br>
-
-{#   <a href="{{ path('picked', {'id':driver.id,'truck_schedule_id': truck_schedule_id }) }}" class="w3-button w3-black">Picked up</a>#}
-        <a href="#" class="w3-button w3-black">Picked up</a><br> {#on click: count time until delivered -> workhours, change schedule status to picked up #}
-        <a href="#" class="w3-button w3-black">Delivered</a><br>
-
+        <p>Route: {{ route }}</p><br>
         <a href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
-{#        <div class="checkbox"><label><input type="button" name="choices" id={{"Picked"}} ></label></div>#}
-{#        <input type="submit" name="picked" class="button" value="Picked" />#}
+        <form>
+            <input class="ajax" type="button" name="Picked" id="Picked" value="Picked">
+            <input class="ajax" type="button" name="Delivered" id="Delivered" value="Delivered">
+            <input id="user_id" type="hidden" value="{{ driver.id }}">
+            <input id="truck_schedule_id" type="hidden" value="{{ truck_schedule_id }}">
+        </form>
 
-
-        {{ form(form) }}
     {% else %}
     <h1>You do not have any deliveries yet!</h1>
     {% endif %}
 
-{#    {{ render(controller(#}
-{#        'App\\Controller\\ArticleController::recentArticles',#}
-{#        { 'max': 3 }#}
-{#    )) }}#}
-
 {% endblock %}
-{% block javascripts %}
 
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../../js/driverhomebutton.js"></script>
 {% endblock %}

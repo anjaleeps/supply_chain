@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Driver;
+use App\Entity\TruckSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -51,7 +52,6 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
 
     public function getWorkedHours(){
         $conn= $this->getEntityManager()->getConnection();
