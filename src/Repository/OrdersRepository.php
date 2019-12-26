@@ -47,4 +47,19 @@ class OrdersRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getSalesReport(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select YEAR(o.date_completed) as year, MONTH(o.date_completed) as month, c.city as city, o.route_id as route_id, 
+                sum(op.quantity) as product_count, sum(p.unit_price*op.quantity) as earnings, count(o.id) as order_count
+                from orders o 
+                inner join order_product op on o.id=op.orders_id 
+                inner join product p on p.id=op.product_id
+                inner join customer c on c.id=o.customer_id
+                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id
+                order by year desc, month desc;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

@@ -64,4 +64,13 @@ class DriverAssistantRepository extends ServiceEntityRepository implements Passw
         ;
     }
     */
+
+    public function getWorkedHours(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM driver_assistant_details";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    
 }

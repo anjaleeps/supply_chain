@@ -136,6 +136,9 @@
             "./config/bootstrap.php"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v4.4.2"
+    },
     "symfony/debug": {
         "version": "v4.4.1"
     },
@@ -371,6 +374,12 @@
     },
     "symfony/yaml": {
         "version": "v4.4.1"
+    },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.2"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.0.0"
     },
     "twig/extra-bundle": {
         "version": "v3.0.0"

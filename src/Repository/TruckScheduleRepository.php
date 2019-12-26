@@ -19,17 +19,16 @@ class TruckScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, TruckSchedule::class);
     }
 
-    public function changeStatusPicked($truck_schedule_id): void
-    {
-        $this->createQueryBuilder('t')
-            ->update('App:TruckSchedule')
-            ->set('t.status','picked')
-            ->where('t.id = :id')
-            ->setParameter('id', $truck_schedule_id)
-            ->getQuery()
-            ->execute();
-    }
-
+//    public function changeStatusPicked($truck_schedule_id): void
+//    {
+//        $this->createQueryBuilder('t')
+//            ->update('App:TruckSchedule')
+//            ->set('t.status','picked')
+//            ->where('t.id = :id')
+//            ->setParameter('id', $truck_schedule_id)
+//            ->getQuery()
+//            ->execute();
+//    }
 
 
     // /**
