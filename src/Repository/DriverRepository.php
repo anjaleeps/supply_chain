@@ -9,6 +9,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use \DateInterval;
+use \DateTime;
 
 /**
  * @method Driver|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,20 +39,32 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $this->_em->flush();
     }
 
-    public function calculateWorkHours(int $ID){
+//    public function calculateWorkHours(int $ID){
+//        $conn = $this->getEntityManager()->getConnection();
+//        $sql = "CREATE EVENT 'zero_work_hours'
+//                ON SCHEDULE
+//                EVERY 168 HOUR STARTS '2019-12-25 00:00:00'
+//                ON COMPLETION PRESERVE
+//                ENABLE
+//                DO BEGIN
+//                    UPDATE driver SET work_hours = 0 WHERE ID=?;
+//                END";
+//        $stmt = $conn->prepare($sql);
+//        $stmt -> bindParam("i",$_POST[$ID]);
+//        $stmt->execute();
+//        return $stmt->fetchAll();
+//    }
+    public function calculateWorkHours(){
+
+    }
+
+    public function updateWorkHours(int $id, string $elapsed_time ){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "CREATE EVENT 'zero_work_hours'
-                ON SCHEDULE
-                EVERY 168 HOUR STARTS '2019-12-25 00:00:00'
-                ON COMPLETION PRESERVE
-                ENABLE
-                DO BEGIN
-                    UPDATE driver SET work_hours = 0 WHERE ID=?;
-                END";
+        $sql = "UPDATE driver SET work_hours=? WHERE id=?";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam("i",$_POST[$ID]);
+        $stmt -> bindParam(1,$elapsed_time);
+        $stmt -> bindParam(2,$id);
         $stmt->execute();
-        return $stmt->fetchAll();
     }
 
     public function getWorkedHours(){

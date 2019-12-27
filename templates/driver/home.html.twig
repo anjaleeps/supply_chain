@@ -8,6 +8,7 @@
 
     {% if truck_no!='null' %}
         <h1>You have a delivery!</h1>
+        {{ time_start }}
         <p>Your truck number: {{ truck_no }}</p><br>
         <p>Route: {{ route }}</p><br>
         <a href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>

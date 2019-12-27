@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Validator\Constraints\Date;
+use \DateTime;
 
 
 /**
@@ -175,12 +177,15 @@ class DriverController extends AbstractController
             $truck_schedule_id=$truckSchedule->getId();
             $truck_no=$truckSchedule->getTruck()->getTruckNo();
             $route=$truckSchedule->getRoute()->getDecription();
+            $start=$driver->getWorkHours();
+            $time_start=$start->format('Y-m-d H:i:s');
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver' => $driver,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
+                'time_start'=>$time_start,
             ]);
         }
         else
@@ -195,18 +200,37 @@ class DriverController extends AbstractController
     /**
      * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
      */
-    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, Request $request)
+    public function scheduleStatusPicked($id,Driver $driver,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
     {
 
         $status = $request->request->get("status");
-        var_dump($status);
         if ($status=='Picked')
         {
-            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+//            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+              $time_start = $truckScheduleRepository->returnCurrentTime();
+              $driver->setWorkHours($time_start);
+//            $time_start = new DateTime(date("Y-m-d H:i:s",time()));
+//            $time_start = new DateTime();
+//            $time_start->
+//            $time_start = date_create_from_format('H:i:s', date("H:i:s"));
+//            $driver->setWorkHours($time_start);
+//            $time_start = new \DateTime('now');
         }
         elseif ($status=='Delivered')
         {
-            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+//            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+
+
+              $time_start=$driver->getWorkHours();
+              $driverRepository->updateWorkHours($id, $time_start->format('Y-m-d H:i:s'));
+//              $time_start=$start->format('Y-m-d H:i:s');
+//
+//            $time_end = new DateTime('now');
+//            $diff  = $time_start->diff($time_end);
+////            $driver->setWorkHours($time_elapsed);
+//            $time_elapsed = $diff->format('%h:%i:%s');
+////            echo $time_elapsed;
+//            $driverRepository->calculateWorkHours($id, $time_elapsed);
         }
 
         return new Response( 'success');
@@ -222,6 +246,20 @@ class DriverController extends AbstractController
         return $this->render('driver/show.html.twig', [
             'driver' => $driver,
         ]);
+    }
+    public function getTimeDiff($dtime,$atime)
+    {
+        $nextDay = $dtime>$atime?1:0;
+        $dep = explode(':',$dtime);
+        $arr = explode(':',$atime);
+        $diff = abs(mktime($dep[0],$dep[1],0,date('n'),date('j'),date('y'))-mktime($arr[0],$arr[1],0,date('n'),date('j')+$nextDay,date('y')));
+        $hours = floor($diff/(60*60));
+        $mins = floor(($diff-($hours*60*60))/(60));
+        $secs = floor(($diff-(($hours*60*60)+($mins*60))));
+        if(strlen($hours)<2){$hours="0".$hours;}
+        if(strlen($mins)<2){$mins="0".$mins;}
+        if(strlen($secs)<2){$secs="0".$secs;}
+        return $hours.':'.$mins.':'.$secs;
     }
 
     /**
