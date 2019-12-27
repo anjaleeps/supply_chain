@@ -4,33 +4,14 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
     <link rel="stylesheet" type="text/css" href="../css/toggle_button.css">
+    <link rel="stylesheet" type="text/css" href="../css/table.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 {% block body %}
 
     <div class="wrapper">
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h4>Manager Options</h4>
-            </div>
 
-            <ul class="list-unstyled components">
-                <li class="active"><a href="{{ path('manager_dashboard') }}">Home</a></li>
-                <li><a href="{{ path('product_index') }}">Product +</a></li>
-                <li><a href="{{ path('sales_report') }}">Reports</a></li>
-                <li>
-                    <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Accounts</a>
-                    <ul class="collapse list-unstyled" id="accountSubmenu">
-                        <li>
-                            <a href="{{ path('driver_registration') }}">Driver</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('driver_assistant_registration') }}">Driver Assistant</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+        {% include ('manager/managerSideBar.html.twig') %}
 
     <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

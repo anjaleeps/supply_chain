@@ -30,12 +30,12 @@
                 <td>{{ product.picture }}</td>
                 <td>{{ product.category }}</td>
                 <td>{{ product.status }}</td>
-                {% if is_granted('ROLE_Manager')  %}
+
                     <td>
                         <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
                         <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
                     </td>
-                {% endif %}
+
             </tr>
         {% else %}
             <tr>
@@ -44,7 +44,7 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if is_granted('ROLE_Manager')  %}
+
         <a href="{{ path('product_new') }}">Create new</a>
-    {% endif %}
+
 {% endblock %}
