@@ -3,11 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\Driver;
+use App\Entity\TruckSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use \DateInterval;
+use \DateTime;
 
 /**
  * @method Driver|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,7 +30,7 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof Driver) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
@@ -36,32 +39,40 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return Driver[] Returns an array of Driver objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+//    public function calculateWorkHours(int $ID){
+//        $conn = $this->getEntityManager()->getConnection();
+//        $sql = "CREATE EVENT 'zero_work_hours'
+//                ON SCHEDULE
+//                EVERY 168 HOUR STARTS '2019-12-25 00:00:00'
+//                ON COMPLETION PRESERVE
+//                ENABLE
+//                DO BEGIN
+//                    UPDATE driver SET work_hours = 0 WHERE ID=?;
+//                END";
+//        $stmt = $conn->prepare($sql);
+//        $stmt -> bindParam("i",$_POST[$ID]);
+//        $stmt->execute();
+//        return $stmt->fetchAll();
+//    }
+    public function calculateWorkHours(){
 
-    /*
-    public function findOneBySomeField($value): ?Driver
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
+
+    public function updateWorkHours(int $id, string $elapsed_time ){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "UPDATE driver SET work_hours=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$elapsed_time);
+        $stmt -> bindParam(2,$id);
+        $stmt->execute();
+    }
+
+    public function getWorkedHours(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM driver_details";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 }

@@ -19,45 +19,29 @@ class TruckScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, TruckSchedule::class);
     }
 
-    public function changeStatusPicked($truck_schedule_id): void
-    {
-        $this->createQueryBuilder('t')
-            ->update('App:TruckSchedule')
-            ->set('t.status','picked')
-            ->where('t.id = :id')
-            ->setParameter('id', $truck_schedule_id)
-            ->getQuery()
-            ->execute();
+
+    public function setStatusPicked(int $id ){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "UPDATE truck_schedule SET status='picked' WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$id);
+        $stmt->execute();
     }
 
-
-
-    // /**
-    //  * @return TruckSchedule[] Returns an array of TruckSchedule objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function setStatusDelivered(int $id ){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "UPDATE truck_schedule SET status='delivered' WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$id);
+        $stmt->execute();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?TruckSchedule
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    public function returnCurrentTime(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT CURRENT_TIMESTAMP()";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$id);
+        $stmt->execute();
+        $stmt->fetchAll();
     }
-    */
 }

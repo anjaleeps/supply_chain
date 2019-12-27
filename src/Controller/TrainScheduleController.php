@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\TrainSchedule;
 use App\Form\TrainScheduleType;
 use App\Repository\TrainScheduleRepository;
+use App\Repository\TransportsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/train/schedule")
+ * @Route("/")
  */
 class TrainScheduleController extends AbstractController
 {
@@ -46,6 +48,23 @@ class TrainScheduleController extends AbstractController
             'train_schedule' => $trainSchedule,
             'form' => $form->createView(),
         ]);
+    }
+
+    
+    /**
+     * @Route("/store_manager/train/update", name="train_status_update", methods={"POST"})
+     * 
+     * @IsGranted("ROLE_STORE_MANAGER")
+     */
+    public function updateTrainStatus(Request $request, TransportsRepository $transportsRepository){
+        $train_id = $request->request->get('train_id');
+        $user_id = $this->getUser()->getId();
+        
+        $rows = $transportsRepository->updateTrainStatus($train_id, $user_id);
+        
+        return new Response('success');
+      
+
     }
 
     /**

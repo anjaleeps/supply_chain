@@ -1,61 +1,142 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Placed Orders{% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
+    <link rel="stylesheet" type="text/css" href="../css/toggle_button.css">
+    <link rel="stylesheet" type="text/css" href="../css/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+{% endblock %}
 {% block body %}
-    <h1>Placed Orders</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Products</th>
-            <th>City</th>
-            <th>Route</th>
-            <th>Train Date</th>
+    <div class="wrapper">
 
-        </tr>
-        </thead>
-        <tbody>
+        {% include ('manager/managerSideBar.html.twig') %}
 
-        {% for order in placed %}
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <h2>Placed Orders</h2>
+
+        <table class="table">
+            <thead>
             <tr>
-                <td class="order_id">{{ order.getId() }}</td>
-                <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
-                <td>{% for product in order.getOrderProducts() %}
-                    {{product.getProduct().getName()}}
-                    {% endfor %}
-                </td>
-                <td>{{ order.getRoute().getStore().getCity()}}</td>
-                <td>{{ order.getRoute().getDecription()}}</td>
-                <td>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Products</th>
+                <th>City</th>
+                <th>Route</th>
+                <th>Train Date</th>
 
-                    <form >
-                        Train Date: <input type="date" name="TrainDate" id="TrainDate">
-                        <button class="ajax">Submit</button>
-                        <div id="ajax-results">here comes the result</div>
-                    </form>
-
-
-                </td>
             </tr>
+            </thead>
+            <tbody>
 
-        {% else %}
+            {% for order in placed %}
+                <tr>
+                    <td class="order_id">{{ order.getId() }}</td>
+                    <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                    <td>{% for product in order.getOrderProducts() %}
+                        {{product.getProduct().getName()}}
+                        {% endfor %}
+                    </td>
+                    <td>{{ order.getRoute().getStore().getCity()}}</td>
+                    <td>{{ order.getRoute().getDecription()}}</td>
+                    <td>
+
+                        <form >
+                            Train Date: <input type="date" name="TrainDate" id="TrainDate">
+                            <button class="ajax">Submit</button>
+                        </form>
+
+
+                    </td>
+                </tr>
+
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+        <br>
+        <h2>On Store Orders</h2>
+
+        <table class="table">
+            <thead>
             <tr>
-                <td colspan="5">no records found</td>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Products</th>
+                <th>City</th>
+                <th>Route</th>
+                <th>Schedule To Truck</th>
+
             </tr>
-        {% endfor %}
+            </thead>
+            <tbody>
 
-        </tbody>
-    </table>
+            {% for order in on_store %}
+                <tr>
+                    <td class="order_id">{{ order.getId() }}</td>
+                    <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                    <td>{% for product in order.getOrderProducts() %}
+                            {{product.getProduct().getName()}}
+                        {% endfor %}
+                    </td>
+                    <td>{{ order.getRoute().getStore().getCity()}}</td>
+                    <td>{{ order.getRoute().getDecription()}}</td>
+                    <td>
+                        <form >
+                            <label class="switch">
+                                <input type="checkbox" name='on_truck' value='on_truck'>
+                                <span class="slider round"></span>
 
+                            </label>
+{#                            <input type='checkbox' name='on_truck' value='on_truck'>On Truck#}
+                        </form>
+
+
+                    </td>
+                </tr>
+
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent()  }}
     <script src="../js/button.js"></script>
+    <script src="../js/side_bar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 {% endblock %}
 
 

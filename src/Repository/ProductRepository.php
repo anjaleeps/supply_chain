@@ -47,4 +47,42 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getProductOrderCount(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM product_order_count LIMIT 20";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getHighestSoldProducts(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select product_name, max(sales_quantity) as max_sales_quantity, month, year from
+                (select p.name as product_name, sum(op.quantity) as sales_quantity, month(o.date_completed) as month, year(o.date_completed) as year 
+                from product p inner join order_product op on op.product_id=p.id
+                inner join orders o on o.id=op.orders_id
+                group by year, month, op.product_id 
+                order by year, month, sum(op.quantity)) as t
+                group by year, month
+                order by year desc, month desc limit 12";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();   
+    }
+
+    public function getHighestSoldCategories(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select category_name, max(sales_quantity) as max_sales_quantity, month, year from 
+                (select p.category as category_name, sum(op.quantity) as sales_quantity, month(o.date_completed) as month, year(o.date_completed) as year 
+                from product p inner join order_product op on op.product_id=p.id 
+                inner join orders o on o.id=op.orders_id 
+                group by year, month, p.category
+                order by year, month, sum(op.quantity)) as t
+                group by year, month
+                order by year desc, month desc limit 12";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();   
+    }
 }

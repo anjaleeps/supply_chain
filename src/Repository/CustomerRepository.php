@@ -64,4 +64,19 @@ class CustomerRepository extends ServiceEntityRepository implements PasswordUpgr
         ;
     }
     */
+
+    public function getCustomerReport(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select count(distinct(o.id)) as order_count, sum(op.quantity) as product_count, 
+                sum(op.quantity*p.unit_price) as paid, c.city, c.first_name, c.last_name, c.id
+                from customer c
+                inner join orders o on c.id=o.customer_id
+                inner join order_product op on op.orders_id=o.id
+                inner join product p on p.id=op.product_id
+                group by c.id
+                order by order_count";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

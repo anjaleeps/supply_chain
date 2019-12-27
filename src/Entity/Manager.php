@@ -52,6 +52,7 @@ class Manager implements UserInterface
      */
     private $last_name;
 
+
     public function getId(): ?int
     {
         return $this->id;

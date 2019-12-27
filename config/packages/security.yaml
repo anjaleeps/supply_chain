@@ -8,6 +8,9 @@ security:
             algorithm: bcrypt
         App\Entity\DriverAssistant:
             algorithm: bcrypt
+        App\Entity\StoreManager:
+            algorithm: bcrypt
+
 
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -25,10 +28,16 @@ security:
             entity:
                 class: App\Entity\Manager
                 property: email
+        store_manager_users:
+            entity:
+                class: App\Entity\StoreManager
+                property: email
         customer_users: 
             entity:
                 class: App\Entity\Customer
                 property: email
+        # used to reload user from session & other features (e.g. switch_user)
+       
         # all_users:
         #     chain:
         #         providers: ['customer_users', 'driver_assistant_users', 'driver_users', 'manager_users']
@@ -77,6 +86,16 @@ security:
                 path: logout_manager
                 # where to redirect after logout
                 # target: app_any_route
+        store_manager_area:
+            anonymous: lazy
+            pattern: ^/store_manager
+            provider: store_manager_users
+            guard:
+                authenticators:
+                    - App\Security\StoreManagerAuthenticator
+                entry_point: App\Security\StoreManagerAuthenticator
+            logout:
+                path: logout_store_manager
         customer_area:
             anonymous: lazy
             pattern: ^/
@@ -87,6 +106,10 @@ security:
                 entry_point: App\Security\CustomerAuthenticator
             logout:
                 path: logout_customer
+                # where to redirect after logout
+                # target: app_any_route
+        
+        
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -101,9 +124,15 @@ security:
     access_control:
         # - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/manager/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/store_manager/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/driver/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/driver_assistant/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/manager/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/store_manager/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/driver/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/driver_assistant/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/manager, roles: ROLE_MANAGER }
         # - { path: ^/driver, roles: ROLE_DRIVER }
         # - { path: ^/driver_assistant, roles: ROLE_DRIVER_ASSISTANT }

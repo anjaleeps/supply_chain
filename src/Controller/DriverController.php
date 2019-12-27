@@ -18,7 +18,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Validator\Constraints\Date;
+use \DateTime;
 
 
 /**
@@ -123,68 +126,6 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
-     */
-    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
-    {
-
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-//            'driver' => $driver->getId(),
-            'status' => 'ready',
-        ]);
-
-        $truck_schedule_id=$truckSchedule->getId();
-        $truck_no=$truckSchedule->getTruck()->getTruckNo();
-        $route=$truckSchedule->getRoute()->getDecription();
-
-//
-//        $form = $this->createFormBuilder()
-//            ->add('picked', SubmitType::class, ['label' => 'Picked up'])
-//            ->add('delivered', SubmitType::class, ['label' => 'Delivered'])
-//            ->getForm();
-        $form = $this->createForm(DriverButtonType::class);
-
-        if($form->get('picked')->isClicked()){
-            $truckScheduleRepository->changeStatusPicked('1');
-        }
-
-
-        return $this->render('driver/home.html.twig', [
-            'truck_schedule_id'=> $truck_schedule_id,
-            'driver' => $driver,
-            'truck_no'=>$truck_no,
-            'route'=>$route,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{truck_schedule_id}/picked", name="picked", methods={"GET"})
-     */
-    public function scheduleStatusPicked($truck_schedule_id,TruckScheduleRepository $truckScheduleRepository): void
-    {
-//        $truckSchedule = $truckScheduleRepository->findOneBy([
-//            'driver_id' => $id,
-//            'status' => 'ready',
-//        ]);
-
-        $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
-    }
-
-
-
-    /**
-     * @Route("/{id}", name="driver_show", methods={"GET"})
-     */
-    public function show(Driver $driver): Response
-    {
-        return $this->render('driver/show.html.twig', [
-            'driver' => $driver,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="driver_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Driver $driver): Response
@@ -217,4 +158,121 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+
+
+
+
+    /**
+     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     */
+    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
+    {
+
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver' => $id,
+            'status' => 'ready',
+        ]);
+        if ($truckSchedule!=null)
+        {
+            $truck_schedule_id=$truckSchedule->getId();
+            $truck_no=$truckSchedule->getTruck()->getTruckNo();
+            $route=$truckSchedule->getRoute()->getDecription();
+            $start=$driver->getWorkHours();
+            $time_start=$start->format('Y-m-d H:i:s');
+
+            return $this->render('driver/home.html.twig', [
+                'truck_schedule_id'=> $truck_schedule_id,
+                'driver' => $driver,
+                'truck_no'=>$truck_no,
+                'route'=>$route,
+                'time_start'=>$time_start,
+            ]);
+        }
+        else
+        {
+            return $this->render('driver/home.html.twig', [
+                'driver' => $driver,
+                'truck_no'=>'null',
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
+     */
+    public function scheduleStatusPicked($id,Driver $driver,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
+    {
+
+        $status = $request->request->get("status");
+        if ($status=='Picked')
+        {
+//            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+              $time_start = $truckScheduleRepository->returnCurrentTime();
+              $driver->setWorkHours($time_start);
+//            $time_start = new DateTime(date("Y-m-d H:i:s",time()));
+//            $time_start = new DateTime();
+//            $time_start->
+//            $time_start = date_create_from_format('H:i:s', date("H:i:s"));
+//            $driver->setWorkHours($time_start);
+//            $time_start = new \DateTime('now');
+        }
+        elseif ($status=='Delivered')
+        {
+//            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+
+
+              $time_start=$driver->getWorkHours();
+              $driverRepository->updateWorkHours($id, $time_start->format('Y-m-d H:i:s'));
+//              $time_start=$start->format('Y-m-d H:i:s');
+//
+//            $time_end = new DateTime('now');
+//            $diff  = $time_start->diff($time_end);
+////            $driver->setWorkHours($time_elapsed);
+//            $time_elapsed = $diff->format('%h:%i:%s');
+////            echo $time_elapsed;
+//            $driverRepository->calculateWorkHours($id, $time_elapsed);
+        }
+
+        return new Response( 'success');
+    }
+
+
+
+    /**
+     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     */
+    public function show(Driver $driver): Response
+    {
+        return $this->render('driver/show.html.twig', [
+            'driver' => $driver,
+        ]);
+    }
+    public function getTimeDiff($dtime,$atime)
+    {
+        $nextDay = $dtime>$atime?1:0;
+        $dep = explode(':',$dtime);
+        $arr = explode(':',$atime);
+        $diff = abs(mktime($dep[0],$dep[1],0,date('n'),date('j'),date('y'))-mktime($arr[0],$arr[1],0,date('n'),date('j')+$nextDay,date('y')));
+        $hours = floor($diff/(60*60));
+        $mins = floor(($diff-($hours*60*60))/(60));
+        $secs = floor(($diff-(($hours*60*60)+($mins*60))));
+        if(strlen($hours)<2){$hours="0".$hours;}
+        if(strlen($mins)<2){$mins="0".$mins;}
+        if(strlen($secs)<2){$secs="0".$secs;}
+        return $hours.':'.$mins.':'.$secs;
+    }
+
+    /**
+     * @Route("/{id}/updateWorkHours", name="driver_show", methods={"GET"})
+     */
+//    public function updateWorkHours(Driver $driver): Response
+//    {
+//        $stopwatch = new Stopwatch();
+//// starts event named 'eventName'
+//        $stopwatch->start('eventName');
+//// ... some code goes here
+//        $event = $stopwatch->stop('eventName');
+//        ]);
+//    }
+
 }

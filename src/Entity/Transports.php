@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TransportsRepository")
  */
@@ -23,11 +24,16 @@ class Transports
     private $date;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $status;
+    /**
      * @ORM\Id()
      * @ORM\OneToOne(targetEntity="App\Entity\Orders", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $orders;
+
 
     public function getTrainSchedule(): ?TrainSchedule
     {
@@ -49,6 +55,18 @@ class Transports
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
 
         return $this;
     }

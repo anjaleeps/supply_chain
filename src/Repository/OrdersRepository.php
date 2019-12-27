@@ -47,4 +47,53 @@ class OrdersRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getSalesReport(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select YEAR(o.date_completed) as year, MONTH(o.date_completed) as month, c.city as city, o.route_id as route_id, 
+                sum(op.quantity) as product_count, sum(p.unit_price*op.quantity) as earnings, count(o.id) as order_count
+                from orders o 
+                inner join order_product op on o.id=op.orders_id 
+                inner join product p on p.id=op.product_id
+                inner join customer c on c.id=o.customer_id
+                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id
+                order by year desc, month desc;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getQuarterlyReport(string $year){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select count(distinct(c.id)) as customer_count, count(distinct(o.id)) as order_count,
+                sum(op.quantity) as product_count, sum(op.quantity*p.unit_price) as revenue, 
+                quarter(o.date_completed) as quarter, o.date_completed from orders o 
+                inner join customer c on c.id=o.customer_id
+                inner join order_product op on op.orders_id=o.id
+                inner join product p on p.id=op.product_id
+                group by quarter(o.date_completed) 
+                having year(o.date_completed) = ? 
+                order by quarter(o.date_completed)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $year);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getStoredOrders(string $id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select o.id as order_id, c.first_name, c.last_name, p.name as product_name, op.quantity, r.id as route_id from orders o 
+                inner join customer c on c.id=o.customer_id
+                inner join route r on r.id=o.route_id
+                inner join order_product op on op.orders_id=o.id
+                inner join product p on p.id=op.product_id
+                inner join store s on s.id=r.store_id
+                inner join store_manager sm on sm.store_id=s.id
+                where sm.id=? and o.order_status= 'on store'
+                order by r.id, o.id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        return $stmt->fetchAll();   
+    }
 }
