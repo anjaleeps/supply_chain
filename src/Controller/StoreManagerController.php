@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\StoreManager;
 use App\Form\StoreManagerType;
+use App\Repository\DriverAssistantRepository;
+use App\Repository\DriverRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\StoreManagerRepository;
 use App\Repository\TransportsRepository;
+use App\Repository\TruckRepository;
 use App\Security\StoreManagerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,11 +92,16 @@ class StoreManagerController extends AbstractController
      * 
      * @IsGranted("ROLE_STORE_MANAGER")
      */
-    public function renderDashboard(OrdersRepository $ordersRepository, TransportsRepository $transportsRepository)
+    public function renderDashboard(OrdersRepository $ordersRepository, TransportsRepository $transportsRepository,
+                    DriverRepository $driverRepository, DriverAssistantRepository $driverAssistantRepository, 
+                    TruckRepository $truckRepository)
     {
         $id = $this->getUser()->getId();
         $trainData = $transportsRepository->getExpectedTrains($id);
         $orderData = $ordersRepository->getStoredOrders($id);
+        $driverData = $driverRepository->getAvailableDrivers($id);
+        $driverAssistantData = $driverAssistantRepository->getAvailableAssistants($id);
+        $truckData = $truckRepository->getAvailableTrucks($id);
         $data = [];
 
         foreach ($orderData as $order){
@@ -116,7 +124,10 @@ class StoreManagerController extends AbstractController
 
         return $this->render('store_manager/dashboard.html.twig', [
             'trains' => $trainData,
-            'orders' => $data
+            'orders' => $data,
+            'drivers' => $driverData,
+            'assistants' => $driverAssistantData,
+            'trucks' => $truckData
         ]);
     }
 

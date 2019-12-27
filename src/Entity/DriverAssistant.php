@@ -267,12 +267,7 @@ class DriverAssistant implements UserInterface
 
         $metadata->addPropertyConstraint('first_name', new Assert\NotBlank());
         $metadata->addPropertyConstraint('last_name',  new Assert\NotBlank());
-        
 
-        $metadata->addPropertyConstraint('city', new Assert\Choice([
-            'choices' => ['Colombo', 'Negombo', 'Galle', 'Jaffna', 'Matara', 'Trinco'],
-            'message' => 'Choose a valid city.',
-        ]));
 
         $metadata->addPropertyConstraint('plainPassword', new Assert\Length([
             'min' => 8,
