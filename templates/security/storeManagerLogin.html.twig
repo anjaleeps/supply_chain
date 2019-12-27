@@ -15,14 +15,14 @@
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
-            {% if is_granted('ROLE_DRIVER_ASSISTANT')  %}
+            {% if is_granted('ROLE_STORE_MANAGER')  %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
                         <div class="lead">
                             <p>You are logged in as {{ app.user.username }}</p> 
                         </div c>
-                        <a class="btn btn-submit" href="{{ path('logout_driver_assistant') }}">Logout</a>
+                        <a class="btn btn-submit" href="{{ path('logout_store_manager') }}">Logout</a>
                     </div>
                 </div>
             </div>

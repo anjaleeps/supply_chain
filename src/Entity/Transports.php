@@ -24,6 +24,10 @@ class Transports
     private $date;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $status;
+    /**
      * @ORM\Id()
      * @ORM\OneToOne(targetEntity="App\Entity\Orders", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
@@ -51,6 +55,18 @@ class Transports
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
 
         return $this;
     }

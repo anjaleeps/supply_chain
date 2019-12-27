@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StoreManager index{% endblock %}
+
+{% block body %}
+    <h1>StoreManager index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>First_name</th>
+                <th>Last_name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for store_manager in store_managers %}
+            <tr>
+                <td>{{ store_manager.id }}</td>
+                <td>{{ store_manager.email }}</td>
+                <td>{{ store_manager.roles ? store_manager.roles|json_encode : '' }}</td>
+                <td>{{ store_manager.password }}</td>
+                <td>{{ store_manager.firstName }}</td>
+                <td>{{ store_manager.lastName }}</td>
+                <td>
+                    <a href="{{ path('store_manager_show', {'id': store_manager.id}) }}">show</a>
+                    <a href="{{ path('store_manager_edit', {'id': store_manager.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('store_manager_new') }}">Create new</a>
+{% endblock %}

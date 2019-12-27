@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit StoreManager{% endblock %}
+
+{% block body %}
+    <h1>Edit StoreManager</h1>
+
+    {{ include('store_manager/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('store_manager_index') }}">back to list</a>
+
+    {{ include('store_manager/_delete_form.html.twig') }}
+{% endblock %}

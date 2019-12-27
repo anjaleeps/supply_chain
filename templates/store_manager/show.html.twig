@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StoreManager{% endblock %}
+
+{% block body %}
+    <h1>StoreManager</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ store_manager.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ store_manager.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ store_manager.roles ? store_manager.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ store_manager.password }}</td>
+            </tr>
+            <tr>
+                <th>First_name</th>
+                <td>{{ store_manager.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Last_name</th>
+                <td>{{ store_manager.lastName }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('store_manager_index') }}">back to list</a>
+
+    <a href="{{ path('store_manager_edit', {'id': store_manager.id}) }}">edit</a>
+
+    {{ include('store_manager/_delete_form.html.twig') }}
+{% endblock %}

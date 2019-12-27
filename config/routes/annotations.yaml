@@ -7,6 +7,9 @@ driver:
 driver_assistant:
     resource: App\Controller\DriverAssistantController
     type: annotation
+store_manager:
+    resource: App\Controller\StoreManagerController
+    type: annotation
 product:
     resource: App\Controller\ProductController
     type: annotation

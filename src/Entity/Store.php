@@ -43,12 +43,18 @@ class Store
      */
     private $driverAssistants;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StoreManager", mappedBy="store")
+     */
+    private $storeManagers;
+
     public function __construct()
     {
         $this->routes = new ArrayCollection();
         $this->trucks = new ArrayCollection();
         $this->drivers = new ArrayCollection();
         $this->driverAssistants = new ArrayCollection();
+        $this->storeManagers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,5 +200,36 @@ class Store
     {
         return $this-> city;
 
+    }
+
+    /**
+     * @return Collection|StoreManager[]
+     */
+    public function getStoreManagers(): Collection
+    {
+        return $this->storeManagers;
+    }
+
+    public function addStoreManager(StoreManager $storeManager): self
+    {
+        if (!$this->storeManagers->contains($storeManager)) {
+            $this->storeManagers[] = $storeManager;
+            $storeManager->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoreManager(StoreManager $storeManager): self
+    {
+        if ($this->storeManagers->contains($storeManager)) {
+            $this->storeManagers->removeElement($storeManager);
+            // set the owning side to null (unless already changed)
+            if ($storeManager->getStore() === $this) {
+                $storeManager->setStore(null);
+            }
+        }
+
+        return $this;
     }
 }
