@@ -35,4 +35,16 @@ class TruckScheduleRepository extends ServiceEntityRepository
         $stmt -> bindParam(1,$id);
         $stmt->execute();
     }
+
+    public function scheduleTruckDelivery(string $route_id, string $driver_id, string $assistant_id, string $truck_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "INSERT INTO truck_schedule 
+                SET truck_id=?, driver_id=?, driver_assistant_id=?, route_id=?, status='scheduled'";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$truck_id);
+        $stmt -> bindParam(2,$driver_id);
+        $stmt -> bindParam(3,$assistant_id);
+        $stmt -> bindParam(4,$route_id);
+        $stmt->execute();
+    }
 }

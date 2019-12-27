@@ -56,6 +56,8 @@ class DriverController extends AbstractController
 
             $driver->setRoles(array('ROLE_DRIVER'));
             $driver->setStatus('idle');
+            $driver->setWorkHours(new \DateTime('00:00:00'));
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($driver);
             $entityManager->flush();

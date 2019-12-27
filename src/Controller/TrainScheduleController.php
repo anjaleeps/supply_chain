@@ -52,7 +52,7 @@ class TrainScheduleController extends AbstractController
 
     
     /**
-     * @Route("/store_manager/train/update", name="train_status_update", methods={"POST"})
+     * @Route("/store_manager/train/schedule/edit", name="train_schedule_edit", methods={"POST"})
      * 
      * @IsGranted("ROLE_STORE_MANAGER")
      */
@@ -77,25 +77,25 @@ class TrainScheduleController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="train_schedule_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, TrainSchedule $trainSchedule): Response
-    {
-        $form = $this->createForm(TrainScheduleType::class, $trainSchedule);
-        $form->handleRequest($request);
+    // /**
+    //  * @Route("/{id}/edit", name="train_schedule_edit", methods={"GET","POST"})
+    //  */
+    // public function edit(Request $request, TrainSchedule $trainSchedule): Response
+    // {
+    //     $form = $this->createForm(TrainScheduleType::class, $trainSchedule);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('train_schedule_index');
-        }
+    //         return $this->redirectToRoute('train_schedule_index');
+    //     }
 
-        return $this->render('train_schedule/edit.html.twig', [
-            'train_schedule' => $trainSchedule,
-            'form' => $form->createView(),
-        ]);
-    }
+    //     return $this->render('train_schedule/edit.html.twig', [
+    //         'train_schedule' => $trainSchedule,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
 
     /**
      * @Route("/{id}", name="train_schedule_delete", methods={"DELETE"})
