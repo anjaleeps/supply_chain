@@ -177,15 +177,12 @@ class DriverController extends AbstractController
             $truck_schedule_id=$truckSchedule->getId();
             $truck_no=$truckSchedule->getTruck()->getTruckNo();
             $route=$truckSchedule->getRoute()->getDecription();
-            $start=$driver->getWorkHours();
-            $time_start=$start->format('Y-m-d H:i:s');
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver' => $driver,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
-                'time_start'=>$time_start,
             ]);
         }
         else
@@ -206,31 +203,16 @@ class DriverController extends AbstractController
         $status = $request->request->get("status");
         if ($status=='Picked')
         {
-//            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
-              $time_start = $truckScheduleRepository->returnCurrentTime();
-              $driver->setWorkHours($time_start);
-//            $time_start = new DateTime(date("Y-m-d H:i:s",time()));
-//            $time_start = new DateTime();
-//            $time_start->
-//            $time_start = date_create_from_format('H:i:s', date("H:i:s"));
-//            $driver->setWorkHours($time_start);
-//            $time_start = new \DateTime('now');
+            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+            $start_time = new DateTime();
+            $driverRepository->updateWorkHours($id, $start_time->format('Y-m-d H:i:s'));
+
         }
         elseif ($status=='Delivered')
         {
-//            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+            $driverRepository->calculateWorkHours($id);
 
-
-              $time_start=$driver->getWorkHours();
-              $driverRepository->updateWorkHours($id, $time_start->format('Y-m-d H:i:s'));
-//              $time_start=$start->format('Y-m-d H:i:s');
-//
-//            $time_end = new DateTime('now');
-//            $diff  = $time_start->diff($time_end);
-////            $driver->setWorkHours($time_elapsed);
-//            $time_elapsed = $diff->format('%h:%i:%s');
-////            echo $time_elapsed;
-//            $driverRepository->calculateWorkHours($id, $time_elapsed);
         }
 
         return new Response( 'success');
