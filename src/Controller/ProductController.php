@@ -27,6 +27,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/all", name="product_display", methods={"GET"})
      *
@@ -46,16 +47,18 @@ class ProductController extends AbstractController
     public function cart()
     {
         return $this->render('product/cart.html.twig');
-
+        
     }
 
+
     /**
-     * @Route("/addToCart/{id}", name="add_to_cart", methods={"GET"})
+     * @Route("/addToCart/{id}", name="add_to_cart", methods={"GET"}, requirements={"id":"\d+"})
      * 
      * @IsGranted("ROLE_CUSTOMER")
      */
     public function addToCart(Product $product): Response
     {
+
         return $this->render('product/cart.html.twig', [
             'product' => $product,
         ]);

@@ -4,6 +4,198 @@
 
 {% block body %}
 
+<p style"display:none" id="product_id" value={{ product.id }}></p>
+
+{% apply inline_css %} 
+
+<style>
+        table th:first-child {
+            border-left: 1px solid #e1e1e1;
+        }
+        table th{
+            color: #575757;
+            font-weight: 100;
+            font-size: 14px;
+            background-color: #efefef;
+            border-top: 1px solid #e1e1e1;
+            border-right: 1px solid #e1e1e1;
+            border-bottom: 1px solid #e1e1e1;
+        }
+        table td:first-child {
+            border-left: 1px solid #e1e1e1;
+        }
+        table td{
+            color: #6a6a6a;
+            font-weight: 400;
+            font-size: 14px;
+            border-right: 1px solid #e1e1e1;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        #shopping-cart {
+            margin: 40px 180px;
+        }
+
+        #product-grid {
+            margin: 40px 0px;
+        }
+
+        #shopping-cart table {
+            width: 100%;
+            background-color: #F0F0F0;
+        }
+
+        #shopping-cart table td {
+            background-color: #FFFFFF;
+        }
+
+        .txt-heading {
+            color: #211a1a;
+            border-bottom: 1px solid #E0E0E0;
+            overflow: auto;
+        }
+
+        .btn btn-1 {
+            /*background-color: #ffffff;*/
+            /*border: #d00000 1px solid;*/
+            /*padding: 5px 10px;*/
+            /*color: #d00000;*/
+            /*float: right;*/
+            /*text-decoration: none;*/
+            /*border-radius: 3px;*/
+            margin: 40px 480px;
+        }
+
+        .btnAddAction {
+            padding: 5px 10px;
+            margin-left: 5px;
+            background-color: #efefef;
+            border: #E0E0E0 1px solid;
+            color: #211a1a;
+            float: right;
+            text-decoration: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #product-grid .txt-heading {
+            margin-bottom: 18px;
+        }
+
+        .product-item {
+            float: left;
+            background: #ffffff;
+            margin: 20px 20px 0px 0px;
+            border: #E0E0E0 1px solid;
+        }
+
+        .product-image {
+            height: 155px;
+            width: 250px;
+            background-color: #FFF;
+        }
+
+        .clear-float {
+            clear: both;
+        }
+
+        .demo-input-box {
+            border-radius: 2px;
+            border: #CCC 1px solid;
+            padding: 2px 1px;
+        }
+
+        .tbl-cart {
+            font-size: 0.9em;
+        }
+
+        .tbl-cart th {
+            font-weight: normal;
+        }
+
+        .product-title {
+            margin-bottom: 20px;
+        }
+
+        .product-price {
+            float:left;
+        }
+
+        .cart-action {
+            float: right;
+        }
+
+        .product-quantity {
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: #E0E0E0 1px solid;
+        }
+
+        .product-tile-footer {
+            padding: 15px;
+            overflow: auto;
+        }
+
+        .cart-item-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: #E0E0E0 1px solid;
+            padding: 5px;
+            vertical-align: middle;
+            margin-right: 15px;
+        }
+        .no-records {
+            text-align: center;
+            clear: both;
+            margin: 38px 0px;
+        }
+    </style>
+
+    <body>
+        <h2 style="padding-left:180px; padding-top:20px">Shopping Cart</h2>
+        <main class="site-content col-xs-9 col-md-9 col-sm-9" style="margin-left: 185px" itemscope="itemscope" itemprop="mainContentOfPage">
+
+        <a class="btn btn-1" style="margin-left: 980px" href="">Empty Cart</a><br><br>
+        <table class="tbl-cart" cellpadding="10" cellspacing="1">
+            <tbody>
+            <tr>
+                <th style="text-align:center;">Name</th>
+                <th style="text-align:center;" width="8%">Color</th>
+                <th style="text-align:center;" width="8%">Quantity</th>
+                <th style="text-align:center;" width="15%">Unit Price</th>
+                <th style="text-align:center;" width="20%">Price</th>
+                <th style="text-align:center;" width="8%">Remove</th>
+            </tr>
+            <tr>
+                <td><img style="width:60px;height:70px;" src=""  >name<br><br><label>Product by: </label>vendor name</td>
+                <td><div style="text-align:center"><span style="height: 25px;width: 25px;background-color:;display: inline-block; margin: 2px" class="dot"></span></td>
+                <td style="text-align:center;">1</td>
+                <td  style="text-align:center;">5000.00</td>
+                <td  style="text-align:center;"></td>
+
+                <td style="text-align:center;"><a class="btnRemoveAction">remove</td>
+
+            </tr>
+            <tr>
+                <td colspan="2" align="right">Total:</td>
+                <td align="right">total_quantity</td>
+                <td align="right" colspan="2"><strong>vghft</strong></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <div class="wc-proceed-to-checkout">
+
+            <a href="" class="btn btn-1" style="margin-left: 930px" >Proceed to checkout</a>
+        </div>
+        </main>
+
+    </body>
+{% endapply %}
+
+
     <script>
 
         function myFunction() {
@@ -45,8 +237,49 @@
                 //empty whole cart
                 CART.contents = [];
                 CART.sync()
+            },
+            increase(id, qty=1){
+                CART.contents = CART.contents.map(item=>{
+                    if(item.id === id)
+                        item.qty = item.qty + qty;
+                    return item;
+                });
+                CART.sync()
+            },
+            reduce(id, qty=1){
+                CART.contents = CART.contents.map(item=>{
+                    if(item.id === id)
+                        item.qty = item.qty - qty;
+                    return item;
+                });
+                CART.contents.forEach(async item=>{
+                    if(item.id === id && item.qty === 0)
+                        await CART.remove(id);
+                });
+                CART.sync()
             }
         }
+
+    function addItem(){
+    
+        var productID = document.getElementById("product_id").value;
+    
+        contents = [];
+
+        let _contents = localStorage.getItem("cartkey");
+        alert(_contents);
+        if(_contents){
+            contents = JSON.parse(_contents);
+        }
+    
+        contents.push(productID);
+        let _cart = JSON.stringify(contents);
+        localStorage.setItem("cartkey", _cart);
+    
+        return false;
+    }
+
+    addItem();
 
     </script>
 

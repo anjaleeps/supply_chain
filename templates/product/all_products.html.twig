@@ -60,11 +60,12 @@
 <div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right:150px">
 <div class="products">
 {% for product in products %}
+    <p style="display:none" value={{ product.id }} id="product_id"></p>
     <div class="card">
     <img src="/images/{{ product.picture }}" alt="product image" style="width:100%">
     <h5>{{ product.name }}</h5>
     <p class="price">{{ product.unitPrice }}</p>
-    <p><a href="{{ path('add_to_cart', {'id': product.id}) }}"><button>Add to Cart</button></a></p>
+    <p><a href="{{ path('add_to_cart', {'id': product.id}) }}"><button >Add to Cart</button></a></p>
     </div>
 
 {% endfor %}
@@ -77,5 +78,29 @@
 
 </html>
 {% endapply %}
+
+<script>
+
+  function addItem(){
+    
+    var productID = document.getElementById("product_id").value;
+    
+    contents = [];
+
+    let _contents = localStorage.getItem("cartkey");
+    alert(_contents);
+    if(_contents){
+      contents = JSON.parse(_contents);
+    }
+    
+    contents.push(productID);
+    let _cart = JSON.stringify(contents);
+    localStorage.setItem("cartkey", _cart);
+    
+    return false;
+  }
+
+</script>
+
 {% endblock %}
 
