@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Validator\Constraints\Date;
+use \DateTime;
 
 
 /**
@@ -197,18 +199,22 @@ class DriverController extends AbstractController
     /**
      * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
      */
-    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, Request $request)
+    public function scheduleStatusPicked($id,Driver $driver,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
     {
 
         $status = $request->request->get("status");
-        var_dump($status);
         if ($status=='Picked')
         {
             $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+            $start_time = new DateTime();
+            $driverRepository->updateWorkHours($id, $start_time->format('Y-m-d H:i:s'));
+
         }
         elseif ($status=='Delivered')
         {
             $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+            $driverRepository->calculateWorkHours($id);
+
         }
 
         return new Response( 'success');
@@ -224,6 +230,20 @@ class DriverController extends AbstractController
         return $this->render('driver/show.html.twig', [
             'driver' => $driver,
         ]);
+    }
+    public function getTimeDiff($dtime,$atime)
+    {
+        $nextDay = $dtime>$atime?1:0;
+        $dep = explode(':',$dtime);
+        $arr = explode(':',$atime);
+        $diff = abs(mktime($dep[0],$dep[1],0,date('n'),date('j'),date('y'))-mktime($arr[0],$arr[1],0,date('n'),date('j')+$nextDay,date('y')));
+        $hours = floor($diff/(60*60));
+        $mins = floor(($diff-($hours*60*60))/(60));
+        $secs = floor(($diff-(($hours*60*60)+($mins*60))));
+        if(strlen($hours)<2){$hours="0".$hours;}
+        if(strlen($mins)<2){$mins="0".$mins;}
+        if(strlen($secs)<2){$secs="0".$secs;}
+        return $hours.':'.$mins.':'.$secs;
     }
 
     /**

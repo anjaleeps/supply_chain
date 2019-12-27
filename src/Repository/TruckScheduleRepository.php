@@ -47,4 +47,12 @@ class TruckScheduleRepository extends ServiceEntityRepository
         $stmt -> bindParam(4,$route_id);
         $stmt->execute();
     }
+    
+    public function returnCurrentTime(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT CURTIME()";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $stmt->fetchAll();
+    }
 }
