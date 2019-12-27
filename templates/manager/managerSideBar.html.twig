@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+{% endblock %}
+{% block body %}
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h4>Manager Options</h4>
+        </div>
+
+        <ul class="list-unstyled components">
+            <li class="active"><a href="{{ path('manager_dashboard') }}">Home</a></li>
+            <li><a href="{{ path('product_index')}}">Products</a></li>
+            <li><a href="{{ path('sales_report') }}">Reports</a></li>
+            <li>
+                <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Accounts</a>
+                <ul class="collapse list-unstyled" id="accountSubmenu">
+                    <li>
+                        <a href="{{ path('driver_registration') }}">Driver</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('driver_assistant_registration') }}">Driver Assistant</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+{% endblock %}
+

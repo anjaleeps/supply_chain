@@ -1,25 +1,32 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Placed Orders{% endblock %}
 {% block stylesheets %}
-    {{ parent()  }}
+    {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
+    <link rel="stylesheet" type="text/css" href="../css/toggle_button.css">
+    <link rel="stylesheet" type="text/css" href="../css/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 {% block body %}
-    <div id="sidebar">
-        <div class="toggle-btn" onclick="toggleSidebar()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul>
-            <li>Home</li>
-            <li>Product +</li>
-            <li>Reports</li>
-        </ul>
-    </div>
 
-        <h1>Placed Orders</h1>
+    <div class="wrapper">
+
+        {% include ('manager/managerSideBar.html.twig') %}
+
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <h2>Placed Orders</h2>
 
         <table class="table">
             <thead>
@@ -50,7 +57,6 @@
                         <form >
                             Train Date: <input type="date" name="TrainDate" id="TrainDate">
                             <button class="ajax">Submit</button>
-    {#                        <div id="ajax-results">here comes the result</div>#}
                         </form>
 
 
@@ -66,7 +72,7 @@
             </tbody>
         </table>
         <br>
-        <h1>On Store Orders</h1>
+        <h2>On Store Orders</h2>
 
         <table class="table">
             <thead>
@@ -94,7 +100,12 @@
                     <td>{{ order.getRoute().getDecription()}}</td>
                     <td>
                         <form >
-                            <input type='checkbox' name='on_truck' value='on_truck'>On Truck
+                            <label class="switch">
+                                <input type="checkbox" name='on_truck' value='on_truck'>
+                                <span class="slider round"></span>
+
+                            </label>
+{#                            <input type='checkbox' name='on_truck' value='on_truck'>On Truck#}
                         </form>
 
 
@@ -110,6 +121,8 @@
             </tbody>
         </table>
 
+    </div>
+</div>
 
 {% endblock %}
 
@@ -117,6 +130,13 @@
     {{ parent()  }}
     <script src="../js/button.js"></script>
     <script src="../js/side_bar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 {% endblock %}
 
 

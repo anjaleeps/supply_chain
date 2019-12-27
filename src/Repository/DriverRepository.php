@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Driver;
+use App\Entity\TruckSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -47,10 +48,10 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
                     UPDATE driver SET work_hours = 0 WHERE ID=?;
                 END";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$ID);
+        $stmt -> bindParam("i",$_POST[$ID]);
         $stmt->execute();
+        return $stmt->fetchAll();
     }
-
 
     public function getWorkedHours(){
         $conn= $this->getEntityManager()->getConnection();

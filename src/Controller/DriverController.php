@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 
@@ -168,46 +168,48 @@ class DriverController extends AbstractController
 
         $truckSchedule = $truckScheduleRepository->findOneBy([
             'driver' => $id,
-//            'driver' => $driver->getId(),
             'status' => 'ready',
         ]);
+        if ($truckSchedule!=null)
+        {
+            $truck_schedule_id=$truckSchedule->getId();
+            $truck_no=$truckSchedule->getTruck()->getTruckNo();
+            $route=$truckSchedule->getRoute()->getDecription();
 
-        $truck_schedule_id=$truckSchedule->getId();
-        $truck_no=$truckSchedule->getTruck()->getTruckNo();
-        $route=$truckSchedule->getRoute()->getDecription();
-
-//
-//        $form = $this->createFormBuilder()
-//            ->add('picked', SubmitType::class, ['label' => 'Picked up'])
-//            ->add('delivered', SubmitType::class, ['label' => 'Delivered'])
-//            ->getForm();
-        $form = $this->createForm(DriverButtonType::class);
-
-        if($form->get('picked')->isClicked()){
-            $truckScheduleRepository->changeStatusPicked('1');
+            return $this->render('driver/home.html.twig', [
+                'truck_schedule_id'=> $truck_schedule_id,
+                'driver' => $driver,
+                'truck_no'=>$truck_no,
+                'route'=>$route,
+            ]);
         }
-
-
-        return $this->render('driver/home.html.twig', [
-            'truck_schedule_id'=> $truck_schedule_id,
-            'driver' => $driver,
-            'truck_no'=>$truck_no,
-            'route'=>$route,
-            'form' => $form->createView(),
-        ]);
+        else
+        {
+            return $this->render('driver/home.html.twig', [
+                'driver' => $driver,
+                'truck_no'=>'null',
+            ]);
+        }
     }
 
     /**
-     * @Route("/{truck_schedule_id}/picked", name="picked", methods={"GET"})
+     * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
      */
-    public function scheduleStatusPicked($truck_schedule_id,TruckScheduleRepository $truckScheduleRepository): void
+    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, Request $request)
     {
-//        $truckSchedule = $truckScheduleRepository->findOneBy([
-//            'driver_id' => $id,
-//            'status' => 'ready',
-//        ]);
 
-        $truckScheduleRepository->changeStatusPicked($truck_schedule_id);
+        $status = $request->request->get("status");
+        var_dump($status);
+        if ($status=='Picked')
+        {
+            $truckScheduleRepository->setStatusPicked($truck_schedule_id);
+        }
+        elseif ($status=='Delivered')
+        {
+            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+        }
+
+        return new Response( 'success');
     }
 
 
