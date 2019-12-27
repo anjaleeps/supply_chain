@@ -4,8 +4,8 @@ table {
 }
 
 th, td {
-    text-align: center;
-    padding: 100px;
+    text-align: left;
+    padding: 30px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
