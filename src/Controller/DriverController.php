@@ -237,9 +237,23 @@ class DriverController extends AbstractController
      */
     public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
     {
-        
         $ordersRepository->setStatusDelivered($order_id);
 
+        return new Response( 'success');
+    }
+
+    /**
+     * @Route("/{id}/{status}/change-status", name="change-status", methods={"POST"})
+     */
+    public function toggleAvailability($id,$status,DriverRepository $driverRepository, Request $request)
+    {
+        if ($status==1){
+            $state="Available";
+        }
+        else{
+            $state="Not available";
+        }
+        $driverRepository->changeAvailability($state,$id);
         return new Response( 'success');
     }
 
