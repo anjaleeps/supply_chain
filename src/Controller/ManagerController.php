@@ -302,14 +302,16 @@ class ManagerController extends AbstractController
     }
 
     /**
-     * @Route("/report/quarter", name="quarterly_report", methods={"GET"})
+     * @Route("/report/quarter", name="quarterly_report", methods={"GET", "POST"})
      */
-    public function generateQuarterlyReport($year = '2019', OrdersRepository $ordersRepository, Request $request)
+    public function generateQuarterlyReport($year = '2020', OrdersRepository $ordersRepository, Request $request)
     {
         if ($request->request->get('year')) {
             $year = $request->request->get('year');
         }
         $quarterReportData = $ordersRepository->getQuarterlyReport($year);
+        $years = $ordersRepository->getRecordedYears();
+
         $data = [
             1 => [],
             2 => [],
@@ -323,9 +325,10 @@ class ManagerController extends AbstractController
         }
 
 
-
         return $this->render('report/quarter.html.twig', [
-            'sales' => $quarterReportData
+            'sales' => $quarterReportData,
+            'years' => $years,
+            'cur_year' => $year
         ]);
     }
 
