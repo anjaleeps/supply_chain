@@ -22,14 +22,20 @@
                 <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
                 <td>{{ truckOrder.getOrders().getCustomer().getAddress() }}</td>
                 <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
-                <td><div class="checkbox"><input type="checkbox" name="choices" ></div></td>
+                <td><div><input class="checkbox" type="checkbox" id="checkbox" name="choices" value="{{ truckOrder.getOrders().getId()}}"></div></td>
             </tr>
         {% else %}
             <tr>
                 <td colspan="9">No records found</td>
             </tr>
         {% endfor %}
+
         </tbody>
     </table>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="{{ asset('js/check_order_delivered.js') }}"></script>
 {% endblock %}

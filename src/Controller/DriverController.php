@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
+use App\Repository\OrdersRepository;
+use App\Repository\TruckOrderRepository;
 use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Form\DriverButtonType;
@@ -160,6 +162,15 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+    /**
+     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     */
+    public function show(Driver $driver): Response
+    {
+        return $this->render('driver/show.html.twig', [
+            'driver' => $driver,
+        ]);
+    }
 
 
 
@@ -196,67 +207,45 @@ class DriverController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
-     */
-    public function scheduleStatusPicked($id,Driver $driver,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
-    {
 
+    /**
+     * @Route("/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
+     */
+    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
+    {
         $status = $request->request->get("status");
         if ($status=='Picked')
         {
             $truckScheduleRepository->setStatusPicked($truck_schedule_id);
-            $start_time = new DateTime();
-            $driverRepository->updateWorkHours($id, $start_time->format('Y-m-d H:i:s'));
-
         }
         elseif ($status=='Delivered')
         {
-            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
-            $driverRepository->calculateWorkHours($id);
-
+            $truckSchedule = $truckScheduleRepository->findOneBy([
+                'driver' => $id,
+                'status' => 'picked',
+            ]);
+            $driver_assistant_id=$truckSchedule->getDriverAssistant()->getId();
+            $truck_id=$truckSchedule->getTruck()->getId();
+            $truckScheduleRepository->setStatusDelivered($truck_schedule_id, $id,$driver_assistant_id,$truck_id);
         }
+
+        return new Response( 'success');
+    }
+
+    /**
+     * @Route("/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
+     */
+    public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
+    {
+        
+        $ordersRepository->setStatusDelivered($order_id);
 
         return new Response( 'success');
     }
 
 
 
-    /**
-     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
-     */
-    public function show(Driver $driver): Response
-    {
-        return $this->render('driver/show.html.twig', [
-            'driver' => $driver,
-        ]);
-    }
-    public function getTimeDiff($dtime,$atime)
-    {
-        $nextDay = $dtime>$atime?1:0;
-        $dep = explode(':',$dtime);
-        $arr = explode(':',$atime);
-        $diff = abs(mktime($dep[0],$dep[1],0,date('n'),date('j'),date('y'))-mktime($arr[0],$arr[1],0,date('n'),date('j')+$nextDay,date('y')));
-        $hours = floor($diff/(60*60));
-        $mins = floor(($diff-($hours*60*60))/(60));
-        $secs = floor(($diff-(($hours*60*60)+($mins*60))));
-        if(strlen($hours)<2){$hours="0".$hours;}
-        if(strlen($mins)<2){$mins="0".$mins;}
-        if(strlen($secs)<2){$secs="0".$secs;}
-        return $hours.':'.$mins.':'.$secs;
-    }
 
-    /**
-     * @Route("/{id}/updateWorkHours", name="driver_show", methods={"GET"})
-     */
-//    public function updateWorkHours(Driver $driver): Response
-//    {
-//        $stopwatch = new Stopwatch();
-//// starts event named 'eventName'
-//        $stopwatch->start('eventName');
-//// ... some code goes here
-//        $event = $stopwatch->stop('eventName');
-//        ]);
-//    }
+
 
 }

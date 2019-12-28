@@ -96,4 +96,12 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();   
     }
+
+    public function setStatusDelivered(int $order_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "CALL order_delivered(?)";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$order_id);
+        $stmt->execute();
+    }
 }

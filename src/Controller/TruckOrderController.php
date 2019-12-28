@@ -92,9 +92,8 @@ class TruckOrderController extends AbstractController
 
         return $this->redirectToRoute('truck_order_index');
     }
-
     /**
-     * @Route("/driver/{truck_schedule_id}", name="orderList_show", methods={"GET"})
+     * @Route("/driver/{truck_schedule_id}/show_orders", name="orderList_show", methods={"GET"})
      */
     public function showOrdersToDriver( $truck_schedule_id,TruckOrderRepository $truckOrderRepository): Response
     {

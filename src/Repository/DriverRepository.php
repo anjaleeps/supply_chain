@@ -55,23 +55,6 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
 //        return $stmt->fetchAll();
 //    }
 
-    public function calculateWorkHours($id){
-        $conn= $this->getEntityManager()->getConnection();
-        $sql = "update driver set work_hours=(timediff(curtime(),(select work_hours from driver where id=?))) where id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$id);
-        $stmt -> bindParam(2,$id);
-        $stmt->execute();
-    }
-
-    public function updateWorkHours(int $id, string $elapsed_time ){
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "UPDATE driver SET work_hours=? WHERE id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$elapsed_time);
-        $stmt -> bindParam(2,$id);
-        $stmt->execute();
-    }
 
     public function getWorkedHours(){
         $conn= $this->getEntityManager()->getConnection();
