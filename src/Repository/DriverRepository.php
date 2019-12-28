@@ -79,4 +79,14 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         return $stmt->fetchAll();
     }
 
+    public function changeAvailability($status, $id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "UPDATE driver SET status=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $status);
+        $stmt->bindParam(2, $id);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 }
