@@ -1,27 +1,30 @@
-$(document).on('click','button.ajax',function(e){
+$(document).on('click', 'button.ajax', function (e) {
     e.preventDefault();
-    console.log('jer');
 
-    $order_id = $(this).parent().parent().parent().find('.order_id').text();
-    $date= $(this).parent().find('input').val();
+    $order_id = $(this).parent().parent().find('.order_id').text();
     console.log($order_id);
-    console.log($date);
-
+    button = $(this)
+    cell = $(this).parent()
     $.ajax({
-        url: "/manager/dashboard/status",
+        url: "/manager/train/schedule/new",
         type: "POST",
         dataType: "json",
         data: {
-            'order_id':$order_id,
-            'date':$date
+            'order_id': $order_id,
             // you can pass some parameters to the controller here
         },
-        success: function(data) {
+        success: function (data) {
             // change button color
             console.log(data)
-            $('div#ajax-results').html(data.output);
+            button.hide()
+            content = ""
+            content += `<li>Train ID: ${data['id']}</li>`
+            content += `<li>Date: ${data['date']}</li>`
+            content += `<li>Start Time: ${data['start_time']}</li>`
+        
+            cell.html(content)
         },
-        error: function() {
+        error: function () {
             // show alert or something
         }
     });

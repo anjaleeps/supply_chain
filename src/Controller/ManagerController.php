@@ -96,36 +96,22 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/dashboard", name="manager_dashboard", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function getDashboard(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Orders::class);
         $orders_placed = $repository->findBy(
-            ['order_status' => 'Placed']
+            ['order_status' => 'placed']
         );
-        $orders_on_sore = $repository->findBy(
-            ['order_status' => 'On Store']
-        );
-
+       
 
         return $this->render('manager/dashboard.html.twig', [
             'placed' => $orders_placed,
-            'on_store' => $orders_on_sore,
         ]);
     }
-    /**
-     * @Route("/dashboard/status", name="manager_change_transport",methods={"POST"})
-     */
-    public function changeTransport(TransportsRepository $transportsRepository, Request $request)
-    {
-        $order_id = $request->request->get("order_id");
-        $date = $request->request->get("date");
-
-        //$date = \DateTime::createFromFormat('Y-m-d', $date);
-        //dd($date);
-        $transportsRepository->scheduleTrainTransport($order_id, $date);
-        return new Response('success');
-    }
+    
 
     /**
      * @Route("/new", name="manager_new", methods={"GET","POST"})
