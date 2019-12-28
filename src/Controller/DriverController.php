@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
+use App\Repository\OrdersRepository;
+use App\Repository\TruckOrderRepository;
 use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Form\DriverButtonType;
@@ -160,6 +162,15 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+    /**
+     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     */
+    public function show(Driver $driver): Response
+    {
+        return $this->render('driver/show.html.twig', [
+            'driver' => $driver,
+        ]);
+    }
 
 
 
@@ -196,18 +207,12 @@ class DriverController extends AbstractController
         }
     }
 
+
     /**
-     * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
+     * @Route("/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
      */
     public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
     {
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-            'status' => 'picked',
-        ]);
-
-        $driver_assistant_id=$truckSchedule->getDriverAssistant()->getId();
-        $truck_id=$truckSchedule->getTruck()->getId();
         $status = $request->request->get("status");
         if ($status=='Picked')
         {
@@ -215,6 +220,12 @@ class DriverController extends AbstractController
         }
         elseif ($status=='Delivered')
         {
+            $truckSchedule = $truckScheduleRepository->findOneBy([
+                'driver' => $id,
+                'status' => 'picked',
+            ]);
+            $driver_assistant_id=$truckSchedule->getDriverAssistant()->getId();
+            $truck_id=$truckSchedule->getTruck()->getId();
             $truckScheduleRepository->setStatusDelivered($truck_schedule_id, $id,$driver_assistant_id,$truck_id);
         }
 
@@ -222,14 +233,18 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     * @Route("/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
      */
-    public function show(Driver $driver): Response
+    public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
     {
-        return $this->render('driver/show.html.twig', [
-            'driver' => $driver,
-        ]);
+        
+        $ordersRepository->setStatusDelivered($order_id);
+
+        return new Response( 'success');
     }
+
+
+
 
 
 

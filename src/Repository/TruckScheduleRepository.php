@@ -19,6 +19,7 @@ class TruckScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, TruckSchedule::class);
     }
 
+
 // to set work_hours, initial number should be made 00:00:00 instead of null
     public function setStatusPicked(int $truck_schedule_id ){
         $conn = $this->getEntityManager()->getConnection();
@@ -26,8 +27,8 @@ class TruckScheduleRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt -> bindParam(1,$truck_schedule_id);
         $stmt->execute();
-
     }
+
     public function setStatusDelivered(int $truck_schedule_id, int $driver_id, int $driver_assistant_id, int $truck_id){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "CALL truck_order_delivered(?,?,?,?)";
