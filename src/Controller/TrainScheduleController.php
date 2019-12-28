@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class TrainScheduleController extends AbstractController
 {
     /**
-     * @Route("/", name="train_schedule_index", methods={"GET"})
+     * @Route("/train/schedule", name="train_schedule_index", methods={"GET"})
      */
     public function index(TrainScheduleRepository $trainScheduleRepository): Response
     {
@@ -60,7 +60,7 @@ class TrainScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="train_schedule_show", methods={"GET"})
+     * @Route("/train/schedule/{id}", name="train_schedule_show", methods={"GET"})
      */
     public function show(TrainSchedule $trainSchedule): Response
     {
@@ -90,7 +90,7 @@ class TrainScheduleController extends AbstractController
     // }
 
     /**
-     * @Route("/{id}", name="train_schedule_delete", methods={"DELETE"})
+     * @Route("/train/schedule/{id}", name="train_schedule_delete", methods={"DELETE"})
      */
     public function delete(Request $request, TrainSchedule $trainSchedule): Response
     {

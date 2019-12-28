@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TruckScheduleController extends AbstractController
 {
     /**
-     * @Route("/", name="truck_schedule_index", methods={"GET"})
+     * @Route("/truck/schedule", name="truck_schedule_index", methods={"GET"})
      */
     public function index(TruckScheduleRepository $truckScheduleRepository): Response
     {
@@ -41,7 +41,7 @@ class TruckScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="truck_schedule_show", methods={"GET"})
+     * @Route("/truck/schedule/{id}", name="truck_schedule_show", methods={"GET"})
      */
     public function show(TruckSchedule $truckSchedule): Response
     {
@@ -51,7 +51,7 @@ class TruckScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="truck_schedule_edit", methods={"GET","POST"})
+     * @Route("/truck/schedule/{id}/edit", name="truck_schedule_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, TruckSchedule $truckSchedule): Response
     {
@@ -71,7 +71,7 @@ class TruckScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="truck_schedule_delete", methods={"DELETE"})
+     * @Route("/truck/schedule/{id}", name="truck_schedule_delete", methods={"DELETE"})
      */
     public function delete(Request $request, TruckSchedule $truckSchedule): Response
     {

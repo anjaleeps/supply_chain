@@ -19,7 +19,7 @@ Orders:
 
 truckOrder:
     resource: App\Controller\TruckOrderController
-
+    type: annotation
 Route:
     resource: App\Controller\RouteController
     type: annotation
