@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Customer;
 
 /**
  * @Route("/orders")
@@ -26,27 +27,49 @@ class OrdersController extends AbstractController
     }
 
     /**
+     * @Route("/placeOrder", name="place_order", methods={"GET"})
+     */
+    public function place_order()
+    {
+
+        return $this->render('orders/customer_order.html.twig');
+
+        $order = new Orders();
+        $customer = new Customer();
+
+        $customer_id = app.user.id;
+        
+        
+
+        
+        $order ->setOrderStatus('Placed');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+
+    }
+
+
+    /**
      * @Route("/new", name="orders_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
         $order = new Orders();
-        $form = $this->createForm(OrdersType::class, $order);
-        $form->handleRequest($request);
+        $customer = new Customer();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order ->setOrderStatus('Placed');
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($order);
-            $entityManager->flush();
+        $customer_id = app.user.id;
+        
+        
 
-            return $this->redirectToRoute('orders_index');
-        }
+        
+        $order ->setOrderStatus('Placed');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
 
-        return $this->render('orders/new.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]);
+        return $this->redirectToRoute('orders_index');
+   
     }
 
     /**
@@ -92,4 +115,7 @@ class OrdersController extends AbstractController
 
         return $this->redirectToRoute('orders_index');
     }
+
+
+    
 }

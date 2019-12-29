@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Entity\Customer;
+use App\Form\CustomerType;
+use App\Repository\CustomerRepository;
 
 /**
  * @Route("/")
@@ -46,9 +49,11 @@ class ProductController extends AbstractController
      * 
      * @IsGranted("ROLE_CUSTOMER")
      */
-    public function cart()
+    public function cart(Request $request)
     {
-        return $this->render('product/cart.html.twig');
+        $variable = $request->request->get("cart");
+        dump($variable);
+        return $this->render('product/cart.html.twig',['cartItems' => $variable]);
         
     }
 
@@ -60,10 +65,8 @@ class ProductController extends AbstractController
      */
     public function addToCart(Product $product): Response
     {
-
-        return $this->render('product/cart.html.twig', [
-            'product' => $product,
-        ]);
+        
+        return $this->render('product/cart.html.twig');
     }
 
 

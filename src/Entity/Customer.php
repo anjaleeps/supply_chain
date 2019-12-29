@@ -371,4 +371,11 @@ class Customer implements UserInterface
         return $this->street;
 
     }
+
+    public function currentLoggedInUser()
+    {
+
+
+
+    }
 }

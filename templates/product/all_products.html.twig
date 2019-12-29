@@ -55,20 +55,30 @@
 
 <body>
 
+<a href="{{ path('cart') }}" ><button onclick="myFunction()">cart</button></a>
+
 <h2 style="padding-left:180px; padding-top:20px">Products</h2>
 
 <div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right:150px">
 <div class="products">
 {% for product in products %}
-    <p style="display:none" value={{ product.id }} id="product_id"></p>
+    {% set arr = [product.id,product.name] %}
+    {% set foo = { details: arr} %}
+
     <div class="card">
     <img src="/images/{{ product.picture }}" alt="product image" style="width:100%">
     <h5>{{ product.name }}</h5>
     <p class="price">{{ product.unitPrice }}</p>
-    <p><a href="{{ path('add_to_cart', {'id': product.id}) }}"><button >Add to Cart</button></a></p>
+    <p><button onclick="addItem()" >Add to Cart</button></p>
     </div>
 
 {% endfor %}
+
+    <p id="user" style="display:none">{{ app.user }}</p>
+  {% if app.user %}
+    <p id="customerId" style="display:none">{{ app.user.id }}</p>
+  {% endif %}
+
 </div>
 
 </div>
@@ -81,24 +91,41 @@
 
 <script>
 
+
   function addItem(){
-    
-    var productID = document.getElementById("product_id").value;
-    
+
+    var userid = document.getElementById("user").innerHTML;
+
+
+    if(userid===""){
+      alert("you have to log in first");
+    }
+
+    else{
+    var customerID = document.getElementById("customerId").innerHTML;
+    var productDetails = {id:2 , name:"camera2" , unitPrice:10000.00, picture:"2image.jpg"};
+    var name = "cartKeyOf:"
+    var key = name.concat(customerID);
+    alert(key);
+
     contents = [];
 
-    let _contents = localStorage.getItem("cartkey");
-    alert(_contents);
+    let _contents = localStorage.getItem(key);
     if(_contents){
       contents = JSON.parse(_contents);
     }
     
-    contents.push(productID);
+    contents.push(productDetails);
     let _cart = JSON.stringify(contents);
-    localStorage.setItem("cartkey", _cart);
+    alert(_cart);
+    localStorage.setItem(key, _cart);
+
+    }
     
     return false;
   }
+
+
 
 </script>
 
