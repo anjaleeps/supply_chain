@@ -52,6 +52,15 @@ class OrdersRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function getRecordedYears(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select distinct year(date_completed) as year from orders
+                order by year(date_completed) desc";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getStoredOrders(string $id){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "select o.id as order_id, c.first_name, c.last_name, p.name as product_name, op.quantity, r.id as route_id from orders o 

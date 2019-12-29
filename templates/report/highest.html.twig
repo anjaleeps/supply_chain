@@ -2,45 +2,40 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive report-table">
-                {% if sales|length > 0 %}
-                    <table class="table table-striped">
-                        <thead class="col-names">
-                            <tr>
-                                <th scope="col">Month </th>
-                                <th scope="col"> Highest Sold Product</th>
-                                <th scope="col">Sold Number of Products</th>
-                                <th scope="col" >Highest Sold Category</th>
-                                <th scope="col" >Sold Number of Products</th>
-                            </tr>
-                        </thead>
-                        <tbody class="col-body">              
-                            {% for row in sales %}
-                                <tr>
-                                    <td>{{ row['year']~'/'~row['month'] }} </td>
-                                    <td>{{  row['product_name'] }}</td>
-                                    <td>{{  row['product_sales_quantity'] }}</td>
-                                    <td>{{ row['category_name'] }}</td>
-                                    <td class="text-center">{{ row['category_sales_quantity']  }}</td>
-                                </tr>
-                            {% endfor %}                            
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p class="lead">No Products available</p>
-                {% endif %} 
-            </div>
-        </div>
-        
+    <h2>Highest Sales Report</h2>
+    <div class="table-responsive report-table">
+        {% if highestSales|length > 0 %}
+            <table class="table table-striped">
+                <thead class="col-names">
+                    <tr>
+                        <th scope="col">Month </th>
+                        <th scope="col"> Highest Sold Product</th>
+                        <th scope="col">Sold Number of Products</th>
+                        <th scope="col" >Highest Sold Category</th>
+                        <th scope="col" >Sold Number of Products</th>
+                    </tr>
+                </thead>
+                <tbody class="col-body">
+                    {% for row in highestSales %}
+                        <tr>
+                            <td>{{ row['year']~'/'~row['month'] }} </td>
+                            <td>{{  row['product_name'] }}</td>
+                            <td>{{  row['product_sales_quantity'] }}</td>
+                            <td>{{ row['category_name'] }}</td>
+                            <td class="text-center">{{ row['category_sales_quantity']  }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="lead">No Products available</p>
+        {% endif %}
     </div>
-</div>
 
 
 {% endblock %}

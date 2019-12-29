@@ -1,52 +1,98 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}quarterly report{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive report-table">
-                {% if sales|length > 0 %}
-                    <table class="table table-striped">
-                        <thead class="col-names">
-                            <tr>
-                                <th scope="col">Quarter</th>
-                                <th scope="col">Number of Sold Products</th>
-                                <th scope="col"> Number of Completed Orders </th>
-                                <th scope="col">Number of Served Customers</th>
-                                <th scope="col">Revenue</th>
-                               
-                            </tr>
 
-                        </thead>
-                        <tbody class="col-body">              
-                            {% for row in sales %}
-                            <tr>
-                                <td class="text-center">{{ loop.index }}</td>
-                                <td>{{ row['product_count']? row['product_count']: 'Not recorded'}}</td>
-                                <td>{{ row['order_count'] ? row['order_count'] : 'Not Recorded' }}</td>
-                                <td>{{ row['customer_count'] ? row['customer_count'] : 'Not Recorded' }}</td>
-                                <td>{{ row['revenue'] ?  row['revenue'] : 'Not recorder' }}</td>
-                            </tr>
-                            {% endfor %}                    
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p class="lead">No Products available</p>
-                {% endif %} 
+    <div class="wrapper">
+        {% include ('manager/managerSideBar.html.twig') %}
+            <div id="content">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+
+                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>navigator</span>
+                        </button>
+                    </div>
+                </nav>
+                    <div class="container my-4">
+                        <h3 class="text-center my-4">{{ cur_year~" Quaterly Sales Report"}}</h3>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive report-table">
+                                    {% if sales|length > 0 %}
+                                        <table class="table table-striped">
+                                            <thead class="col-names">
+                                                <tr>
+                                                    <th scope="col">Quarter</th>
+                                                    <th scope="col">Number of Sold Products</th>
+                                                    <th scope="col"> Number of Completed Orders </th>
+                                                    <th scope="col">Number of Served Customers</th>
+                                                    <th scope="col">Revenue</th>
+
+                                                </tr>
+
+                                            </thead>
+                                            <tbody class="col-body">
+                                                {% for row in sales %}
+                                                <tr>
+                                                    <td class="text-center">{{ loop.index }}</td>
+                                                    <td>{{ row['product_count']? row['product_count']: 'Not recorded'}}</td>
+                                                    <td>{{ row['order_count'] ? row['order_count'] : 'Not Recorded' }}</td>
+                                                    <td>{{ row['customer_count'] ? row['customer_count'] : 'Not Recorded' }}</td>
+                                                    <td>{{ row['revenue'] ?  row['revenue'] : 'Not recorder' }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <p class="lead">No Report available</p>
+                                    {% endif %}
+                                </div>
+
+                                <form class="form-inline my-4" method="POST" action="{{ path('quarterly_report')}}">
+                                    <div class="form-group">
+                                        <select id='year' name='year' class="form-control">
+                                            {% for year in years %}
+                                                {% if loop.index == 1 %}
+                                                    <option selected>{{ year['year'] }}</option>
+                                                {% else %}
+                                                    <option>{{ year['year'] }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group mx-4">
+                                        <input type='submit' class= 'btn btn-primary'>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
             </div>
-        </div>
-        
     </div>
-</div>
+
+
 
 
 {% endblock %}
 
 {% block javascripts %}
-   {{ parent() }} 
+    {{ parent()  }}
+    <script src="../../js/side_bar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 {% endblock %}

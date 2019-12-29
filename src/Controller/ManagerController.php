@@ -302,14 +302,16 @@ class ManagerController extends AbstractController
     }
 
     /**
-     * @Route("/report/quarter", name="quarterly_report", methods={"GET"})
+     * @Route("/report/quarter", name="quarterly_report", methods={"GET", "POST"})
      */
-    public function generateQuarterlyReport($year = '2019', OrdersRepository $ordersRepository, Request $request)
+    public function generateQuarterlyReport($year = '2020', OrdersRepository $ordersRepository, Request $request)
     {
         if ($request->request->get('year')) {
             $year = $request->request->get('year');
         }
         $quarterReportData = $ordersRepository->getQuarterlyReport($year);
+        $years = $ordersRepository->getRecordedYears();
+
         $data = [
             1 => [],
             2 => [],
@@ -323,9 +325,10 @@ class ManagerController extends AbstractController
         }
 
 
-
         return $this->render('report/quarter.html.twig', [
-            'sales' => $quarterReportData
+            'sales' => $quarterReportData,
+            'years' => $years,
+            'cur_year' => $year
         ]);
     }
 
@@ -346,6 +349,95 @@ class ManagerController extends AbstractController
 
         return $this->render('report/customer.html.twig', [
             'customers' => $customers
+        ]);
+    }
+
+    /**
+     * @Route("/report/work_dashboard", name="work_report", methods={"GET"})
+     */
+
+    public function getWorkDashboard(DriverRepository $driverRepository,DriverAssistantRepository $driverAssistantRepository,TruckRepository $truckRepository): Response
+    {
+        //driver
+        $driverData = $driverRepository->getWorkedHours();
+        $drivers = [];
+
+        foreach ($driverData as $driver) {
+            if (!(\array_key_exists($driver['city'], $drivers))) {
+                $drivers[$driver['city']] = [];
+            }
+            array_push($drivers[$driver['city']], $driver);
+        }
+
+        //driverAssistant
+        $driverAssistantData = $driverAssistantRepository->getWorkedHours();
+        $driverAssistants = [];
+
+        foreach ($driverAssistantData as $driverAssistant) {
+            if (!(\array_key_exists($driverAssistant['city'], $driverAssistants))) {
+                $driverAssistants[$driverAssistant['city']] = [];
+            }
+            array_push($driverAssistants[$driverAssistant['city']], $driverAssistant);
+        }
+
+        //trucks
+        $truckData = $truckRepository->getWorkedHours();
+        $trucks = [];
+
+        foreach ($truckData as $truck) {
+            if (!(\array_key_exists($truck['city'], $trucks))) {
+                $trucks[$truck['city']] = [];
+            }
+            array_push($trucks[$truck['city']], $truck);
+        }
+
+        return $this->render('report/work_dashboard.html.twig', [
+            'drivers' => $drivers,
+            'driverAssistants'=>$driverAssistants,
+            'trucks'=>$trucks,
+        ]);
+    }
+
+    /**
+     * @Route("/report/sales_dashboard", name="sales_dashboard", methods={"GET"})
+     */
+    public function getSalesDashboard(ProductRepository $productRepository,OrdersRepository $ordersRepository)
+    {
+        //product
+        $productSales = $productRepository->getProductOrderCount();
+
+        //sales
+        $salesData = $ordersRepository->getSalesReport();
+        $dataSales = [];
+
+        foreach ($salesData as $sd) {
+
+            if (!(\array_key_exists($sd['city'], $dataSales))) {
+                $dataSales[$sd['city']] = [];
+            }
+            if (!(\array_key_exists($sd['route_id'], $dataSales[$sd['city']]))) {
+                $dataSales[$sd['city']][$sd['route_id']] = [];
+            }
+            array_push($dataSales[$sd['city']][$sd['route_id']], $sd);
+        }
+
+        //highest sales
+        $highestSoldProducts = $productRepository->getHighestSoldProducts();
+        $highestSoldCategories = $productRepository->getHighestSoldCategories();
+        $data = [];
+
+        for ($i = 0; $i < count($highestSoldProducts); $i++) {
+            $data[$i]['year'] = $highestSoldProducts[$i]['year'];
+            $data[$i]['month'] = $highestSoldProducts[$i]['month'];
+            $data[$i]['product_name'] = $highestSoldProducts[$i]['product_name'];
+            $data[$i]['product_sales_quantity'] = $highestSoldProducts[$i]['max_sales_quantity'];
+            $data[$i]['category_name'] = $highestSoldCategories[$i]['category_name'];
+            $data[$i]['category_sales_quantity'] = $highestSoldCategories[$i]['max_sales_quantity'];
+        }
+        return $this->render('report/sales_dashboard.html.twig', [
+            'products' => $productSales,
+            'sales'=>$dataSales,
+            'highestSales'=>$data,
         ]);
     }
 }

@@ -14,20 +14,35 @@
         <ul class="list-unstyled components">
             <li class="active"><a href="{{ path('manager_dashboard') }}">Home</a></li>
             <li><a href="{{ path('product_index')}}">Products</a></li>
-            <li><a href="{{ path('sales_report') }}">Reports</a></li>
+            <li>
+                <a href="#reportSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reports</a>
+                <ul class="collapse list-unstyled" id="reportSubmenu">
+                    <li>
+                        <a href="{{ path('work_report') }}">Working Hours Reports</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('quarterly_report') }}">Quarterly sales report</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sales_dashboard') }}">Sales Reports</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('customer_report') }}">Customer Order Reports</a>
+                    </li>
+                </ul>
+            </li>
             <li>
                 <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Accounts</a>
                 <ul class="collapse list-unstyled" id="accountSubmenu">
                     <li>
-                        <a href="{{ path('driver_registration') }}">Driver</a>
+                        <a href="{{ path('store_manager_registration') }}">Store Manager</a>
                     </li>
-                    <li>
-                        <a href="{{ path('driver_assistant_registration') }}">Driver Assistant</a>
-                    </li>
+
                 </ul>
             </li>
         </ul>
     </nav>
 
 {% endblock %}
+
 
