@@ -1,50 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}DriverAssistant{% endblock %}
-
+{% block title %}Driver Assistant Profile{% endblock %}
+ {% block stylesheets %}
+     {{ parent()  }}
+ {% endblock %}
 {% block body %}
-    <h1>DriverAssistant</h1>
+    <h1>My Profile</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ driver_assistant.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ driver_assistant.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ driver_assistant.roles ? driver_assistant.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ driver_assistant.password }}</td>
-            </tr>
-            <tr>
-                <th>First_name</th>
-                <td>{{ driver_assistant.firstName }}</td>
-            </tr>
-            <tr>
-                <th>Last_name</th>
-                <td>{{ driver_assistant.lastName }}</td>
-            </tr>
-            <tr>
-                <th>Work_hours</th>
-                <td>{{ driver_assistant.workHours ? driver_assistant.workHours|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ driver_assistant.status }}</td>
-            </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ driver_assistant.firstName ~' '~ driver_assistant.lastName }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ driver_assistant.email }}</td>
+        </tr>
+        <tr>
+            <th>Worked hours for this week</th>
+            <td>{{ driver_assistant.workHours ? driver_assistant.workHours|date('H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="customSwitches" value="">
+                    <label class="custom-control-label" for="customSwitches"></label>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
+    <input id="id" type="hidden" value="{{ driver_assistant.id }}">
 
-    <a href="{{ path('driver_assistant_index') }}">back to list</a>
+    <a href="{{ path('driver_assistant_home',{'id': driver_assistant.id}) }}">Back</a>
 
-    <a href="{{ path('driver_assistant_edit', {'id': driver_assistant.id}) }}">edit</a>
+    <a href="{{ path('driver_assistant_edit', {'id': driver_assistant.id}) }}">Edit profile</a>
 
     {{ include('driver_assistant/_delete_form.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="{{ asset('js/driver_assistant_status.js') }}"></script>
 {% endblock %}
