@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
+use App\Repository\OrdersRepository;
+use App\Repository\TruckOrderRepository;
 use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Form\DriverButtonType;
@@ -20,6 +22,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Validator\Constraints\Date;
+use \DateTime;
 
 
 /**
@@ -56,6 +60,8 @@ class DriverController extends AbstractController
 
             $driver->setRoles(array('ROLE_DRIVER'));
             $driver->setStatus('idle');
+            $driver->setWorkHours(new \DateTime('00:00:00'));
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($driver);
             $entityManager->flush();
@@ -156,6 +162,15 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+    /**
+     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     */
+    public function show(Driver $driver): Response
+    {
+        return $this->render('driver/show.html.twig', [
+            'driver' => $driver,
+        ]);
+    }
 
 
 
@@ -192,49 +207,59 @@ class DriverController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/{id}/{truck_schedule_id}/picked", name="picked", methods={"POST"})
-     */
-    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, Request $request)
-    {
 
+    /**
+     * @Route("/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
+     */
+    public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
+    {
         $status = $request->request->get("status");
-        var_dump($status);
         if ($status=='Picked')
         {
             $truckScheduleRepository->setStatusPicked($truck_schedule_id);
         }
         elseif ($status=='Delivered')
         {
-            $truckScheduleRepository->setStatusDelivered($truck_schedule_id);
+            $truckSchedule = $truckScheduleRepository->findOneBy([
+                'driver' => $id,
+                'status' => 'picked',
+            ]);
+            $driver_assistant_id=$truckSchedule->getDriverAssistant()->getId();
+            $truck_id=$truckSchedule->getTruck()->getId();
+            $truckScheduleRepository->setStatusDelivered($truck_schedule_id, $id,$driver_assistant_id,$truck_id);
         }
 
         return new Response( 'success');
     }
 
-
-
     /**
-     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     * @Route("/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
      */
-    public function show(Driver $driver): Response
+    public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
     {
-        return $this->render('driver/show.html.twig', [
-            'driver' => $driver,
-        ]);
+        $ordersRepository->setStatusDelivered($order_id);
+
+        return new Response( 'success');
     }
 
     /**
-     * @Route("/{id}/updateWorkHours", name="driver_show", methods={"GET"})
+     * @Route("/{id}/{status}/change-status", name="change-status", methods={"POST"})
      */
-//    public function updateWorkHours(Driver $driver): Response
-//    {
-//        $stopwatch = new Stopwatch();
-//// starts event named 'eventName'
-//        $stopwatch->start('eventName');
-//// ... some code goes here
-//        $event = $stopwatch->stop('eventName');
-//        ]);
-//    }
+    public function toggleAvailability($id,$status,DriverRepository $driverRepository, Request $request)
+    {
+        if ($status==1){
+            $state="Available";
+        }
+        else{
+            $state="Not available";
+        }
+        $driverRepository->changeAvailability($state,$id);
+        return new Response( 'success');
+    }
+
+
+
+
+
 
 }

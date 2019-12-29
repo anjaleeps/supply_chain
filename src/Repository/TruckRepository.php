@@ -55,5 +55,16 @@ class TruckRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function getAvailableTrucks(string $user_id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "SELECT t.id, truck_no FROM truck t
+                inner join store_manager sm on sm.store_id=t.store_id 
+                where status = 'idle'";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $user_id);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
     
 }

@@ -19,34 +19,6 @@ class OrdersRepository extends ServiceEntityRepository
         parent::__construct($registry, Orders::class);
     }
 
-    // /**
-    //  * @return Orders[] Returns an array of Orders objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Orders
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 
     public function getSalesReport(){
         $conn= $this->getEntityManager()->getConnection();
@@ -80,6 +52,15 @@ class OrdersRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function getRecordedYears(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select distinct year(date_completed) as year from orders
+                order by year(date_completed) desc";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getStoredOrders(string $id){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "select o.id as order_id, c.first_name, c.last_name, p.name as product_name, op.quantity, r.id as route_id from orders o 
@@ -95,5 +76,13 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->bindParam(1, $id);
         $stmt->execute();
         return $stmt->fetchAll();   
+    }
+
+    public function setStatusDelivered(int $order_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "CALL order_delivered(?)";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$order_id);
+        $stmt->execute();
     }
 }

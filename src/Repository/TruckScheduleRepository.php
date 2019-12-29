@@ -20,19 +20,39 @@ class TruckScheduleRepository extends ServiceEntityRepository
     }
 
 
-    public function setStatusPicked(int $id ){
+// to set work_hours, initial number should be made 00:00:00 instead of null
+    public function setStatusPicked(int $truck_schedule_id ){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "UPDATE truck_schedule SET status='picked' WHERE id=?";
+        $sql = "CALL truck_order_picked(?)";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$id);
+        $stmt -> bindParam(1,$truck_schedule_id);
         $stmt->execute();
     }
 
-    public function setStatusDelivered(int $id ){
+    public function setStatusDelivered(int $truck_schedule_id, int $driver_id, int $driver_assistant_id, int $truck_id){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "UPDATE truck_schedule SET status='delivered' WHERE id=?";
+        $sql = "CALL truck_order_delivered(?,?,?,?)";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$id);
+        $stmt -> bindParam(1,$truck_schedule_id);
+        $stmt -> bindParam(2,$driver_id);
+        $stmt -> bindParam(3,$driver_assistant_id);
+        $stmt -> bindParam(4,$truck_id );
         $stmt->execute();
     }
+
+
+    public function scheduleTruckDelivery(string $route_id, string $driver_id, string $assistant_id, string $truck_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "INSERT INTO truck_schedule 
+                SET truck_id=?, driver_id=?, driver_assistant_id=?, route_id=?, status='scheduled'";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$truck_id);
+        $stmt -> bindParam(2,$driver_id);
+        $stmt -> bindParam(3,$assistant_id);
+        $stmt -> bindParam(4,$route_id);
+        $stmt->execute();
+    }
+    
+
+
 }

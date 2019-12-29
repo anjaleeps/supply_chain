@@ -19,7 +19,7 @@ Orders:
 
 truckOrder:
     resource: App\Controller\TruckOrderController
-
+    type: annotation
 Route:
     resource: App\Controller\RouteController
     type: annotation
@@ -28,6 +28,9 @@ Store:
     type: annotation
 TrainSchedule:
     resource: App\Controller\TrainScheduleController
+    type: annotation
+truckSchedule:
+    resource: App\Controller\TruckScheduleController
     type: annotation
 customer:
     resource: App\Controller\CustomerController

@@ -45,7 +45,10 @@ class DriverAssistantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($driverAssistant, $driverAssistant->getPlainPassword());
             $driverAssistant->setPassword($password);
+            
             $driverAssistant->setRoles(array('ROLE_DRIVER_ASSISTANT'));
+            $driverAssistant->setStatus('idle');
+            $driverAssistant->setWorkHours(new \DateTime('00:00:00'));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($driverAssistant);

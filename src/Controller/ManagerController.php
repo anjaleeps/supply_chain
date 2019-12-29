@@ -96,6 +96,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/dashboard", name="manager_dashboard", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function getDashboard(): Response
     {
@@ -103,32 +105,13 @@ class ManagerController extends AbstractController
         $orders_placed = $repository->findBy(
             ['order_status' => 'placed']
         );
-        $orders_on_sore = $repository->findBy(
-            ['order_status' => 'on store']
-        );
 
 
         return $this->render('manager/dashboard.html.twig', [
             'placed' => $orders_placed,
-            'on_store' => $orders_on_sore,
         ]);
     }
 
-
-
-    /**
-     * @Route("/dashboard/status", name="manager_change_transport",methods={"POST"})
-     */
-    public function changeTransport(TransportsRepository $transportsRepository, Request $request)
-    {
-        $order_id = $request->request->get("order_id");
-        $date = $request->request->get("date");
-
-        //$date = \DateTime::createFromFormat('Y-m-d', $date);
-        //dd($date);
-        $transportsRepository->scheduleTrainTransport($order_id, $date);
-        return new Response('success');
-    }
 
     /**
      * @Route("/new", name="manager_new", methods={"GET","POST"})
@@ -305,157 +288,67 @@ class ManagerController extends AbstractController
         $data = [];
 
         for ($i = 0; $i < count($highestSoldProducts); $i++) {
-            $data[$i]['year']=$highestSoldProducts[$i]['year'];
-            $data[$i]['month']=$highestSoldProducts[$i]['month'];
-            $data[$i]['product_name']=$highestSoldProducts[$i]['product_name'];
-            $data[$i]['product_sales_quantity']=$highestSoldProducts[$i]['max_sales_quantity'];
-            $data[$i]['category_name']=$highestSoldCategories[$i]['category_name'];
-            $data[$i]['category_sales_quantity']=$highestSoldCategories[$i]['max_sales_quantity'];
+            $data[$i]['year'] = $highestSoldProducts[$i]['year'];
+            $data[$i]['month'] = $highestSoldProducts[$i]['month'];
+            $data[$i]['product_name'] = $highestSoldProducts[$i]['product_name'];
+            $data[$i]['product_sales_quantity'] = $highestSoldProducts[$i]['max_sales_quantity'];
+            $data[$i]['category_name'] = $highestSoldCategories[$i]['category_name'];
+            $data[$i]['category_sales_quantity'] = $highestSoldCategories[$i]['max_sales_quantity'];
         }
-    
+
         return $this->render('report/highest.html.twig', [
-            'sales'=>$data
+            'sales' => $data
         ]);
     }
 
     /**
-     * @Route("/report/quarter", name="quarterly_report", methods={"GET"})
+     * @Route("/report/quarter", name="quarterly_report", methods={"GET", "POST"})
      */
-    public function generateQuarterlyReport($year='2019', OrdersRepository $ordersRepository, Request $request){
-        if ($request->request->get('year')){
+    public function generateQuarterlyReport($year = '2020', OrdersRepository $ordersRepository, Request $request)
+    {
+        if ($request->request->get('year')) {
             $year = $request->request->get('year');
         }
         $quarterReportData = $ordersRepository->getQuarterlyReport($year);
-        $data=[
-            1=> [],
-            2=> [],
-            3=> [],
-            4=> []
+        $years = $ordersRepository->getRecordedYears();
+
+        $data = [
+            1 => [],
+            2 => [],
+            3 => [],
+            4 => []
         ];
-        
-        foreach ($quarterReportData as $row){
+
+        foreach ($quarterReportData as $row) {
             $quarter = $row['quarter'];
             $data[$quarter] = $row;
         }
 
-       
 
         return $this->render('report/quarter.html.twig', [
-            'sales' => $quarterReportData
-        ]);
-
-    }
-
-     /**
-     * @Route("/report/customer", name="customer_report", methods={"GET"})
-     */
-    public function generateCustomerReport(CustomerRepository $customerRepository){
-        $customerData = $customerRepository->getCustomerReport();
-        
-        return $this->render('report/customer.html.twig', [
-            'customers'=> $customerData
+            'sales' => $quarterReportData,
+            'years' => $years,
+            'cur_year' => $year
         ]);
     }
 
     /**
-     * @Route("/report/dashboard", name="report_dashboard", methods={"GET"})
+     * @Route("/report/customer", name="customer_report", methods={"GET"})
      */
-    public function reportDashboard(CustomerRepository $customerRepository,$year='2019',Request $request,ProductRepository $productRepository,DriverRepository $driverRepository,DriverAssistantRepository $driverAssistantRepository,TruckRepository $truckRepository,OrdersRepository $ordersRepository): Response
+    public function generateCustomerReport(CustomerRepository $customerRepository)
     {
-        //product
-        $productSales = $productRepository->getProductOrderCount();
-        //driver
-        $driverData = $driverRepository->getWorkedHours();
-        $drivers = [];
-
-        foreach ($driverData as $driver) {
-            if (!(\array_key_exists($driver['city'], $drivers))) {
-                $drivers[$driver['city']] = [];
-            }
-            array_push($drivers[$driver['city']], $driver);
-        }
-
-        //driver assistant
-        $driverAssistantData = $driverAssistantRepository->getWorkedHours();
-        $driverAssistants = [];
-
-        foreach ($driverAssistantData as $driverAssistant) {
-            if (!(\array_key_exists($driverAssistant['city'], $driverAssistants))) {
-                $driverAssistants[$driverAssistant['city']] = [];
-            }
-            array_push($driverAssistants[$driverAssistant['city']], $driverAssistant);
-        }
-        //trucks
-        $truckData = $truckRepository->getWorkedHours();
-        $trucks = [];
-
-        foreach ($truckData as $truck) {
-            if (!(\array_key_exists($truck['city'], $trucks))) {
-                $trucks[$truck['city']] = [];
-            }
-            array_push($trucks[$truck['city']], $truck);
-        }
-
-        //sales
-        $salesData = $ordersRepository->getSalesReport();
-        $dataSales = [];
-
-        foreach ($salesData as $sd) {
-
-            if (!(\array_key_exists($sd['city'], $dataSales))) {
-                $dataSales[$sd['city']] = [];
-            }
-            if (!(\array_key_exists($sd['route_id'], $dataSales[$sd['city']]))) {
-                $dataSales[$sd['city']][$sd['route_id']] = [];
-            }
-            array_push($dataSales[$sd['city']][$sd['route_id']], $sd);
-        }
-
-        //highest sales data
-        $highestSoldProducts = $productRepository->getHighestSoldProducts();
-        $highestSoldCategories = $productRepository->getHighestSoldCategories();
-        $dataHighest = [];
-
-        for ($i = 0; $i < count($highestSoldProducts); $i++) {
-            $dataHighest[$i]['year']=$highestSoldProducts[$i]['year'];
-            $dataHighest[$i]['month']=$highestSoldProducts[$i]['month'];
-            $dataHighest[$i]['product_name']=$highestSoldProducts[$i]['product_name'];
-            $dataHighest[$i]['product_sales_quantity']=$highestSoldProducts[$i]['max_sales_quantity'];
-            $dataHighest[$i]['category_name']=$highestSoldCategories[$i]['category_name'];
-            $dataHighest[$i]['category_sales_quantity']=$highestSoldCategories[$i]['max_sales_quantity'];
-        }
-
-        //quarterly report
-        if ($request->request->get('year')){
-            $year = $request->request->get('year');
-        }
-        $quarterReportData = $ordersRepository->getQuarterlyReport($year);
-        $data=[
-            1=> [],
-            2=> [],
-            3=> [],
-            4=> []
-        ];
-
-        foreach ($quarterReportData as $row){
-            $quarter = $row['quarter'];
-            $data[$quarter] = $row;
-        }
-
-        //customer
         $customerData = $customerRepository->getCustomerReport();
+        $customers = [];
 
-        return $this->render('report/dashboard.html.twig', [
-            'products' => $productSales,
-            'drivers' => $drivers,
-            'driverAssistants' => $driverAssistants,
-            'trucks' => $trucks,
-            'sales' => $dataSales,
-            'salesHigh'=>$dataHighest,
-            'salesQua' => $quarterReportData,
-            'customers'=> $customerData,
+        foreach ($customerData as $customer) {
+            if (!(array_key_exists($customer['customer_type'], $customers))) {
+                $customers[$customer['customer_type']] = [];
+            }
+            array_push($customers[$customer['customer_type']], $customer);
+        }
 
+        return $this->render('report/customer.html.twig', [
+            'customers' => $customers
         ]);
-
     }
 }

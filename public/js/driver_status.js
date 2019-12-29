@@ -1,20 +1,18 @@
-$(document).on('click','.ajax',function(e){
+$(document).on('change', '.customSwitches', function (e){
     e.preventDefault();
     console.log('jer');
-
-    $clicked= $(this).val();
-    console.log($clicked);
-    $user_id = $('#user_id').val();
-    $truck_schedule_id = $('#truck_schedule_id').val();
-    console.log($user_id);
-    console.log($truck_schedule_id);
+    $val = $(this).val();
+    $status = $(this).is(':checked') ? 1 : 0;
+    console.log($status);
+    $id = $('#id').val();
+    console.log($id);
 
     $.ajax({
-        url: `/driver/${$user_id}/${$truck_schedule_id}/status`,
+        url: `/driver/${$id}/${$status}/change-status`,
         type: "POST",
         dataType: "json",
         data: {
-            'status':$clicked
+            'status':$status,
             // you can pass some parameters to the controller here
         },
         success: function(data) {

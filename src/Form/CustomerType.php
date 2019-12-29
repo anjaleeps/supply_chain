@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Form\PhoneNumberType;
 
 class CustomerType extends AbstractType
 {
@@ -47,6 +49,7 @@ class CustomerType extends AbstractType
             ), [
                 'attr'=> ['class'=>'form-control']
             ])
+            ->add('phoneNumber', TextType:: class)
         ;
     }
 

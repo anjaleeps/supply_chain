@@ -83,6 +83,11 @@ class Customer implements UserInterface
      */
     private $phoneNumbers;
 
+    /**
+     * @Assert\NotBlank()
+     */
+    private $phoneNumber;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -331,7 +336,15 @@ class Customer implements UserInterface
         return $this;
     }
 
+    public function setPhoneNumber(string $phoneNumber){
+        $this->phoneNumber = $phoneNumber;
 
+        return $this;
+    }
+
+    public function getPhoneNumber( ){
+        return $this->phoneNumber;
+    }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata){
 
@@ -359,6 +372,12 @@ class Customer implements UserInterface
             'max' => 20,    
             'minMessage' => 'Password should be at least 8 characters long',
             'maxMessage' => 'Password cannot be longer than 20 characters'
+        ]));
+        
+        $metadata->addPropertyConstraint('phoneNumber', new Assert\Length([
+            'min' => 10,
+            'max' => 10,    
+            'exactMessage' => 'Incorrect format'
         ]));
 
     }
