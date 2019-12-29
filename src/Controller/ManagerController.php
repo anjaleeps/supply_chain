@@ -101,10 +101,10 @@ class ManagerController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(Orders::class);
         $orders_placed = $repository->findBy(
-            ['order_status' => 'Placed']
+            ['order_status' => 'placed']
         );
         $orders_on_sore = $repository->findBy(
-            ['order_status' => 'On Store']
+            ['order_status' => 'on store']
         );
 
 
@@ -113,6 +113,9 @@ class ManagerController extends AbstractController
             'on_store' => $orders_on_sore,
         ]);
     }
+
+
+
     /**
      * @Route("/dashboard/status", name="manager_change_transport",methods={"POST"})
      */
@@ -352,5 +355,107 @@ class ManagerController extends AbstractController
         return $this->render('report/customer.html.twig', [
             'customers'=> $customerData
         ]);
+    }
+
+    /**
+     * @Route("/report/dashboard", name="report_dashboard", methods={"GET"})
+     */
+    public function reportDashboard(CustomerRepository $customerRepository,$year='2019',Request $request,ProductRepository $productRepository,DriverRepository $driverRepository,DriverAssistantRepository $driverAssistantRepository,TruckRepository $truckRepository,OrdersRepository $ordersRepository): Response
+    {
+        //product
+        $productSales = $productRepository->getProductOrderCount();
+        //driver
+        $driverData = $driverRepository->getWorkedHours();
+        $drivers = [];
+
+        foreach ($driverData as $driver) {
+            if (!(\array_key_exists($driver['city'], $drivers))) {
+                $drivers[$driver['city']] = [];
+            }
+            array_push($drivers[$driver['city']], $driver);
+        }
+
+        //driver assistant
+        $driverAssistantData = $driverAssistantRepository->getWorkedHours();
+        $driverAssistants = [];
+
+        foreach ($driverAssistantData as $driverAssistant) {
+            if (!(\array_key_exists($driverAssistant['city'], $driverAssistants))) {
+                $driverAssistants[$driverAssistant['city']] = [];
+            }
+            array_push($driverAssistants[$driverAssistant['city']], $driverAssistant);
+        }
+        //trucks
+        $truckData = $truckRepository->getWorkedHours();
+        $trucks = [];
+
+        foreach ($truckData as $truck) {
+            if (!(\array_key_exists($truck['city'], $trucks))) {
+                $trucks[$truck['city']] = [];
+            }
+            array_push($trucks[$truck['city']], $truck);
+        }
+
+        //sales
+        $salesData = $ordersRepository->getSalesReport();
+        $dataSales = [];
+
+        foreach ($salesData as $sd) {
+
+            if (!(\array_key_exists($sd['city'], $dataSales))) {
+                $dataSales[$sd['city']] = [];
+            }
+            if (!(\array_key_exists($sd['route_id'], $dataSales[$sd['city']]))) {
+                $dataSales[$sd['city']][$sd['route_id']] = [];
+            }
+            array_push($dataSales[$sd['city']][$sd['route_id']], $sd);
+        }
+
+        //highest sales data
+        $highestSoldProducts = $productRepository->getHighestSoldProducts();
+        $highestSoldCategories = $productRepository->getHighestSoldCategories();
+        $dataHighest = [];
+
+        for ($i = 0; $i < count($highestSoldProducts); $i++) {
+            $dataHighest[$i]['year']=$highestSoldProducts[$i]['year'];
+            $dataHighest[$i]['month']=$highestSoldProducts[$i]['month'];
+            $dataHighest[$i]['product_name']=$highestSoldProducts[$i]['product_name'];
+            $dataHighest[$i]['product_sales_quantity']=$highestSoldProducts[$i]['max_sales_quantity'];
+            $dataHighest[$i]['category_name']=$highestSoldCategories[$i]['category_name'];
+            $dataHighest[$i]['category_sales_quantity']=$highestSoldCategories[$i]['max_sales_quantity'];
+        }
+
+        //quarterly report
+        if ($request->request->get('year')){
+            $year = $request->request->get('year');
+        }
+        $quarterReportData = $ordersRepository->getQuarterlyReport($year);
+        $data=[
+            1=> [],
+            2=> [],
+            3=> [],
+            4=> []
+        ];
+
+        foreach ($quarterReportData as $row){
+            $quarter = $row['quarter'];
+            $data[$quarter] = $row;
+        }
+
+        //customer
+        $customerData = $customerRepository->getCustomerReport();
+
+        return $this->render('report/dashboard.html.twig', [
+            'products' => $productSales,
+            'drivers' => $drivers,
+            'driverAssistants' => $driverAssistants,
+            'trucks' => $trucks,
+            'sales' => $dataSales,
+            'salesHigh'=>$dataHighest,
+            'salesQua' => $quarterReportData,
+            'customers'=> $customerData,
+
+        ]);
+
     }
 }

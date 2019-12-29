@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Placed Orders{% endblock %}
+{% block title %}Orders{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
@@ -19,108 +19,107 @@
 
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span>Navigator</span>
                 </button>
             </div>
         </nav>
+        <div class="container my-3">
+            <h2>Placed Orders</h2>
 
-        <h2>Placed Orders</h2>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Products</th>
-                <th>City</th>
-                <th>Route</th>
-                <th>Train Date</th>
-
-            </tr>
-            </thead>
-            <tbody>
-
-            {% for order in placed %}
+            <table class="table">
+                <thead>
                 <tr>
-                    <td class="order_id">{{ order.getId() }}</td>
-                    <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
-                    <td>{% for product in order.getOrderProducts() %}
-                        {{product.getProduct().getName()}}
-                        {% endfor %}
-                    </td>
-                    <td>{{ order.getRoute().getStore().getCity()}}</td>
-                    <td>{{ order.getRoute().getDecription()}}</td>
-                    <td>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Products</th>
+                    <th>City</th>
+                    <th>Route</th>
+                    <th>Train Date</th>
 
-                        <form >
-                            Train Date: <input type="date" name="TrainDate" id="TrainDate">
-                            <button class="ajax">Submit</button>
-                        </form>
-
-
-                    </td>
                 </tr>
+                </thead>
+                <tbody>
 
-            {% else %}
-                <tr>
-                    <td colspan="5">no records found</td>
-                </tr>
-            {% endfor %}
-
-            </tbody>
-        </table>
-        <br>
-        <h2>On Store Orders</h2>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Products</th>
-                <th>City</th>
-                <th>Route</th>
-                <th>Schedule To Truck</th>
-
-            </tr>
-            </thead>
-            <tbody>
-
-            {% for order in on_store %}
-                <tr>
-                    <td class="order_id">{{ order.getId() }}</td>
-                    <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
-                    <td>{% for product in order.getOrderProducts() %}
+                {% for order in placed %}
+                    <tr>
+                        <td class="order_id">{{ order.getId() }}</td>
+                        <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                        <td>{% for product in order.getOrderProducts() %}
                             {{product.getProduct().getName()}}
-                        {% endfor %}
-                    </td>
-                    <td>{{ order.getRoute().getStore().getCity()}}</td>
-                    <td>{{ order.getRoute().getDecription()}}</td>
-                    <td>
-                        <form >
-                            <label class="switch">
-                                <input type="checkbox" name='on_truck' value='on_truck'>
-                                <span class="slider round"></span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.getRoute().getStore().getCity()}}</td>
+                        <td>{{ order.getRoute().getDecription()}}</td>
+                        <td>
 
-                            </label>
-{#                            <input type='checkbox' name='on_truck' value='on_truck'>On Truck#}
-                        </form>
+                            <form >
+                                Train Date: <input type="date" name="TrainDate" id="TrainDate">
+                                <button class="ajax">Submit</button>
+                            </form>
 
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
 
-            {% else %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            <br>
+            <h2>On Store Orders</h2>
+
+            <table class="table">
+                <thead>
                 <tr>
-                    <td colspan="5">no records found</td>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Products</th>
+                    <th>City</th>
+                    <th>Route</th>
+                    <th>Schedule To Truck</th>
+
                 </tr>
-            {% endfor %}
+                </thead>
+                <tbody>
 
-            </tbody>
-        </table>
+                {% for order in on_store %}
+                    <tr>
+                        <td class="order_id">{{ order.getId() }}</td>
+                        <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
+                        <td>{% for product in order.getOrderProducts() %}
+                                {{product.getProduct().getName()}}
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.getRoute().getStore().getCity()}}</td>
+                        <td>{{ order.getRoute().getDecription()}}</td>
+                        <td>
+                            <form >
+                                <label class="switch">
+                                    <input type="checkbox" name='on_truck' value='on_truck'>
+                                    <span class="slider round"></span>
 
+                                </label>
+    {#                            <input type='checkbox' name='on_truck' value='on_truck'>On Truck#}
+                            </form>
+
+
+                        </td>
+                    </tr>
+
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
     </div>
 </div>
 

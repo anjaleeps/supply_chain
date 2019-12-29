@@ -8,22 +8,21 @@
 
     <nav id="sidebar">
         <div class="sidebar-header">
-            <h4>Manager Options</h4>
+            <h4>Store Manager Options</h4>
         </div>
 
         <ul class="list-unstyled components">
-            <li class="active"><a href="{{ path('manager_dashboard') }}">Home</a></li>
-            <li><a href="{{ path('product_index')}}">Products</a></li>
+            <li class="active"><a href="{{ path('store_manager_dashboard') }}">Home</a></li>
             <li><a href="{{ path('sales_report') }}">Reports</a></li>
             <li>
                 <a href="#accountSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Accounts</a>
                 <ul class="collapse list-unstyled" id="accountSubmenu">
                     <li>
-                        <a href="{{ path('store_manager_registration') }}">Store Manager</a>
+                        <a href="{{ path('driver_registration') }}">Driver</a>
                     </li>
-{#                    <li>#}
-{#                        <a href="{{ path('driver_assistant_registration') }}">Driver Assistant</a>#}
-{#                    </li>#}
+                    <li>
+                        <a href="{{ path('driver_assistant_registration') }}">Driver Assistant</a>
+                    </li>
                 </ul>
             </li>
         </ul>
