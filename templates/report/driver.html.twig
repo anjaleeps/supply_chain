@@ -2,69 +2,74 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive report-table">
-                {% if drivers|length > 0 %}
-                    <ul class="nav nav-tabs" role="tablist" id="myTab">
-                        {% for city, cityDrivers in drivers %}
-                            <li class="nav-item">
-                                {% if (loop.index)==1 %}
-                                    <a class="nav-link active" href="{{ '#'~city }}" id="{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
-                                {% else %}
-                                    <a class="nav-link" href="{{ '#'~city }}" id= "{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        {% for city, cityDrivers in drivers %}
+
+        <h2>Driver Report</h2>
+                    <div class="table-responsive report-table">
+                        {% if drivers|length > 0 %}
+                        <ul class="nav nav-tabs" role="tablist" id="myTab">
+                            {% for city, cityDrivers in drivers %}
+                                <li class="nav-item">
+                                    {% if (loop.index)==1 %}
+                                        <a class="nav-link active" href="{{ '#'~city }}" id="{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
+                                    {% else %}
+                                        <a class="nav-link" href="{{ '#'~city }}" id= "{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            {% for city, cityDrivers in drivers %}
                             {% if (loop.index)==1 %}
-                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
-                            {% else %}
+                            <div class="tab-pane show fade active" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
+                                {% else %}
                                 <div class="tab-pane fade" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
-                            {% endif %}
-                            <table class="table table-striped">
-                                <thead class="col-names">
-                                    <tr>
-                                        <th scope="col"> </th>
-                                        <th scope="col">Driver Name</th>
-                                        <th scope="col" >Worked Hours</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="col-body">              
-                                    {% for driver in cityDrivers %}
+                                    {% endif %}
+                                    <table class="table table-striped">
+                                        <thead class="col-names">
                                         <tr>
-                                            <td>{{ loop.index}}</td>
-                                            <td>{{  driver['first_name']~" "~driver['last_name'] }}</td>
-                                            <td>{{  driver['work_hours'] ? driver['work_hours'] : 0 }}</td>
+                                            <th scope="col"> </th>
+                                            <th scope="col">Driver Name</th>
+                                            <th scope="col" >Worked Hours</th>
                                         </tr>
-                                    {% endfor %}                            
-                                </tbody>
-                            </table>
-                                
+                                        </thead>
+                                        <tbody class="col-body">
+                                        {% for driver in cityDrivers %}
+                                            <tr>
+                                                <td>{{ loop.index}}</td>
+                                                <td>{{  driver['first_name']~" "~driver['last_name'] }}</td>
+                                                <td>{{  driver['work_hours'] ? driver['work_hours'] : 0 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
+
+
+                            {% else %}
+                                <p class="lead">No Drivers available</p>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    
-                {% else %}
-                    <p class="lead">No Drivers available</p>
-                {% endif %} 
-            </div>
-        </div>
-        
-    </div>
-</div>
+
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 
 
-{% endblock %}
 
-{% block javascripts %}
-   {{ parent() }} 
-{% endblock %}
+
+
+
+
+

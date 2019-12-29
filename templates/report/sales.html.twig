@@ -7,90 +7,82 @@
 {% endblock %}
 
 {% block body %}
-<div class="wrapper">
-    <div id="content">
-        <div class="container my-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive report-table">
-                        {% if sales|length > 0 %}
-                            <ul class="nav nav-tabs" role="tablist" id="myTab">
-                                {% for city, routeData in sales %}
-                                    <li class="nav-item">
-                                        {% if (loop.index)==1 %}
-                                            <a class="nav-link active" href="{{ '#'~city }}" id="{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
-                                        {% else %}
-                                            <a class="nav-link" href="{{ '#'~city }}" id= "{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                {% for city, routeData in sales %}
-                                    {% if (loop.index)==1 %}
-                                        <div class="tab-pane show fade active" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
-                                    {% else %}
-                                        <div class="tab-pane fade" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
-                                    {% endif %}
-                                            <ul class="nav nav-tabs" role="tablist" id="myTab2">
-                                                {% for route, info in routeData %}
-                                                    <li class="nav-item">
-                                                        {% if (loop.index)==1 %}
-                                                            <a class="nav-link active" href="{{ '#'~route }}" id="{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ route }}</a>
-                                                        {% else %}
-                                                            <a class="nav-link" href="{{ '#'~route }}" id= "{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ route }}</a>
-                                                        {% endif %}
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                            <div class="tab-content" id="myTabContent2">
-                                                {% for route, info in routeData %}
-                                                    {% if (loop.index)==1 %}
-                                                        <div class="tab-pane show fade active" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
-                                                    {% else %}
-                                                        <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
-                                                    {% endif %}
+    <h2>Sales Report</h2>
+            <div class="table-responsive report-table">
+                {% if sales|length > 0 %}
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        {% for city, routeData in sales %}
+                            <li class="nav-item">
+                                {% if (loop.index)==1 %}
+                                    <a class="nav-link active" href="{{ '#'~city }}" id="{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ '#'~city }}" id= "{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        {% for city, routeData in sales %}
+                            {% if (loop.index)==1 %}
+                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
+                            {% else %}
+                                <div class="tab-pane fade" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
+                            {% endif %}
+                                    <ul class="nav nav-tabs" role="tablist" id="myTab2">
+                                        {% for route, info in routeData %}
+                                            <li class="nav-item">
+                                                {% if (loop.index)==1 %}
+                                                    <a class="nav-link active" href="{{ '#'~route }}" id="{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ route }}</a>
+                                                {% else %}
+                                                    <a class="nav-link" href="{{ '#'~route }}" id= "{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ route }}</a>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent2">
+                                        {% for route, info in routeData %}
+                                            {% if (loop.index)==1 %}
+                                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                                            {% else %}
+                                                <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                                            {% endif %}
 
-                                                        <table class="table table-striped">
-                                                            <thead class="col-names">
-                                                                <tr>
-                                                                    <th scope="col"> Month</th>
-                                                                    <th scope="col">Completed Number of Orders</th>
-                                                                    <th scope="col" >Delivered Number of Products</th>
-                                                                    <th scope="col" >Earnings</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="col-body">
-                                                                {% for row in info %}
-                                                                    <tr>
-                                                                        <td>{{ row['year']~"/"~row['month'] }}</td>
-                                                                        <td class="text-center">{{  row['order_count']}}</td>
-                                                                        <td class="text-center">{{  row['product_count']  }}</td>
-                                                                        <td class="text-center">{{  row['earnings']  }}</td>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                        </div>
-                                                {% endfor %}
-                                            </div>
+                                                <table class="table table-striped">
+                                                    <thead class="col-names">
+                                                        <tr>
+                                                            <th scope="col"> Month</th>
+                                                            <th scope="col">Completed Number of Orders</th>
+                                                            <th scope="col" >Delivered Number of Products</th>
+                                                            <th scope="col" >Earnings</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="col-body">
+                                                        {% for row in info %}
+                                                            <tr>
+                                                                <td>{{ row['year']~"/"~row['month'] }}</td>
+                                                                <td class="text-center">{{  row['order_count']}}</td>
+                                                                <td class="text-center">{{  row['product_count']  }}</td>
+                                                                <td class="text-center">{{  row['earnings']  }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                        {% endfor %}
                                     </div>
-                                {% endfor %}
                             </div>
-
-
-                        {% else %}
-                            <p class="lead">No Data available</p>
-                        {% endif %}
+                        {% endfor %}
                     </div>
-                </div>
 
+
+                {% else %}
+                    <p class="lead">No Data available</p>
+                {% endif %}
             </div>
         </div>
-            </div>
-        </div>
+
     </div>
-</div>
+
 
 
 {% endblock %}

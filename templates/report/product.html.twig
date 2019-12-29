@@ -2,13 +2,13 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
+
+    <h2>Product Report</h2>
             <div class="table-responsive report-table">
                 {% if products|length > 0 %}
                     <table class="table table-striped">
@@ -22,7 +22,7 @@
                                 <th scope="col" >Number of Orders</th>
                             </tr>
                         </thead>
-                        <tbody class="col-body">              
+                        <tbody class="col-body">
                             {% for product in products %}
                                 <tr>
                                     <td class="text-center">{{ loop.index }}</td>
@@ -32,17 +32,13 @@
                                     <td>{{ "Rs."~product['unit_price'] }}</td>
                                     <td class="text-center">{{ product['order_count'] }}</td>
                                 </tr>
-                            {% endfor %}                            
+                            {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
                     <p class="lead">No Products available</p>
-                {% endif %} 
+                {% endif %}
             </div>
-        </div>
-        
-    </div>
-</div>
 
 
 {% endblock %}

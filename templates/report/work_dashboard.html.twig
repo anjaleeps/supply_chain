@@ -3,8 +3,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../../css/side_bar.css">
-{#    <link rel="stylesheet" type="text/css" href="../../css/report.css">#}
-{#    <link rel="stylesheet" type="text/css" href="../../css/table.css">#}
+    <link rel="stylesheet" type="text/css" href="../../css/report.css">
+    {#    <link rel="stylesheet" type="text/css" href="../../css/table.css">#}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 
@@ -21,7 +21,19 @@
                     </button>
                 </div>
             </nav>
-            {% include ('report/sales.html.twig') %}
+            <div class="container my-4">
+                <div class="row">
+                    <div class="col-12">
+                        {% include ('report/driver.html.twig') %}
+                        {% include ('report/driver_assistant.html.twig') %}
+                        {% include ('report/truck.html.twig') %}
+                    </div>
+                </div>
+            </div>
+
+
+
+
 
         </div>
     </div>
