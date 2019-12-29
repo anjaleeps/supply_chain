@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Entity\PhoneNumber;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
+use App\Repository\PhoneNumberRepository;
 use App\Security\CustomerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,13 +37,16 @@ class CustomerController extends AbstractController
     /**
      * @Route("/register", name="customer_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  CustomerAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  
+                CustomerAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler,
+                PhoneNumberRepository $phoneNumberRepository)
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class, $customer);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $password = $passwordEncoder->encodePassword($customer, $customer->getPlainPassword());
             $customer->setPassword($password);
             $customer->setRoles(array('ROLE_CUSTOMER'));
@@ -49,6 +54,9 @@ class CustomerController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($customer);
             $entityManager->flush();
+
+            $phoneNumberRepository->insertPNum($customer->getPhoneNumber(), $customer->getId());
+
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                     $customer,

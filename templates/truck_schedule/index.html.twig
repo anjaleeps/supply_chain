@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TruckSchedule index{% endblock %}
+
+{% block body %}
+    <h1>TruckSchedule index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Start_time</th>
+                <th>End_time</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for truck_schedule in truck_schedules %}
+            <tr>
+                <td>{{ truck_schedule.id }}</td>
+                <td>{{ truck_schedule.startTime ? truck_schedule.startTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ truck_schedule.endTime ? truck_schedule.endTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ truck_schedule.status }}</td>
+                <td>
+                    <a href="{{ path('truck_schedule_show', {'id': truck_schedule.id}) }}">show</a>
+                    <a href="{{ path('truck_schedule_edit', {'id': truck_schedule.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('truck_schedule_new') }}">Create new</a>
+{% endblock %}

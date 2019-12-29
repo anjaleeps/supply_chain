@@ -95,7 +95,7 @@ class DriverAuthenticator extends AbstractFormLoginAuthenticator implements Pass
         }
 
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        return new RedirectResponse($this->urlGenerator->generate('app_homepage'));
+        return new RedirectResponse($this->urlGenerator->generate('driver_home'));
     }
 
     protected function getLoginUrl()

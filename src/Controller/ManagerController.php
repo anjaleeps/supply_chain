@@ -96,36 +96,22 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/dashboard", name="manager_dashboard", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function getDashboard(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Orders::class);
         $orders_placed = $repository->findBy(
-            ['order_status' => 'Placed']
-        );
-        $orders_on_sore = $repository->findBy(
-            ['order_status' => 'On Store']
+            ['order_status' => 'placed']
         );
 
 
         return $this->render('manager/dashboard.html.twig', [
             'placed' => $orders_placed,
-            'on_store' => $orders_on_sore,
         ]);
     }
-    /**
-     * @Route("/dashboard/status", name="manager_change_transport",methods={"POST"})
-     */
-    public function changeTransport(TransportsRepository $transportsRepository, Request $request)
-    {
-        $order_id = $request->request->get("order_id");
-        $date = $request->request->get("date");
 
-        //$date = \DateTime::createFromFormat('Y-m-d', $date);
-        //dd($date);
-        $transportsRepository->scheduleTrainTransport($order_id, $date);
-        return new Response('success');
-    }
 
     /**
      * @Route("/new", name="manager_new", methods={"GET","POST"})
@@ -302,55 +288,67 @@ class ManagerController extends AbstractController
         $data = [];
 
         for ($i = 0; $i < count($highestSoldProducts); $i++) {
-            $data[$i]['year']=$highestSoldProducts[$i]['year'];
-            $data[$i]['month']=$highestSoldProducts[$i]['month'];
-            $data[$i]['product_name']=$highestSoldProducts[$i]['product_name'];
-            $data[$i]['product_sales_quantity']=$highestSoldProducts[$i]['max_sales_quantity'];
-            $data[$i]['category_name']=$highestSoldCategories[$i]['category_name'];
-            $data[$i]['category_sales_quantity']=$highestSoldCategories[$i]['max_sales_quantity'];
+            $data[$i]['year'] = $highestSoldProducts[$i]['year'];
+            $data[$i]['month'] = $highestSoldProducts[$i]['month'];
+            $data[$i]['product_name'] = $highestSoldProducts[$i]['product_name'];
+            $data[$i]['product_sales_quantity'] = $highestSoldProducts[$i]['max_sales_quantity'];
+            $data[$i]['category_name'] = $highestSoldCategories[$i]['category_name'];
+            $data[$i]['category_sales_quantity'] = $highestSoldCategories[$i]['max_sales_quantity'];
         }
-    
+
         return $this->render('report/highest.html.twig', [
-            'sales'=>$data
+            'sales' => $data
         ]);
     }
 
     /**
-     * @Route("/report/quarter", name="quarterly_report", methods={"GET"})
+     * @Route("/report/quarter", name="quarterly_report", methods={"GET", "POST"})
      */
-    public function generateQuarterlyReport($year='2019', OrdersRepository $ordersRepository, Request $request){
-        if ($request->request->get('year')){
+    public function generateQuarterlyReport($year = '2020', OrdersRepository $ordersRepository, Request $request)
+    {
+        if ($request->request->get('year')) {
             $year = $request->request->get('year');
         }
         $quarterReportData = $ordersRepository->getQuarterlyReport($year);
-        $data=[
-            1=> [],
-            2=> [],
-            3=> [],
-            4=> []
+        $years = $ordersRepository->getRecordedYears();
+
+        $data = [
+            1 => [],
+            2 => [],
+            3 => [],
+            4 => []
         ];
-        
-        foreach ($quarterReportData as $row){
+
+        foreach ($quarterReportData as $row) {
             $quarter = $row['quarter'];
             $data[$quarter] = $row;
         }
 
-       
 
         return $this->render('report/quarter.html.twig', [
-            'sales' => $quarterReportData
+            'sales' => $quarterReportData,
+            'years' => $years,
+            'cur_year' => $year
         ]);
-
     }
 
-     /**
+    /**
      * @Route("/report/customer", name="customer_report", methods={"GET"})
      */
-    public function generateCustomerReport(CustomerRepository $customerRepository){
+    public function generateCustomerReport(CustomerRepository $customerRepository)
+    {
         $customerData = $customerRepository->getCustomerReport();
-        
+        $customers = [];
+
+        foreach ($customerData as $customer) {
+            if (!(array_key_exists($customer['customer_type'], $customers))) {
+                $customers[$customer['customer_type']] = [];
+            }
+            array_push($customers[$customer['customer_type']], $customer);
+        }
+
         return $this->render('report/customer.html.twig', [
-            'customers'=> $customerData
+            'customers' => $customers
         ]);
     }
 }

@@ -9,6 +9,7 @@ use App\Repository\TransportsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -18,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class TrainScheduleController extends AbstractController
 {
     /**
-     * @Route("/", name="train_schedule_index", methods={"GET"})
+     * @Route("/train/schedule", name="train_schedule_index", methods={"GET"})
      */
     public function index(TrainScheduleRepository $trainScheduleRepository): Response
     {
@@ -28,31 +29,22 @@ class TrainScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="train_schedule_new", methods={"GET","POST"})
+     * @Route("/manager/train/schedule/new", name="train_schedule_new", methods={"POST"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
-    public function new(Request $request): Response
+    public function scheduleTrainTransport(Request $request, TransportsRepository $transportsRepository): Response
     {
-        $trainSchedule = new TrainSchedule();
-        $form = $this->createForm(TrainScheduleType::class, $trainSchedule);
-        $form->handleRequest($request);
+        $order_id = $request->request->get("order_id");
+        // $date = $request->request->get("date");
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trainSchedule);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('train_schedule_index');
-        }
-
-        return $this->render('train_schedule/new.html.twig', [
-            'train_schedule' => $trainSchedule,
-            'form' => $form->createView(),
-        ]);
+        $trainData = $transportsRepository->scheduleTrainTransport($order_id);
+        return new JsonResponse($trainData[0]);    
     }
 
     
     /**
-     * @Route("/store_manager/train/update", name="train_status_update", methods={"POST"})
+     * @Route("/store_manager/train/schedule/edit", name="train_schedule_edit", methods={"POST"})
      * 
      * @IsGranted("ROLE_STORE_MANAGER")
      */
@@ -68,7 +60,7 @@ class TrainScheduleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="train_schedule_show", methods={"GET"})
+     * @Route("/train/schedule/{id}", name="train_schedule_show", methods={"GET"})
      */
     public function show(TrainSchedule $trainSchedule): Response
     {
@@ -77,28 +69,28 @@ class TrainScheduleController extends AbstractController
         ]);
     }
 
+    // /**
+    //  * @Route("/{id}/edit", name="train_schedule_edit", methods={"GET","POST"})
+    //  */
+    // public function edit(Request $request, TrainSchedule $trainSchedule): Response
+    // {
+    //     $form = $this->createForm(TrainScheduleType::class, $trainSchedule);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $this->getDoctrine()->getManager()->flush();
+
+    //         return $this->redirectToRoute('train_schedule_index');
+    //     }
+
+    //     return $this->render('train_schedule/edit.html.twig', [
+    //         'train_schedule' => $trainSchedule,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/{id}/edit", name="train_schedule_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, TrainSchedule $trainSchedule): Response
-    {
-        $form = $this->createForm(TrainScheduleType::class, $trainSchedule);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('train_schedule_index');
-        }
-
-        return $this->render('train_schedule/edit.html.twig', [
-            'train_schedule' => $trainSchedule,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="train_schedule_delete", methods={"DELETE"})
+     * @Route("/train/schedule/{id}", name="train_schedule_delete", methods={"DELETE"})
      */
     public function delete(Request $request, TrainSchedule $trainSchedule): Response
     {

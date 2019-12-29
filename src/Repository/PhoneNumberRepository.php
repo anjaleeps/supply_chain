@@ -47,4 +47,14 @@ class PhoneNumberRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function insertPNum(string $phone_number, int $customer_id ){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "insert into phone_number (customer_id, phone_number) 
+                values (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $customer_id);
+        $stmt->bindParam(2, $phone_number);
+        $stmt->execute();
+    }
 }

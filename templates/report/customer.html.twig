@@ -11,33 +11,59 @@
         <div class="col-12">
             <div class="table-responsive report-table">
                 {% if customers|length > 0 %}
-                    <table class="table table-striped">
-                        <thead class="col-names">
-                            <tr>
-                                <th scope="col">Customer ID </th>
-                                <th scope="col"> Customer Name</th>
-                                <th scope="col">City</th>
-                                <th scope="col" >Number of Orders Placed</th>
-                                <th scope="col" >Number of Products Ordered</th>
-                                <th scope="col" >Payments</th>
-                            </tr>
-                        </thead>
-                        <tbody class="col-body">              
-                            {% for customer in customers %}
-                                <tr>
-                                    <td class="text-center">{{ customer['id'] }}</td>
-                                    <td> {{ customer['first_name']~" "~customer['last_name'] }}</td>
-                                    <td>{{  customer['city'] }}</td>
-                                    <td>{{  customer['order_count'] }}</td>
-                                    <td>{{ customer['product_count'] }}</td>
-                                    <td class="text-center">{{ "Rs."~customer['paid']}}</td>
-                                </tr>
-                            {% endfor %}                            
-                        </tbody>
-                    </table>
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        {% for type, data in customers %}
+                            <li class="nav-item">
+                                {% if (loop.index)==1 %}
+                                    <a class="nav-link active" href="{{ '#'~type }}" id="{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="true">{{ type }}</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ '#'~type }}" id= "{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="false">{{ type }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        {% for type, data in customers %}
+                            {% if (loop.index)==1 %}
+                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
+                            {% else %}
+                                <div class="tab-pane fade" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
+                            {% endif %}
+                            <table class="table table-striped">
+                                <thead class="col-names">
+                                    <tr>
+                                        <th scope="col">Customer ID </th>
+                                        <th scope="col"> Customer Name</th>
+                                        <th scope="col">City</th>
+                                        <th scope="col" >Number of Orders Placed</th>
+                                        <th scope="col" >Number of Products Ordered</th>
+                                        <th scope="col" >Payments</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="col-body">              
+                                    {% for customer in data %}
+                                        <tr>
+                                            <td class="text-center">{{ customer['id'] }}</td>
+                                            <td> {{ customer['first_name']~" "~customer['last_name'] }}</td>
+                                            <td>{{  customer['city'] }}</td>
+                                            <td>{{  customer['order_count'] }}</td>
+                                            <td>{{ customer['product_count'] }}</td>
+                                            <td class="text-center">{{ "Rs."~customer['paid']}}</td>
+                                        </tr>
+                                    {% endfor %}                            
+                                </tbody>
+                            </table>
+                                
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    
                 {% else %}
-                    <p class="lead">No Products available</p>
+                    <p class="lead">No Customers available</p>
                 {% endif %} 
+
+                
             </div>
         </div>
         

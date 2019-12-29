@@ -21,14 +21,24 @@ class TransportsRepository extends ServiceEntityRepository
         parent::__construct($registry, Transports::class);
     }
 
-    public function scheduleTrainTransport(int $order_id, string $date){
+    public function scheduleTrainTransport(int $order_id){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "CALL schedule_train_transportation(?,?)";
+        $sql = "select schedule_trains(?) as train_id";
         $stmt = $conn->prepare($sql);
         $stmt -> bindParam(1,$order_id);
-        $stmt ->bindParam(2,$date);
         $stmt->execute();
+        $data = $stmt->fetchAll();
+        $train_id = $data[0]['train_id'];
 
+        $sql = "SELECT ts.id, ts.start_time, t.date 
+                FROM train_schedule ts 
+                INNER JOIN transports t on t.train_schedule_id=ts.id
+                WHERE ts.id = ? and t.orders_id = ?";
+         $stmt = $conn->prepare($sql);
+         $stmt -> bindParam(1,$train_id);
+         $stmt -> bindParam(2,$order_id);
+         $stmt->execute();
+         return $stmt->fetchAll();
     }
 
     // /**

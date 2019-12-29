@@ -1,20 +1,15 @@
-$(document).on('click','.ajax',function(e){
+$('.checkbox').change(function(e){
     e.preventDefault();
     console.log('jer');
 
-    $clicked= $(this).val();
-    console.log($clicked);
-    $user_id = $('#user_id').val();
-    $truck_schedule_id = $('#truck_schedule_id').val();
-    console.log($user_id);
-    console.log($truck_schedule_id);
+    $order_id=$(this).val();
+    console.log($order_id);
 
     $.ajax({
-        url: `/driver/${$user_id}/${$truck_schedule_id}/status`,
+        url: `/driver/${$order_id}/orderdelivered`,
         type: "POST",
         dataType: "json",
         data: {
-            'status':$clicked
             // you can pass some parameters to the controller here
         },
         success: function(data) {
@@ -26,5 +21,6 @@ $(document).on('click','.ajax',function(e){
             // show alert or something
         }
     });
+
 
 });

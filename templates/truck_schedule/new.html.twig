@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TruckSchedule{% endblock %}
+
+{% block body %}
+    <h1>Create new TruckSchedule</h1>
+
+    {{ include('truck_schedule/_form.html.twig') }}
+
+    <a href="{{ path('truck_schedule_index') }}">back to list</a>
+{% endblock %}

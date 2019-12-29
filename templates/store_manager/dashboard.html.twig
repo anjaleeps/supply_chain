@@ -6,18 +6,6 @@
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
 {% endblock %}
 {% block body %}
-    <div id="sidebar">
-        <div class="toggle-btn" onclick="toggleSidebar()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul>
-            <li>Home</li>
-            <li>Product +</li>
-            <li>Reports</li>
-        </ul>
-    </div>
 
         <h1>Expected Train Deliveries</h1>
 
@@ -107,8 +95,48 @@
                     </table>
                 </div>
                 {% endfor %}
-            </div>    
+            </div>   
             
+            <h4>Schedule Truck Deliveries</h4>
+            <form class="form-inline my-4">
+                <div class="form-group mx-3">
+                    <select id="route_selection" class="form-control">
+                        <option selected value=null>Choose Route</option>
+                        {% for route in orders|keys %}
+                            <option value="{{ route }}">{{ "Route #"~route}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mx-3">
+                    <select id="driver_selection" class="form-control">
+                        <option selected value=null>Choose Driver</option>
+                        {% for driver in drivers %}
+                            <option value="{{ driver.id }}">{{ driver.first_name~" "~driver.last_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mx-3">
+                    <select id="assistant_selection" class="form-control">
+                        <option selected value=null>Choose Assistant</option>
+                        {% for assistant in assistants %}
+                            <option value="{{ assistant.id }}">{{ assistant.first_name~" "~assistant.last_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mx-3">
+                    <select id="truck_selection" class="form-control">
+                        <option selected value=null>Choose Truck</option>
+                        {% for truck in trucks %}
+                            <option value="{{ truck.id }}">{{ truck.truck_no }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mx-3">
+                    <input type="submit" class="btn btn-sm btn-primary schedule">
+                </div>
+            </form>
+    
+    
             {% else %}
             <p class="lead">No Data available</p>
              {% endif %} 
@@ -118,8 +146,8 @@
 
 {% block javascripts %}
     {{ parent()  }}
-    <script src="../js/store_manager.js"></script>
     <script src="../js/side_bar.js"></script>
+    <script src="../js/store_manager.js"></script>
 {% endblock %}
 
 

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TruckSchedule{% endblock %}
+
+{% block body %}
+    <h1>Edit TruckSchedule</h1>
+
+    {{ include('truck_schedule/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('truck_schedule_index') }}">back to list</a>
+
+    {{ include('truck_schedule/_delete_form.html.twig') }}
+{% endblock %}
