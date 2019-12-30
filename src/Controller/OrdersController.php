@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Orders;
+use App\Entity\OrderProduct;
 use App\Form\OrdersType;
 use App\Repository\OrdersRepository;
+use App\Repository\OrderProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,25 +29,34 @@ class OrdersController extends AbstractController
     }
 
     /**
-     * @Route("/placeOrder", name="place_order", methods={"GET"})
+     * @Route("/checkout", name="order_checkout", methods={"GET","POST"})
      */
-    public function place_order()
+    public function checkout(Request $request)
+    {
+        return $this->render('orders/customer_order.html.twig',[
+            'details' => $request->request->get('details')
+        ]);
+    }
+
+    /**
+     * @Route("/placeOrder", name="place_order", methods={"GET","POST"})
+     */
+    public function place_order(OrdersRepository $ordersRepository, OrderProductRepository $orderProductRepository)
     {
 
-        return $this->render('orders/customer_order.html.twig');
-
-        $order = new Orders();
-        $customer = new Customer();
-
-        $customer_id = app.user.id;
         
         
 
-        
-        $order ->setOrderStatus('Placed');
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($order);
-        $entityManager->flush();
+        $customer_id = 1;
+        $route_id = 1;
+        $status = "placed";
+        $details = [[1,2],[4,5]];
+
+        $date = date('Y/m/d');
+        $orders_id = $ordersRepository->placeOrder($customer_id,$route_id,$status,$date);
+        foreach ($details as $item){
+            $orderProductRepository->orderProducts($orders_id, $item[0], $item[1]);
+        }
 
     }
 
@@ -56,19 +67,19 @@ class OrdersController extends AbstractController
     public function new(Request $request): Response
     {
         $order = new Orders();
-        $customer = new Customer();
-
-        $customer_id = app.user.id;
-        
-        
-
-        
-        $order ->setOrderStatus('Placed');
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($order);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('orders_index');
+        $form = $this->createForm(OrdersType::class, $order);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order ->setOrderStatus('Placed');
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($order);
+            $entityManager->flush();
+            return $this->redirectToRoute('orders_index');
+        }
+        return $this->render('orders/new.html.twig', [
+            'order' => $order,
+            'form' => $form->createView(),
+        ]);
    
     }
 

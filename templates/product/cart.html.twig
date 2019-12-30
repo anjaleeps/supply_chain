@@ -11,10 +11,10 @@
             border-left: 1px solid #e1e1e1;
         }
         table th{
-            color: #575757;
+            color: white;
             font-weight: 100;
             font-size: 14px;
-            background-color: #efefef;
+            background-color: #002752;
             border-top: 1px solid #e1e1e1;
             border-right: 1px solid #e1e1e1;
             border-bottom: 1px solid #e1e1e1;
@@ -24,11 +24,12 @@
             border-left: 1px solid #e1e1e1;
         }
         table td{
-            color: #6a6a6a;
+            height: 100px;
+            color: #212529;
             font-weight: 400;
             font-size: 14px;
             border-right: 1px solid #e1e1e1;
-            border-bottom: 1px solid #e1e1e1;
+            border-bottom: 1px solid #d3cece;
             text-align:center;
         }
 
@@ -72,7 +73,7 @@
         <br>
         <div class="wc-proceed-to-checkout">
 
-            <a href="{{ path('place_order') }}" class="btn btn-1" style="margin-left: 930px" >Proceed to checkout</a>
+            <a style="margin-left: 930px" href="{{ path('order_checkout') }}" ><button onClick="checkout()">Proceed to checkout</button></a>
         </div>
         </main>
         <p id="customerId" style="display:none">{{ app.user.id }}</p>
@@ -151,14 +152,6 @@
         CART.init();
         showCart();
         
-
-        function create(item){
-            let name = document.createElement('td');
-            name.textContent = item.name;
-            cartBody.appendChild(name);
-
-        }
-        
         function showCart(){
             let cartTable = document.getElementById('cartTable');
             let cartBody = document.getElementById('cartbody');
@@ -169,11 +162,15 @@
                 one.className = "tbl-cart";
 
                 let name = document.createElement('td');
+                let image = document.createElement('img');
+                image.setAttribute('src', '/images/item.picture');
+                image.setAttribute('alt', 'image');
+                name.appendChild(image);
                 name.textContent = item.name;
                 one.appendChild(name);
 
                 let quantity = document.createElement('td');
-                quantity.textContent = 2;
+                quantity.textContent = 1;
                 one.appendChild(quantity);
 
                 let uprice = document.createElement('td');
@@ -188,17 +185,74 @@
                 remove.textContent = "remove";
                 one.appendChild(remove);
 
-                cartBody.appendChild(one);
+                cartTable.appendChild(one);
 
             })
-            cartTable.appendChild(cartBody);
-
+            
         }
 
         function checkout(){
-            let details = CART.contents;
+            let details = [];
+            let cartitems = CART.contents;
+            cartitems.forEach( item =>{
+                let product = [];
+                product.push(item.id,1)
+                details.push(product);
+            })
 
+            let customerId = id;
+            let quant = 1;
+            var det = JSON.stringify(details);
+
+            $.ajax({
+                url: "/orders/checkout",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    adetails : det,                    
+                },
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (adetails) {
+                    alert(typeof(adetails));
+                }
+            });
         }
+
+        $(document).on('click', 'button.ajax', function (e) {
+        e.preventDefault();
+
+        let details = [];
+            let cartitems = CART.contents;
+            cartitems.forEach( item =>{
+                let product = [];
+                product.push(item.id,1)
+                details.push(product);
+            })
+
+            let customerId = id;
+            let quant = 1;
+            var det = JSON.stringify(details);
+
+        $.ajax({
+            url: "/orders/placeOrder",
+            type: "POST",
+            dataType: "json",
+            data: {
+                'details': det,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+
+        });
+
+
 
     </script>
 

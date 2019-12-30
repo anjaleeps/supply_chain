@@ -49,24 +49,11 @@ class ProductController extends AbstractController
      * 
      * @IsGranted("ROLE_CUSTOMER")
      */
-    public function cart(Request $request)
-    {
-        $variable = $request->request->get("cart");
-        dump($variable);
-        return $this->render('product/cart.html.twig',['cartItems' => $variable]);
-        
-    }
-
-
-    /**
-     * @Route("/addToCart/{id}", name="add_to_cart", methods={"GET"}, requirements={"id":"\d+"})
-     * 
-     * @IsGranted("ROLE_CUSTOMER")
-     */
-    public function addToCart(Product $product): Response
+    public function cart()
     {
         
         return $this->render('product/cart.html.twig');
+        
     }
 
 

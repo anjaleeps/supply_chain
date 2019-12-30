@@ -23,7 +23,22 @@
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   height: 400px;
-  width: 270px;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  padding-bottom: 20px;
+}
+
+.imagecard {
+  height: 250px;
+  width: 230px;
+  margin: auto;
+}
+
+.textcard{
+  height: 150px;
+  width: 230px;
   margin: auto;
   text-align: center;
   font-family: arial;
@@ -40,7 +55,7 @@
   outline: 0;
   padding: 12px;
   color: white;
-  background-color: #000;
+  background-color: #002752;
   text-align: center;
   cursor: pointer;
   width: 100%;
@@ -55,7 +70,7 @@
 
 <body>
 
-<a href="{{ path('cart') }}" ><button onclick="myFunction()">cart</button></a>
+<a href="{{ path('cart') }}" ><button>cart</button></a>
 
 <h2 style="padding-left:180px; padding-top:20px">Products</h2>
 
@@ -66,10 +81,14 @@
     {% set foo = { details: arr} %}
 
     <div class="card">
-    <img src="/images/{{ product.picture }}" alt="product image" style="width:100%">
+    <box class="imagecard">
+    <img height=220px src="/images/{{ product.picture }}" alt="product image" style="width:100%">
+    </box>
+    <div class="textcard">
     <h5>{{ product.name }}</h5>
     <p class="price">{{ product.unitPrice }}</p>
-    <p><button onclick="addItem()" >Add to Cart</button></p>
+    <p><button onclick="addItem({{product.id}}, '{{product.name}}',{{product.unitPrice}}, '{{product.picture}}')" >Add to Cart</button></p>
+    </div>
     </div>
 
 {% endfor %}
@@ -92,7 +111,7 @@
 <script>
 
 
-  function addItem(){
+  function addItem(id, name, unitPrice, picture){
 
     var userid = document.getElementById("user").innerHTML;
 
@@ -103,10 +122,9 @@
 
     else{
     var customerID = document.getElementById("customerId").innerHTML;
-    var productDetails = {id:2 , name:"camera2" , unitPrice:10000.00, picture:"2image.jpg"};
+    var productDetails = {id:id , name:name , unitPrice:unitPrice, picture:picture};
     var name = "cartKeyOf:"
     var key = name.concat(customerID);
-    alert(key);
 
     contents = [];
 
@@ -117,9 +135,8 @@
     
     contents.push(productDetails);
     let _cart = JSON.stringify(contents);
-    alert(_cart);
     localStorage.setItem(key, _cart);
-
+    alert("Added to cart");
     }
     
     return false;
