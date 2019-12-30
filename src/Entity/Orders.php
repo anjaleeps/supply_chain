@@ -115,6 +115,18 @@ class Orders
         return $this;
     }
 
+    public function getCustomerId(): ?int
+    {
+        return $this->customer_id;
+    }
+
+    public function setCustomerId(int $id): self
+    {
+        $this->customer_id = $id;
+
+        return $this;
+    }
+
     /**
      * @return Collection|OrderProduct[]
      */
@@ -154,6 +166,18 @@ class Orders
     public function setRoute(?Route $route): self
     {
         $this->route = $route;
+
+        return $this;
+    }
+
+    public function getRouteId(): ?int
+    {
+        return $this->route_id;
+    }
+
+    public function setRouteId(int $id): self
+    {
+        $this->route_id = $id;
 
         return $this;
     }
