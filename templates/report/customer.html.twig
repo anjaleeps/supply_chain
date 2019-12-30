@@ -1,72 +1,90 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}Customer Report{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive report-table">
-                {% if customers|length > 0 %}
-                    <ul class="nav nav-tabs" role="tablist" id="myTab">
-                        {% for type, data in customers %}
-                            <li class="nav-item">
-                                {% if (loop.index)==1 %}
-                                    <a class="nav-link active" href="{{ '#'~type }}" id="{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="true">{{ type }}</a>
-                                {% else %}
-                                    <a class="nav-link" href="{{ '#'~type }}" id= "{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="false">{{ type }}</a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        {% for type, data in customers %}
-                            {% if (loop.index)==1 %}
-                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
-                            {% else %}
-                                <div class="tab-pane fade" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
-                            {% endif %}
-                            <table class="table table-striped">
-                                <thead class="col-names">
-                                    <tr>
-                                        <th scope="col">Customer ID </th>
-                                        <th scope="col"> Customer Name</th>
-                                        <th scope="col">City</th>
-                                        <th scope="col" >Number of Orders Placed</th>
-                                        <th scope="col" >Number of Products Ordered</th>
-                                        <th scope="col" >Payments</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="col-body">              
-                                    {% for customer in data %}
-                                        <tr>
-                                            <td class="text-center">{{ customer['id'] }}</td>
-                                            <td> {{ customer['first_name']~" "~customer['last_name'] }}</td>
-                                            <td>{{  customer['city'] }}</td>
-                                            <td>{{  customer['order_count'] }}</td>
-                                            <td>{{ customer['product_count'] }}</td>
-                                            <td class="text-center">{{ "Rs."~customer['paid']}}</td>
-                                        </tr>
-                                    {% endfor %}                            
-                                </tbody>
-                            </table>
-                                
+<div class="wrapper">
+    {% include ('manager/managerSideBar.html.twig') %}
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>navigator</span>
+                </button>
+            </div>
+        </nav>
+        <h2>Customer Order Report</h2>
+        <div class="container my-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive report-table">
+                        {% if customers|length > 0 %}
+                            <ul class="nav nav-tabs" role="tablist" id="myTab">
+                                {% for type, data in customers %}
+                                    <li class="nav-item">
+                                        {% if (loop.index)==1 %}
+                                            <a class="nav-link active" href="{{ '#'~type }}" id="{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="true">{{ type }}</a>
+                                        {% else %}
+                                            <a class="nav-link" href="{{ '#'~type }}" id= "{{ type~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ type }}" aria-selected="false">{{ type }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                {% for type, data in customers %}
+                                    {% if (loop.index)==1 %}
+                                        <div class="tab-pane show fade active" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
+                                    {% else %}
+                                        <div class="tab-pane fade" role="tabpanel" id= "{{ type }}" aria-labelledby="{{ type~'-tab' }}">
+                                    {% endif %}
+                                    <table class="table table-striped">
+                                        <thead class="col-names">
+                                            <tr>
+                                                <th scope="col">Customer ID </th>
+                                                <th scope="col"> Customer Name</th>
+                                                <th scope="col">City</th>
+                                                <th scope="col" >Number of Orders Placed</th>
+                                                <th scope="col" >Number of Products Ordered</th>
+                                                <th scope="col" >Payments</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="col-body">
+                                            {% for customer in data %}
+                                                <tr>
+                                                    <td class="text-center">{{ customer['id'] }}</td>
+                                                    <td> {{ customer['first_name']~" "~customer['last_name'] }}</td>
+                                                    <td>{{  customer['city'] }}</td>
+                                                    <td>{{  customer['order_count'] }}</td>
+                                                    <td>{{ customer['product_count'] }}</td>
+                                                    <td class="text-center">{{ "Rs."~customer['paid']}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                    </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
+
+
+                        {% else %}
+                            <p class="lead">No Customers available</p>
+                        {% endif %}
+
+
                     </div>
+                </div>
 
-                    
-                {% else %}
-                    <p class="lead">No Customers available</p>
-                {% endif %} 
-
-                
             </div>
         </div>
-        
+        </div>
     </div>
 </div>
 
@@ -74,5 +92,13 @@
 {% endblock %}
 
 {% block javascripts %}
-   {{ parent() }} 
+    {{ parent()  }}
+    <script src="../../js/side_bar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 {% endblock %}

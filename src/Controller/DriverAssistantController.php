@@ -148,37 +148,6 @@ class DriverAssistantController extends AbstractController
 
         return $this->redirectToRoute('driver_assistant_index');
     }
-    /**
-     * @Route("/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
-     */
-    public function home($id, DriverAssistant $driverAssistant, TruckScheduleRepository $truckScheduleRepository): Response
-    {
-
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_assistant' => $id,
-//            'driver_assistant' => $driverAssistant->getId(),
-            'status' => 'ready',
-        ]);
-
-        $truck_schedule_id=$truckSchedule->getId();
-        $truck_no=$truckSchedule->getTruck()->getTruckNo();
-        $route=$truckSchedule->getRoute()->getDecription();
-
-        $form = $this->createForm(DriverButtonType::class);
-
-        if($form->get('picked')->isClicked()){
-            $truckScheduleRepository->changeStatusPicked('1');
-        }
-
-
-        return $this->render('driver_assistant/home.html.twig', [
-            'truck_schedule_id'=> $truck_schedule_id,
-            'driver_assistant' => $driverAssistant,
-            'truck_no'=>$truck_no,
-            'route'=>$route,
-            'form' => $form->createView(),
-        ]);
-    }
 
     /**
      * @Route("/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
@@ -189,5 +158,56 @@ class DriverAssistantController extends AbstractController
             'driver_assistant' => $driverAssistant,
         ]);
     }
+
+
+    /**
+     * @Route("/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
+     */
+    public function home($id, DriverAssistant $driverAssistant, TruckScheduleRepository $truckScheduleRepository): Response
+    {
+
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver_assistant' => $id,
+            'status' => 'ready',
+        ]);
+
+        if ($truckSchedule!=null)
+        {
+            $truck_schedule_id=$truckSchedule->getId();
+            $truck_no=$truckSchedule->getTruck()->getTruckNo();
+            $route=$truckSchedule->getRoute()->getDecription();
+
+            return $this->render('driver_assistant/home.html.twig', [
+                'truck_schedule_id'=> $truck_schedule_id,
+                'driver_assistant' => $driverAssistant,
+                'truck_no'=>$truck_no,
+                'route'=>$route,
+            ]);
+        }
+        else
+        {
+            return $this->render('driver_assistant/home.html.twig', [
+                'driver_assistant' => $driverAssistant,
+                'truck_no'=>'null',
+            ]);
+        }
+    }
+    /**
+     * @Route("/{id}/{status}/assistant-change-status", name="assistant-change-status", methods={"POST"})
+     */
+    public function toggleAvailability($id,$status,DriverAssistantRepository $driverAssistantRepository, Request $request)
+    {
+        if ($status==1){
+            $state="Available";
+        }
+        else{
+            $state="Not available";
+        }
+        $driverAssistantRepository->changeAvailability($state,$id);
+        return new Response( 'success');
+    }
+
+
+
 
 }

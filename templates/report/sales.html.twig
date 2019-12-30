@@ -2,13 +2,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="../../css/side_bar.css">
     <link rel="stylesheet" href="../../css/report.css">
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
+    <h2>Sales Report</h2>
             <div class="table-responsive report-table">
                 {% if sales|length > 0 %}
                     <ul class="nav nav-tabs" role="tablist" id="myTab">
@@ -47,7 +46,7 @@
                                             {% else %}
                                                 <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
                                             {% endif %}
-                                            
+
                                                 <table class="table table-striped">
                                                     <thead class="col-names">
                                                         <tr>
@@ -57,7 +56,7 @@
                                                             <th scope="col" >Earnings</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="col-body">              
+                                                    <tbody class="col-body">
                                                         {% for row in info %}
                                                             <tr>
                                                                 <td>{{ row['year']~"/"~row['month'] }}</td>
@@ -65,25 +64,25 @@
                                                                 <td class="text-center">{{  row['product_count']  }}</td>
                                                                 <td class="text-center">{{  row['earnings']  }}</td>
                                                             </tr>
-                                                        {% endfor %}                            
+                                                        {% endfor %}
                                                     </tbody>
                                                 </table>
                                                 </div>
                                         {% endfor %}
-                                    </div>                                
+                                    </div>
                             </div>
                         {% endfor %}
                     </div>
 
-                    
+
                 {% else %}
                     <p class="lead">No Data available</p>
-                {% endif %} 
+                {% endif %}
             </div>
         </div>
-        
+
     </div>
-</div>
+
 
 
 {% endblock %}

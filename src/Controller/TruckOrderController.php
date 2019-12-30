@@ -105,4 +105,18 @@ class TruckOrderController extends AbstractController
             'truckOrders' => $truckOrders,
         ]);
     }
+
+    /**
+     * @Route("/driver_assistant/{truck_schedule_id}/show_orders_", name="orderList_show_driverAssistant", methods={"GET"})
+     */
+    public function showOrdersToDriverAssistant( $truck_schedule_id,TruckOrderRepository $truckOrderRepository): Response
+    {
+        $truckOrders = $truckOrderRepository->findBy([
+            'truck_schedule' => $truck_schedule_id,
+        ]);
+
+        return $this->render('driver_assistant/view_order_list.html.twig', [
+            'truckOrders' => $truckOrders,
+        ]);
+    }
 }

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <h4>Welcome {{ driver_assistant.firstName }}!</h4>
+    <a href="{{ path('driver_assistant_show',{'id': driver_assistant.id}) }}" class="w3-button w3-black">My profile</a>
+
+    {% if truck_no!='null' %}
+        <h1>You have a delivery!</h1>
+        <p>Your truck number: {{ truck_no }}</p><br>
+        <p>Route: {{ route }}</p><br>
+        <a href="{{ path('orderList_show_driverAssistant',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
+
+    {% else %}
+        <h1>You do not have any deliveries yet!</h1>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+{% endblock %}
