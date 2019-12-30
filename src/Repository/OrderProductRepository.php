@@ -19,6 +19,20 @@ class OrderProductRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderProduct::class);
     }
 
+
+    public function orderProducts(int $orders_id, int $product_id, int $quantity){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "insert into order_product (orders_id, product_id, quantity) 
+                values (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $orders_id);
+        $stmt->bindParam(2, $product_id);
+        $stmt->bindParam(3, $quantity);
+        $stmt->execute();
+
+
+    }
+
     // /**
     //  * @return OrderProduct[] Returns an array of OrderProduct objects
     //  */
