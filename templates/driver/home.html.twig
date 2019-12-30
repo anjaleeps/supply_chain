@@ -1,25 +1,66 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Home{% endblock %}
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
 
 {% block body %}
-<h4>Welcome {{ driver.firstName }}!</h4>
-    <a href="{{ path('driver_show',{'id': driver.id}) }}" class="w3-button w3-black">My profile</a>
+    {% include 'driver/header.html.twig' %}
+
+    <div class="space"></div>
 
     {% if truck_no!='null' %}
-        <h1>You have a delivery!</h1>
-        <p>Your truck number: {{ truck_no }}</p><br>
-        <p>Route: {{ route }}</p><br>
-        <a href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
+        <div class="alert alert-primary" role="alert">
+            <h4 class="alert-heading text-center">You have a delivery!</h4>
+            <p></p>
+            <hr>
+            <p class="mb-0 text-center">Click the buttons below when you complete each section of the delivery</p>
+        </div>
+        <div class="space2"></div>
+
+
+
+
+        <div class="container w-25 p-3">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Truck:
+                    <h3><span class="badge badge-primary badge-pill">{{ truck_no }}</span></h3>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Route:
+                    <h3><span class="badge badge-primary badge-pill"> {{ route }}</span></h3>
+                </li>
+
+            </ul>
+        </div>
+        <div class="space2"></div>
+
         <form>
-            <input class="ajax" type="button" name="Picked" id="Picked" value="Picked">
-            <input class="ajax" type="button" name="Delivered" id="Delivered" value="Delivered">
+            <div class="container ">
+                <div class="row">
+                    <div class="col text-right">
+                        <input class="btn btn-dark btn-lg w-50 p-3" type="button" name="Picked" id="Picked" value="Picked"><br><br>
+                    </div>
+                    <div class="col text-left">
+                        <input class="btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
+                    </div>
+                </div>
+            </div>
             <input id="user_id" type="hidden" value="{{ driver.id }}">
             <input id="truck_schedule_id" type="hidden" value="{{ truck_schedule_id }}">
         </form>
 
     {% else %}
-    <h1>You do not have any deliveries yet!</h1>
+        <div class="row">
+        <div class="alert alert-warning " role="alert">
+            <h4 class="alert-heading text-center">You do not have any deliveries yet!</h4>
+            <hr>
+            <p class="mb-0 text-center">Check back in when you have a delivery</p>
+        </div>
+        </div>
     {% endif %}
 
 {% endblock %}
