@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+{% apply inline_css %}
+
+<a href="{{ path('cart') }}"><button>cart</button></a>
+<h2 style="padding-left:180px; padding-top:20px">Place Order</h2>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 180px; padding-right:150px">
+
+<label>select route </label>
+<select style="width:400px" id="route" >
+    {% for route in routes %}
+      <option value={{route.id }}>{{ route.decription }}->maximum time:{{ route.max_time }}</option>
+    {% endfor %}
+  </select>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 50px" id="order_summary">
+    <label>total quantity: </label>
+    <label id="tot_q"></label>
+    <br>
+    <label>total price: </label>
+    <label id="tot_p"></label>
+</div>
+
+<div>
+<a><button style="width:150px" onClick="checkout()" >place order</button><a>
+</div>
+
+</div>
+<p id="customerId" style="display:none">{{ app.user.id }}</p>
+
+{% endapply %}
+
+
+<script>
+    var id = document.getElementById("customerId").innerHTML;
+    var name = "cartKeyOf:"
+    var key = name.concat(id);
+
+    var products = [];
+    let stor = localStorage.getItem(key);
+    products = JSON.parse(stor);
+
+    var tot_quantity = 0;
+    var tot_price = 0;
+
+    products.forEach(item=>{
+      tot_quantity = tot_quantity + item.quantity;
+      tot_price = tot_price + (item.unitPrice * item.quantity)
+    })
+
+    var r_id = document.getElementById("route").value;
+    _contents = {};
+    _contents.products = products;
+    _contents.route_id = r_id;
+    
+document.addEventListener('DOMContentLoaded', ()=>{
+    showOrder();
+});
+
+function showOrder(){
+  let tot_q = document.getElementById('tot_q');
+  tot_q.textContent = tot_quantity;
+  let tot_p = document.getElementById('tot_p');
+  tot_p.textContent = tot_price;
+}
+
+function checkout(){ 
+  if(confirm("confirm to place order?")){
+    localStorage.removeItem(key);
+    var contents = JSON.stringify(_contents);
+
+    $.ajax({
+        url: `/orders/placeOrder/${id}`,
+        type: "POST",
+        dataType: "json",
+        data: {
+            'details' : contents,                    
+        },
+        success: function () {
+            alert("Order placed successfully");
+            window.location.href = "/all";
+
+        },
+        error: function () {
+            alert('error');
+        }
+    });
+  }
+}
+</script>
+{% endblock %}

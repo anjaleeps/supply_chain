@@ -1,0 +1,11 @@
+
+{% for order in orders %}
+    <p>date_placed:{{ order.date_placed }}</p> 
+    <p>status:{{ order.status }}</p> 
+    {% for product in order.products %}
+        <p>product:{{ product.pr_name }}</p>
+        <p>quantity:{{ product.quantity }}</p> 
+        <p>price:{{ product.unit_price }}</p> 
+    {% endfor %} 
+    <br>    
+{% endfor %}
