@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block body %}
+    <h3>Your orders</h3>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Delivered</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for truckOrder in truckOrders %}
+            <tr>
+                <td>{{ truckOrder.getOrders().getId() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getAddress() }}</td>
+                <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">No records found</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+{% endblock %}

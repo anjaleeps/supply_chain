@@ -86,6 +86,7 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->execute();
     }
 
+<<<<<<< HEAD
     public function getOrderById(string $order_id){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT o.id as order_id, o.route_id, o.order_status, 
@@ -98,5 +99,20 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt -> bindParam(1,$order_id);
         $stmt->execute();
         return $stmt->fetchAll();
+=======
+    public function placeOrder(int $customer_id, int $route_id, string $status, string $date ){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "insert into orders (customer_id, route_id, order_status, date_placed) 
+                values (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $customer_id);
+        $stmt->bindParam(2, $route_id);
+        $stmt->bindParam(3, $status);
+        $stmt->bindParam(4, $date);
+        $stmt->execute();
+
+        $last_id = $conn->lastInsertId();
+        return $last_id;
+>>>>>>> e14f2eb5ac4faf1a003bae24661d272e759be3ae
     }
 }

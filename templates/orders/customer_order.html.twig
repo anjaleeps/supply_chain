@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+
+{% block stylesheets %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+{% endblock %}
+
+{% block body %}
+{% apply inline_css %}
+
+
+<h2 style="padding-left:180px; padding-top:20px">Place Order</h2>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 180px; padding-right:150px">
+
+<label>select route </label>
+<select style="width:200px" id="route" >
+    <option></option>
+    <option value="">sgevsre</option>
+    <option value="">kiuyolio</option>
+    <option value="">qwewqgfrg</option>
+    <option value="">trbhrtbn</option>
+  </select>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 50px" id="order_summary">
+    <label>total quantity: </label>
+    <label>3</label>
+    <br>
+    <label>total price: </label>
+    <label>30000.00</label>
+</div>
+
+<div>
+<a href="{{ path('place_order') }}" ><button style="width:150px" >place order</button><a>
+</div>
+
+</div>
+
+
+
+
+{% endapply %}
+{% endblock %}

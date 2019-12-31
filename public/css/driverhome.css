@@ -1,0 +1,9 @@
+.space { margin-top: 150px; }
+
+.space2 { margin-top: 50px; }
+
+@media (min-width: 1200px) {
+    .custom-container {
+        max-width: 300px;
+    }
+}
