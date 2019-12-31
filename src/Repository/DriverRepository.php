@@ -39,23 +39,6 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $this->_em->flush();
     }
 
-//    public function calculateWorkHours(int $ID){
-//        $conn = $this->getEntityManager()->getConnection();
-//        $sql = "CREATE EVENT 'zero_work_hours'
-//                ON SCHEDULE
-//                EVERY 168 HOUR STARTS '2019-12-25 00:00:00'
-//                ON COMPLETION PRESERVE
-//                ENABLE
-//                DO BEGIN
-//                    UPDATE driver SET work_hours = 0 WHERE ID=?;
-//                END";
-//        $stmt = $conn->prepare($sql);
-//        $stmt -> bindParam("i",$_POST[$ID]);
-//        $stmt->execute();
-//        return $stmt->fetchAll();
-//    }
-
-
     public function getWorkedHours(){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "SELECT * FROM driver_details";
@@ -71,7 +54,7 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
                 inner join route r on r.store_id=d.store_id
                 where d.id <> (select driver_id from truck_schedule ts 
                 where ts.status='completed' order by ts.end_time desc, ts.start_time desc, ts.id desc limit 1) 
-                and sm.id=? and hour(addtime(r.max_time, d.work_hours)) < 40 and status='idle'
+                and sm.id=? and hour(addtime(r.max_time, d.work_hours)) < 40 and status='available'
                 order by d.work_hours";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(1, $user_id);

@@ -18,15 +18,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class TrainScheduleController extends AbstractController
 {
-    /**
-     * @Route("/train/schedule", name="train_schedule_index", methods={"GET"})
-     */
-    public function index(TrainScheduleRepository $trainScheduleRepository): Response
-    {
-        return $this->render('train_schedule/index.html.twig', [
-            'train_schedules' => $trainScheduleRepository->findAll(),
-        ]);
-    }
+    // /**
+    //  * @Route("/train/schedule", name="train_schedule_index", methods={"GET"})
+    //  */
+    // public function index(TrainScheduleRepository $trainScheduleRepository): Response
+    // {
+    //     return $this->render('train_schedule/index.html.twig', [
+    //         'train_schedules' => $trainScheduleRepository->findAll(),
+    //     ]);
+    // }
 
     /**
      * @Route("/manager/train/schedule/new", name="train_schedule_new", methods={"POST"})
@@ -59,15 +59,15 @@ class TrainScheduleController extends AbstractController
 
     }
 
-    /**
-     * @Route("/train/schedule/{id}", name="train_schedule_show", methods={"GET"})
-     */
-    public function show(TrainSchedule $trainSchedule): Response
-    {
-        return $this->render('train_schedule/show.html.twig', [
-            'train_schedule' => $trainSchedule,
-        ]);
-    }
+    // /**
+    //  * @Route("/train/schedule/{id}", name="train_schedule_show", methods={"GET"})
+    //  */
+    // public function show(TrainSchedule $trainSchedule): Response
+    // {
+    //     return $this->render('train_schedule/show.html.twig', [
+    //         'train_schedule' => $trainSchedule,
+    //     ]);
+    // }
 
     // /**
     //  * @Route("/{id}/edit", name="train_schedule_edit", methods={"GET","POST"})
@@ -89,17 +89,17 @@ class TrainScheduleController extends AbstractController
     //     ]);
     // }
 
-    /**
-     * @Route("/train/schedule/{id}", name="train_schedule_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, TrainSchedule $trainSchedule): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$trainSchedule->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($trainSchedule);
-            $entityManager->flush();
-        }
+    // /**
+    //  * @Route("/train/schedule/{id}", name="train_schedule_delete", methods={"DELETE"})
+    //  */
+    // public function delete(Request $request, TrainSchedule $trainSchedule): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete'.$trainSchedule->getId(), $request->request->get('_token'))) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->remove($trainSchedule);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('train_schedule_index');
-    }
+    //     return $this->redirectToRoute('train_schedule_index');
+    // }
 }

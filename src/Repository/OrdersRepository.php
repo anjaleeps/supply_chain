@@ -86,6 +86,21 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->execute();
     }
 
+
+    public function getOrderById(string $order_id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT o.id as order_id, o.route_id, o.order_status, 
+                o.date_placed, c.id as customer_id, c.first_name, c.last_name,
+                c.customer_type, c.place_no, c.street, c.city
+                FROM orders o 
+                inner join customer c on c.id=o.id
+                where o.id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $order_id);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
     public function placeOrder(int $customer_id, int $route_id, string $status, string $date ){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "insert into orders (customer_id, route_id, order_status, date_placed) 
@@ -99,6 +114,7 @@ class OrdersRepository extends ServiceEntityRepository
 
         $last_id = $conn->lastInsertId();
         return $last_id;
+
     }
 
     public function getCustomerOrders(int $customer_id){
