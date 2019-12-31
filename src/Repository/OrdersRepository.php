@@ -100,4 +100,19 @@ class OrdersRepository extends ServiceEntityRepository
         $last_id = $conn->lastInsertId();
         return $last_id;
     }
+
+    public function getCustomerOrders(int $customer_id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select o.id, o.route_id, o.order_status, o.date_placed, o.date_completed, op.product_id, op.quantity, 
+                p.name, p.unit_price from orders o 
+                inner join order_product op on o.id=op.orders_id
+                inner join product p on op.product_id=p.id
+                where o.customer_id=$customer_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $customer_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+    }
 }

@@ -21,15 +21,15 @@
             text-align:center;
         }
         table td:first-child {
-            border-left: 1px solid #e1e1e1;
+            border-left: 1px solid #3f3a3a;
         }
         table td{
             height: 100px;
             color: #212529;
             font-weight: 400;
             font-size: 14px;
-            border-right: 1px solid #e1e1e1;
-            border-bottom: 1px solid #d3cece;
+            border-right: 1px solid #3f3a3a;
+            border-bottom: 1px solid #3f3a3a;
             text-align:center;
         }
 
@@ -55,25 +55,18 @@
     </style>
 
     <body>
+        <a href="{{ path('product_display') }}"><button>All products</button></a>
         <h2 style="padding-left:180px; padding-top:20px">Shopping Cart</h2>
-        <main class="site-content col-xs-9 col-md-9 col-sm-9" style="margin-left: 185px" itemscope="itemscope" itemprop="mainContentOfPage">
-
-        <a style="margin-left: 980px" href="">Empty Cart</a><br><br>
+        <main id="main" class="site-content col-xs-9 col-md-9 col-sm-9" style="margin-left: 185px" itemscope="itemscope" itemprop="mainContentOfPage">
+        <div id="cart_content">
+        <a style="margin-left: 980px"><button onClick="emptyCart()" >Empty Cart</button></a><br><br>
         <table id="cartTable" class="tbl-cart" cellpadding="10" cellspacing="1">
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Product Price</th>
-                <th>Remove</th>
-            </tr>
-            <tbody id="cartbody">
-            </tbody>
         </table>
         <br>
         <div class="wc-proceed-to-checkout">
 
-            <a style="margin-left: 930px" href="{{ path('order_checkout') }}" ><button onClick="checkout()">Proceed to checkout</button></a>
+            <a style="margin-left: 930px" href="{{ path('order_checkout', {'id': app.user.id } ) }}" ><button>Proceed to checkout</button></a>
+        </div>
         </div>
         </main>
         <p id="customerId" style="display:none">{{ app.user.id }}</p>
@@ -81,179 +74,10 @@
 {% endapply %}
 
 
-    <script>
-
-        var id = document.getElementById("customerId").innerHTML;
-        var name = "cartKeyOf:"
-        var key = name.concat(id);
-
-        const CART = {
-            KEY: key,
-            contents: [],
-            init(){
-                let stor = localStorage.getItem(CART.KEY);
-                if(stor){
-                    CART.contents = JSON.parse(stor);
-                }                
-            },
-            async sync(){
-                let _cart = JSON.stringify(CART.contents);
-                await localStorage.setItem(CART.KEY, _cart);
-            },
-            add(){
-                        let obj = {
-                            id: "12",
-                            title: "name",
-                            qty: 1,
-                            itemPrice: 120
-                        };
-                        CART.contents.push(obj);
-                        CART.sync();
-            },
-            remove(id){
-                //remove an item entirely from CART.contents based on its id
-                CART.contents = CART.contents.filter(item=>{
-                    if(item.id !== id)
-                        return true;
-                });
-                CART.sync()
-            },
-            empty(){
-                //empty whole cart
-                CART.contents = [];
-                CART.sync()
-            },
-            increase(id, qty=1){
-                CART.contents = CART.contents.map(item=>{
-                    if(item.id === id)
-                        item.qty = item.qty + qty;
-                    return item;
-                });
-                CART.sync()
-            },
-            reduce(id, qty=1){
-                CART.contents = CART.contents.map(item=>{
-                    if(item.id === id)
-                        item.qty = item.qty - qty;
-                    return item;
-                });
-                CART.contents.forEach(async item=>{
-                    if(item.id === id && item.qty === 0)
-                        await CART.remove(id);
-                });
-                CART.sync()
-            }
-        }
-
-        function test(){
-            alert(CART.contents);
-        }
-
-        CART.init();
-        showCart();
-        
-        function showCart(){
-            let cartTable = document.getElementById('cartTable');
-            let cartBody = document.getElementById('cartbody');
-            cartBody.innerHTML = '';
-            let cartitems = CART.contents;
-            cartitems.forEach( item =>{
-                let one = document.createElement('tbody');
-                one.className = "tbl-cart";
-
-                let name = document.createElement('td');
-                let image = document.createElement('img');
-                image.setAttribute('src', '/images/item.picture');
-                image.setAttribute('alt', 'image');
-                name.appendChild(image);
-                name.textContent = item.name;
-                one.appendChild(name);
-
-                let quantity = document.createElement('td');
-                quantity.textContent = 1;
-                one.appendChild(quantity);
-
-                let uprice = document.createElement('td');
-                uprice.textContent = item.unitPrice;
-                one.appendChild(uprice);
-
-                let price = document.createElement('td');
-                price.textContent = quantity.textContent*uprice.textContent;
-                one.appendChild(price);
-
-                let remove = document.createElement('td');
-                remove.textContent = "remove";
-                one.appendChild(remove);
-
-                cartTable.appendChild(one);
-
-            })
-            
-        }
-
-        function checkout(){
-            let details = [];
-            let cartitems = CART.contents;
-            cartitems.forEach( item =>{
-                let product = [];
-                product.push(item.id,1)
-                details.push(product);
-            })
-
-            let customerId = id;
-            let quant = 1;
-            var det = JSON.stringify(details);
-
-            $.ajax({
-                url: "/orders/checkout",
-                type: "POST",
-                dataType: "json",
-                data: {
-                    adetails : det,                    
-                },
-                success: function (data) {
-                    alert(data);
-                },
-                error: function (adetails) {
-                    alert(typeof(adetails));
-                }
-            });
-        }
-
-        $(document).on('click', 'button.ajax', function (e) {
-        e.preventDefault();
-
-        let details = [];
-            let cartitems = CART.contents;
-            cartitems.forEach( item =>{
-                let product = [];
-                product.push(item.id,1)
-                details.push(product);
-            })
-
-            let customerId = id;
-            let quant = 1;
-            var det = JSON.stringify(details);
-
-        $.ajax({
-            url: "/orders/placeOrder",
-            type: "POST",
-            dataType: "json",
-            data: {
-                'details': det,
-            },
-            success: function (data) {
-                console.log(data);
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-
-        });
-
-
-
-    </script>
-
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="js/cart.js" ></script>
+{% endblock %}
+
