@@ -100,4 +100,18 @@ class TransportsRepository extends ServiceEntityRepository
         $stmt->execute();
         $stmt->rowCount();
     }
+
+    public function getScheduledOrders(){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select o.id as order_id, ts.id as train_id, ts.start_time, t.date, ts.destination as city 
+                from transports t
+                inner join train_schedule ts on ts.id=t.train_schedule_id
+                inner join orders o on o.id=t.orders_id
+                where timestamp(t.date, ts.start_time) > now()
+                and t.status='scheduled'
+                order by timestamp(t.date, ts.start_time)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

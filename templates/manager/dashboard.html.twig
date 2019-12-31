@@ -36,7 +36,7 @@
                 <th>Products</th>
                 <th>City</th>
                 <th>Route</th>
-                <th>Train Date</th>
+                <th></th>
 
             </tr>
             </thead>
@@ -44,7 +44,7 @@
 
             {% for order in placed %}
                 <tr>
-                    <td class="order_id">{{ order.getId() }}</td>
+                    <td class="order_id"><a href="{{ path('orders_show', {'id': order.getId() })}}">{{ order.getId() }}</a></td>
                     <td>{{ order.getCustomer().getFirstName()~" "~ order.getCustomer().getLastName() }}</td>
                     <td>
                         <ul>
@@ -60,6 +60,42 @@
                         <button class="ajax">Put on train</button>
 
                     </td>
+                </tr>
+
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+        <br>
+
+        <h2>Orders Scheduled for Train Delivery</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>City</th>
+                <th>Train ID</th>
+                <th>Date</th>
+                <th>Start Time</th>
+               
+
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for order in scheduled %}
+                <tr>
+                    <td><a href="{{ path('orders_show', {'id': order.order_id})}}">{{ order.order_id }}</a></td>
+                    <td>{{ order.city }}</td>
+                    <td>{{ order.train_id}}</td>
+                    <td>{{ order.date}}</td>
+                    <td>{{ order.start_time}}</td>
+                   
                 </tr>
 
             {% else %}

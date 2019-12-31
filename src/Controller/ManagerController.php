@@ -30,17 +30,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class ManagerController extends AbstractController
 {
-    /**
-     * @Route("/", name="manager_index", methods={"GET"})
-     * 
-     * @IsGranted("ROLE_MANAGER")
-     */
-    public function index(ManagerRepository $managerRepository): Response
-    {
-        return $this->render('manager/index.html.twig', [
-            'managers' => $managerRepository->findAll(),
-        ]);
-    }
+    // /**
+    //  * @Route("/", name="manager_index", methods={"GET"})
+    //  * 
+    //  * @IsGranted("ROLE_MANAGER")
+    //  */
+    // public function index(ManagerRepository $managerRepository): Response
+    // {
+    //     return $this->render('manager/index.html.twig', [
+    //         'managers' => $managerRepository->findAll(),
+    //     ]);
+    // }
 
     /**
      * @Route("/register", name="manager_registration")
@@ -99,89 +99,93 @@ class ManagerController extends AbstractController
      * 
      * @IsGranted("ROLE_MANAGER")
      */
-    public function getDashboard(): Response
+    public function getDashboard(TransportsRepository $transportsRepository): Response
     {
+        $scheduledOrders = $transportsRepository->getScheduledOrders();
+        
         $repository = $this->getDoctrine()->getRepository(Orders::class);
         $orders_placed = $repository->findBy(
             ['order_status' => 'placed']
         );
 
-
         return $this->render('manager/dashboard.html.twig', [
             'placed' => $orders_placed,
+            'scheduled' => $scheduledOrders
         ]);
     }
 
 
-    /**
-     * @Route("/new", name="manager_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $manager = new Manager();
-        $form = $this->createForm(ManagerType::class, $manager);
-        $form->handleRequest($request);
+    // /**
+    //  * @Route("/new", name="manager_new", methods={"GET","POST"})
+    //  */
+    // public function new(Request $request): Response
+    // {
+    //     $manager = new Manager();
+    //     $form = $this->createForm(ManagerType::class, $manager);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($manager);
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($manager);
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('manager_index');
-        }
+    //         return $this->redirectToRoute('manager_index');
+    //     }
 
-        return $this->render('manager/new.html.twig', [
-            'manager' => $manager,
-            'form' => $form->createView(),
-        ]);
-    }
+    //     return $this->render('manager/new.html.twig', [
+    //         'manager' => $manager,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
 
-    /**
-     * @Route("/{id}", name="manager_show", methods={"GET"})
-     */
-    public function show(Manager $manager): Response
-    {
-        return $this->render('manager/show.html.twig', [
-            'manager' => $manager,
-        ]);
-    }
+    // /**
+    //  * @Route("/{id}", name="manager_show", methods={"GET"})
+    //  */
+    // public function show(Manager $manager): Response
+    // {
+    //     return $this->render('manager/show.html.twig', [
+    //         'manager' => $manager,
+    //     ]);
+    // }
 
-    /**
-     * @Route("/{id}/edit", name="manager_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Manager $manager): Response
-    {
-        $form = $this->createForm(ManagerType::class, $manager);
-        $form->handleRequest($request);
+        // /**
+        //  * @Route("/{id}/edit", name="manager_edit", methods={"GET","POST"})
+        //  */
+        // public function edit(Request $request, Manager $manager): Response
+        // {
+        //     $form = $this->createForm(ManagerType::class, $manager);
+        //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        //     if ($form->isSubmitted() && $form->isValid()) {
+        //         $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('manager_index');
-        }
+        //         return $this->redirectToRoute('manager_index');
+        //     }
 
-        return $this->render('manager/edit.html.twig', [
-            'manager' => $manager,
-            'form' => $form->createView(),
-        ]);
-    }
+        //     return $this->render('manager/edit.html.twig', [
+        //         'manager' => $manager,
+        //         'form' => $form->createView(),
+        //     ]);
+        // }
 
-    /**
-     * @Route("/{id}", name="manager_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Manager $manager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $manager->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($manager);
-            $entityManager->flush();
-        }
+    // /**
+    //  * @Route("/{id}", name="manager_delete", methods={"DELETE"})
+    //  */
+    // public function delete(Request $request, Manager $manager): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete' . $manager->getId(), $request->request->get('_token'))) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->remove($manager);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('manager_index');
-    }
+    //     return $this->redirectToRoute('manager_index');
+    // }
 
     /**
      * @Route("/report/products", name="products_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateProductReport(ProductRepository $productRepository)
     {
@@ -194,6 +198,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/drivers", name="drivers_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateDriverReport(DriverRepository $driverRepository)
     {
@@ -214,6 +220,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/driver_assistants", name="driver_assistants_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateDriverAssistantReport(DriverAssistantRepository $driverAssistantRepository)
     {
@@ -235,6 +243,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/trucks", name="trucks_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateTruckReport(TruckRepository $truckRepository)
     {
@@ -256,6 +266,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/sales", name="sales_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateSalesReport(OrdersRepository $ordersRepository)
     {
@@ -280,6 +292,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/highest", name="highest_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateHighestSaleData(ProductRepository $productRepository)
     {
@@ -303,6 +317,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/quarter", name="quarterly_report", methods={"GET", "POST"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateQuarterlyReport($year = '2020', OrdersRepository $ordersRepository, Request $request)
     {
@@ -334,6 +350,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/customer", name="customer_report", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function generateCustomerReport(CustomerRepository $customerRepository)
     {

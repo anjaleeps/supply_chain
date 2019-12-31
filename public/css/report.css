@@ -12,6 +12,7 @@
     border: 3px solid rgba(0,0,0,0.1);
     border-top: 0;
 }
+
 .product-table td{
     border: 1px solid rgba(0,0,0,0.1);
 }
@@ -72,3 +73,4 @@ footer {
 footer a {
     color: #f8f9fa!important
 }
+

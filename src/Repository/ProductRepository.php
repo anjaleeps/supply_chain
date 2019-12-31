@@ -85,4 +85,15 @@ class ProductRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();   
     }
+
+    public function getOrderProducts($order_id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select p.id as product_id, name, category, unit_price as price, quantity, picture 
+                from product p inner join order_product op on op.product_id=p.id
+                where op.orders_id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $order_id);
+        $stmt->execute();
+        return $stmt->fetchAll();   
+    }
 }

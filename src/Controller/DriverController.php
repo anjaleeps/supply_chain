@@ -59,7 +59,7 @@ class DriverController extends AbstractController
             $driver->setPassword($password);
 
             $driver->setRoles(array('ROLE_DRIVER'));
-            $driver->setStatus('idle');
+            $driver->setStatus('available');
             $driver->setWorkHours(new \DateTime('00:00:00'));
 
             $entityManager = $this->getDoctrine()->getManager();

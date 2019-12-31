@@ -3,32 +3,62 @@
 {% block title %}Orders{% endblock %}
 
 {% block body %}
-    <h1>Orders</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>Order_status</th>
-                <td>{{ order.orderStatus }}</td>
-            </tr>
-            <tr>
-                <th>Date_placed</th>
-                <td>{{ order.datePlaced ? order.datePlaced|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date_completed</th>
-                <td>{{ order.dateCompleted ? order.dateCompleted|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    
+    <section class="jumbotron text-center">
+        <div class="container text-left jumbotron-heading">
+            <h6>{{ 'Order ID: ' ~ order.order_id }} </h6>
+            <h6>{{ 'Order Status: ' ~ order.order_status }} </h6>
+            <h6>{{ 'Route ID: ' ~ order.route_id }} </h6>
+            <h6>{{ 'Customer ID: ' ~ order.customer_id }} </h6>
+            <h6>{{ 'Customer Name: ' ~ order.first_name ~ ' ' ~ order.last_name}} </h6>
+            <h6>{{ 'Customer Type: ' ~ order.customer_type }} </h6>
+            <h6>{{ 'Customer Address: ' ~ order.place_no ~ ', ' ~ order.street ~ ', ' ~ order.city}} </h6>
+         </div>
+    </section>
+    
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"> </th>
+                                <th scope="col">Product ID</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col" >Category</th>
+                                <th scope="col" >Quantity</th>
+                                <th scope="col" class="text-right">Price</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in order.products %}
+                            <tr>
+                                <td><img src="{{  product.picture}}" /> </td>
+                                <td>{{ product.product_id}}</td>
+                                <td>{{ product.name}}</td>
+                                <td>{{ product.category }}</td>
+                                <td >{{ product.quantity }}</td>
+                                <td class="text-right">{{ 'Rs.'~ product.price*product.quantity}} </td>
+                            </tr>
+                            {%  endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total</strong></td>
+                                <td class="text-right"><strong>{{ order.price }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
 
-    <a href="{{ path('orders_index') }}">back to list</a>
-
-    <a href="{{ path('orders_edit', {'id': order.id}) }}">edit</a>
-
-    {{ include('orders/_delete_form.html.twig') }}
 {% endblock %}
