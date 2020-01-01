@@ -91,7 +91,7 @@ class OrdersController extends AbstractController
     /**
      * @Route("/{id}", name="orders_show", methods={"GET"})
      * 
-     * @IsGranted({"ROLE_MANAGER", "ROLE_DRIVER", "ROLE_DRIVER_ASSISTANT", "ROLE_STORE_MANAGER"})
+     * @IsGranted({"ROLE_MANAGER", "ROLE_STORE_MANAGER"})
      */
     public function show(string $id, OrdersRepository $ordersRepository, ProductRepository $productRepository): Response
     {

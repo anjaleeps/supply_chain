@@ -96,4 +96,18 @@ class ProductRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();   
     }
+
+    public function searchProducts(string $keyword){
+
+        $keyword = preg_replace('/[^a-zA-Z0-9\s]/', '', $keyword);
+        $keyword = '%'.$keyword.'%';
+
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select * from product where name like ? or category like ? ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $keyword);
+        $stmt->bindParam(2, $keyword);
+        $stmt->execute();
+        return $stmt->fetchAll();   
+    }
 }
