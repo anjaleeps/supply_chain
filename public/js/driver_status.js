@@ -1,4 +1,3 @@
-console.log('ghth');
 
 $('.check').change(function(e){
     e.preventDefault();
