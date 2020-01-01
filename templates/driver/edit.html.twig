@@ -2,12 +2,28 @@
 
 {% block title %}Edit Driver{% endblock %}
 
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
+
 {% block body %}
-    <h1>Edit Driver</h1>
+    {% include 'driver/header.html.twig' %}
+    <div class="space"></div>
+    <div class="alert alert-dark" role="alert">
+        <h4 class="text-center">Edit Profile</h4>
+    </div>
 
-    {{ include('driver/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="space2"></div>
+    <div class="container ">
+        {{ include('driver/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 
-    <a href="{{ path('driver_index') }}">Back</a>
+            </div>
+        </div>
+    </div>
 
-    {{ include('driver/_delete_form.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent()  }}
 {% endblock %}

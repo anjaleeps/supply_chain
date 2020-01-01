@@ -1,11 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Orders{% endblock %}
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
 
 {% block body %}
-    <h3>Your orders</h3>
+    {% include 'driver/header.html.twig' %}
 
-    <table class="table">
+    <div class="space"></div>
+    <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading text-center">Your orders</h4>
+        <p></p>
+        <hr>
+        <p class="mb-0 text-center">Check each order when it is delivered</p>
+    </div>
+    <div class="space2"></div>
+    <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>Order Id</th>

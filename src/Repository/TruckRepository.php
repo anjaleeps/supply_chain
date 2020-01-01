@@ -66,5 +66,13 @@ class TruckRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function fetchTruckNo(int $truck_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT truck_no FROM truck WHERE id=? ";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$truck_id);
+        $stmt->execute();
+        $stmt->fetchAll();
+    }
     
 }

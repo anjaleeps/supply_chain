@@ -2,77 +2,24 @@
 
 {% block title %}Product index{% endblock %}
 
-
 {% block stylesheets %}
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-{% endblock %}
-
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/allproducts.css') }}">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+ {% endblock %}
+ 
 {% block body %}
-{% apply inline_css %}
+
+
 
 <html>
-<style>
-.products {
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 5px;
-    
-    flex:1 1 auto;
-}
-
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  height: 400px;
-  width: 250px;
-  margin: auto;
-  text-align: center;
-  font-family: arial;
-  padding-bottom: 20px;
-}
-
-.imagecard {
-  height: 250px;
-  width: 230px;
-  margin: auto;
-}
-
-.textcard{
-  height: 150px;
-  width: 230px;
-  margin: auto;
-  text-align: center;
-  font-family: arial;
-  padding-bottom: 20px;
-}
-
-.price {
-  color: grey;
-  font-size: 22px;
-}
-
-.card button {
-  border: none;
-  outline: 0;
-  padding: 12px;
-  color: white;
-  background-color: #002752;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-}
-
-.card button:hover {
-  opacity: 0.7;
-}
-</style>
-
-
 <body>
+<div>
+{% include 'customer/header.html.twig' %}
 
 <a href="{{ path('cart') }}" ><button>cart</button></a>
 
-<h2 style="padding-left:180px; padding-top:20px">Products</h2>
+<h2 style="padding-left:180px; padding-top:100px; color:#585a5b">Products</h2>
 
 <div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right:150px">
 <div class="products">
@@ -104,47 +51,11 @@
 </div>
 
 </body>  
-
 </html>
-{% endapply %}
+{% endblock %}
 
-<script>
-
-
-  function addItem(id, name, unitPrice, picture){
-
-    var userid = document.getElementById("user").innerHTML;
-
-
-    if(userid===""){
-      alert("you have to log in first");
-    }
-
-    else{
-    var customerID = document.getElementById("customerId").innerHTML;
-    var productDetails = {id:id , name:name , unitPrice:unitPrice, picture:picture};
-    var name = "cartKeyOf:"
-    var key = name.concat(customerID);
-
-    contents = [];
-
-    let _contents = localStorage.getItem(key);
-    if(_contents){
-      contents = JSON.parse(_contents);
-    }
-    
-    contents.push(productDetails);
-    let _cart = JSON.stringify(contents);
-    localStorage.setItem(key, _cart);
-    alert("Added to cart");
-    }
-    
-    return false;
-  }
-
-
-
-</script>
-
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../../js/all_products.js"></script>
 {% endblock %}
 

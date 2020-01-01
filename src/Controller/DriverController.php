@@ -6,7 +6,9 @@ use App\Entity\Driver;
 use App\Entity\Store;
 use App\Entity\TruckSchedule;
 use App\Repository\OrdersRepository;
+use App\Repository\RouteRepository;
 use App\Repository\TruckOrderRepository;
+use App\Repository\TruckRepository;
 use App\Security\DriverAuthenticator;
 use App\Form\DriverType;
 use App\Form\DriverButtonType;
@@ -178,18 +180,22 @@ class DriverController extends AbstractController
     /**
      * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
      */
-    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository): Response
+    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
 
+//        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
         $truckSchedule = $truckScheduleRepository->findOneBy([
             'driver' => $id,
-            'status' => 'ready',
+            'status' => 'scheduled',
         ]);
         if ($truckSchedule!=null)
         {
             $truck_schedule_id=$truckSchedule->getId();
             $truck_no=$truckSchedule->getTruck()->getTruckNo();
             $route=$truckSchedule->getRoute()->getDecription();
+//            $truck_schedule_id= $truckSchedule['id'];
+//            $truck_no=$truckRepository->fetchTruckNo($truckSchedule['truck_id']);
+//            $route=$routeRepository->fetchRoute($truckSchedule['route_id']);
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
@@ -257,7 +263,37 @@ class DriverController extends AbstractController
         return new Response( 'success');
     }
 
+    /**
+     * @Route("/{id}/show_orders", name="orderList_show", methods={"GET"})
+     */
+    public function showOrdersToDriver( $id, Driver $driver,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
+    {
+        $truckSchedule = $truckScheduleRepository->findOneBy([
+            'driver' => $id,
+            'status' => 'scheduled',
+        ]);
+        if ($truckSchedule!=null) {
 
+            $truck_schedule_id = $truckSchedule->getId();
+
+            $truckOrders = $truckOrderRepository->findBy([
+                'truck_schedule' => $truck_schedule_id,
+            ]);
+
+            return $this->render('driver/view_order_list.html.twig', [
+                'truckOrders' => $truckOrders,
+                'driver' => $driver,
+
+            ]);
+        }
+        else
+        {
+            return $this->render('driver/home.html.twig', [
+                'driver' => $driver,
+                'truck_no'=>'null',
+            ]);
+        }
+    }
 
 
 

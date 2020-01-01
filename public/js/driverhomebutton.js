@@ -9,6 +9,8 @@ $(document).on('click','.ajax',function(e){
     console.log($user_id);
     console.log($truck_schedule_id);
 
+    button = $(this)
+
     $.ajax({
         url: `/driver/${$user_id}/${$truck_schedule_id}/status`,
         type: "POST",
@@ -20,7 +22,7 @@ $(document).on('click','.ajax',function(e){
         success: function(data) {
             // change button color
             console.log(data)
-            $('div#ajax-results').html(data.output);
+            button.hide()
         },
         error: function() {
             // show alert or something

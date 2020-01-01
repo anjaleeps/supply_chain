@@ -42,10 +42,10 @@
             <div class="container ">
                 <div class="row">
                     <div class="col text-right">
-                        <input class="btn btn-dark btn-lg w-50 p-3" type="button" name="Picked" id="Picked" value="Picked"><br><br>
+                        <input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Picked" id="Picked" value="Picked"><br><br>
                     </div>
                     <div class="col text-left">
-                        <input class="btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
+                        <input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
                     </div>
                 </div>
             </div>
@@ -54,12 +54,11 @@
         </form>
 
     {% else %}
-        <div class="row">
-        <div class="alert alert-warning " role="alert">
-            <h4 class="alert-heading text-center">You do not have any deliveries yet!</h4>
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading text-center">You do not have a delivery yet!</h4>
+            <p></p>
             <hr>
             <p class="mb-0 text-center">Check back in when you have a delivery</p>
-        </div>
         </div>
     {% endif %}
 
@@ -67,5 +66,5 @@
 
 {% block javascripts %}
     {{ parent()  }}
-    <script src="../../js/driverhomebutton.js"></script>
+    <script src="{{ asset('js/driverhomebutton.js') }}"></script>
 {% endblock %}
