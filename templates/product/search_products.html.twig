@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/allproducts.css') }}">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+ {% endblock %}
+ 
+{% block body %}
+
+
+
+<html>
+<body>
+<div>
+{% include 'customer/header.html.twig' %}
+
+<a href="{{ path('cart') }}" ><button>cart</button></a>
+
+<h2 style="padding-left:180px; padding-top:100px; color:#585a5b">Products</h2>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right:150px">
+<div class="products">
+
+<div>{{ 'Results showing for: ' ~ keyword }}</div>
+{% for product in products %}
+    {% set arr = [product.id,product.name] %}
+    {% set foo = { details: arr} %}
+
+    <div class="card">
+    <box class="imagecard">
+    <img height=220px src="/images/{{ product.picture }}" alt="product image" style="width:100%">
+    </box>
+    <div class="textcard">
+    <h5>{{ product.name }}</h5>
+    <p class="price">{{ product.unit_price }}</p>
+    <p><button onclick="addItem({{product.id}}, '{{product.name}}',{{product.unit_price}}, '{{product.picture}}')" >Add to Cart</button></p>
+    </div>
+    </div>
+
+{% endfor %}
+
+    <p id="user" style="display:none">{{ app.user }}</p>
+  {% if app.user %}
+    <p id="customerId" style="display:none">{{ app.user.id }}</p>
+  {% endif %}
+
+</div>
+
+</div>
+</div>
+
+</body>  
+</html>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../../js/all_products.js"></script>
+{% endblock %}
+

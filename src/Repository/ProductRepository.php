@@ -62,7 +62,8 @@ class ProductRepository extends ServiceEntityRepository
                 (select p.name as product_name, sum(op.quantity) as sales_quantity, month(o.date_completed) as month, year(o.date_completed) as year 
                 from product p inner join order_product op on op.product_id=p.id
                 inner join orders o on o.id=op.orders_id
-                group by year, month, op.product_id 
+                group by year, month, op.product_id, o.order_status
+                having o.order_status='delivered'
                 order by year, month, sum(op.quantity)) as t
                 group by year, month
                 order by year desc, month desc limit 12";

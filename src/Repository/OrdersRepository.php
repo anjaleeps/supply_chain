@@ -29,7 +29,7 @@ class OrdersRepository extends ServiceEntityRepository
                 inner join product p on p.id=op.product_id
                 inner join customer c on c.id=o.customer_id
                 group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id, o.order_status
-                having o.status='delivered'
+                having o.order_status='delivered'
                 order by year desc, month desc;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();

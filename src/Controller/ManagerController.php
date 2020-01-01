@@ -311,7 +311,7 @@ class ManagerController extends AbstractController
         }
 
         return $this->render('report/highest.html.twig', [
-            'sales' => $data
+            'highestSales' => $data
         ]);
     }
 

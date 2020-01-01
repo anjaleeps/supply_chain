@@ -50,8 +50,9 @@ class ProductController extends AbstractController
         $keyword = $request->query->get('keyword');
         $results = $productRepository->searchProducts($keyword);
         
-        return $this->render('product/all_products.html.twig', [
+        return $this->render('product/search_products.html.twig', [
             'products' => $results,
+            'keyword' => $keyword
         ]);
     }
 
