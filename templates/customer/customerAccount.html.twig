@@ -1,5 +1,25 @@
+{% extends 'base.html.twig' %}
 
-{% for order in orders %}
+{% block title %}Account index{% endblock %}
+
+{% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/customerAccount.css') }}">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+ {% endblock %}
+ 
+{% block body %}
+
+{% include 'customer/header.html.twig' %}
+
+<h2 class="font" style="padding-left:180px; padding-top:130px">My Account</h2>
+
+<div class="column left">
+    <p>Edit Details</p>
+</div>
+<div class="column right">
+    <p>my orders</p>
+    {% for order in orders %}
     <p>date_placed:{{ order.date_placed }}</p> 
     <p>status:{{ order.status }}</p> 
     {% for product in order.products %}
@@ -9,3 +29,11 @@
     {% endfor %} 
     <br>    
 {% endfor %}
+</div>
+
+
+
+
+
+
+{% endblock %}

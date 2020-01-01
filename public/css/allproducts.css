@@ -1,0 +1,53 @@
+.products {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 5px;
+    
+    flex:1 1 auto;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  height: 400px;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  padding-bottom: 20px;
+}
+
+.imagecard {
+  height: 250px;
+  width: 230px;
+  margin: auto;
+}
+
+.textcard{
+  height: 150px;
+  width: 230px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  padding-bottom: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 22px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  background-color: #002752;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}

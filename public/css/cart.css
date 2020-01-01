@@ -1,0 +1,82 @@
+table th:first-child {
+    border-left: 1px solid #e1e1e1;
+}
+table th{
+    color: white;
+    font-weight: 100;
+    font-size: 14px;
+    background-color: #002752;
+    border-top: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    text-align:center;
+}
+table td:first-child {
+    border-left: 1px solid #3f3a3a;
+}
+table td{
+    height: 100px;
+    color: #212529;
+    font-weight: 400;
+    font-size: 14px;
+    border-right: 1px solid #3f3a3a;
+    border-bottom: 1px solid #3f3a3a;
+    text-align:center;
+}
+
+.tbl-cart {
+    font-size: 0.9em;
+    width:100%;
+}
+
+.cart-item-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: #E0E0E0 1px solid;
+    padding: 5px;
+    vertical-align: middle;
+    margin-right: 15px;
+}
+.no-records {
+    text-align: center;
+    clear: both;
+    margin: 38px 0px;
+}
+
+.font {
+    color: #585a5b;
+}
+
+.button {
+    background-color:#77767c; 
+    border: none;
+    color: white;
+    padding: 6px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .button:hover {
+    background-color: #002752;
+    color: white;
+  }
+
+  .buttonsm {
+    background-color:#77767c; 
+    border: none;
+    color: black;
+    border-radius: 8px;
+  }
+
+  .buttonsm:hover {
+    background-color: #002752;
+    color: white;
+  }

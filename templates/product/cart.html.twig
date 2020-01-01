@@ -2,77 +2,32 @@
 
 {% block title %}cart{% endblock %}
 
+{% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
+ {% endblock %}
+
 {% block body %}
 
-{% apply inline_css %} 
-
-<style>
-        table th:first-child {
-            border-left: 1px solid #e1e1e1;
-        }
-        table th{
-            color: white;
-            font-weight: 100;
-            font-size: 14px;
-            background-color: #002752;
-            border-top: 1px solid #e1e1e1;
-            border-right: 1px solid #e1e1e1;
-            border-bottom: 1px solid #e1e1e1;
-            text-align:center;
-        }
-        table td:first-child {
-            border-left: 1px solid #3f3a3a;
-        }
-        table td{
-            height: 100px;
-            color: #212529;
-            font-weight: 400;
-            font-size: 14px;
-            border-right: 1px solid #3f3a3a;
-            border-bottom: 1px solid #3f3a3a;
-            text-align:center;
-        }
-
-        .tbl-cart {
-            font-size: 0.9em;
-            width:100%;
-        }
-
-        .cart-item-image {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: #E0E0E0 1px solid;
-            padding: 5px;
-            vertical-align: middle;
-            margin-right: 15px;
-        }
-        .no-records {
-            text-align: center;
-            clear: both;
-            margin: 38px 0px;
-        }
-    </style>
+{% include 'customer/header.html.twig' %}
 
     <body>
         <a href="{{ path('product_display') }}"><button>All products</button></a>
-        <h2 style="padding-left:180px; padding-top:20px">Shopping Cart</h2>
+        <h2 class="font" style="padding-left:180px; padding-top:100px">Shopping Cart</h2>
         <main id="main" class="site-content col-xs-9 col-md-9 col-sm-9" style="margin-left: 185px" itemscope="itemscope" itemprop="mainContentOfPage">
         <div id="cart_content">
-        <a style="margin-left: 980px"><button onClick="emptyCart()" >Empty Cart</button></a><br><br>
+        <a style="margin-left: 980px"><button class="button" onClick="emptyCart()" >Empty Cart</button></a><br><br>
         <table id="cartTable" class="tbl-cart" cellpadding="10" cellspacing="1">
         </table>
         <br>
         <div class="wc-proceed-to-checkout">
 
-            <a style="margin-left: 930px" href="{{ path('order_checkout', {'id': app.user.id } ) }}" ><button>Proceed to checkout</button></a>
+            <a style="margin-left: 930px" href="{{ path('order_checkout', {'id': app.user.id } ) }}" ><button class="button">Proceed to checkout</button></a>
         </div>
         </div>
         </main>
         <p id="customerId" style="display:none">{{ app.user.id }}</p>
     </body>
-{% endapply %}
-
 
 {% endblock %}
 

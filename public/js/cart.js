@@ -103,8 +103,8 @@ function showCart(){
         let main = document.getElementById('main');
         let body = document.getElementById('cart_content');
         body.innerHTML = '';
-        let empty = document.createElement('h3');
-        empty.textContent = "Cart is Empty";
+        let empty = document.createElement('h4');
+        empty.textContent = "Your cart is Empty";
         main.appendChild(empty);
     }
     else{
