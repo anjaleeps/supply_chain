@@ -279,7 +279,7 @@ class DriverController extends AbstractController
                 'truckOrders' => $truckOrders,
                 'driver' => $driver,
             ]);
-        }
+        }  
         else
         {
             return $this->render('driver/home.html.twig', [
