@@ -11,7 +11,7 @@
 
     <div class="space"></div>
     <div class="alert alert-primary" role="alert">
-        <h4 class="alert-heading text-center">Your orders</h4>
+        <h4 class="alert-heading text-center">Orders to be delivered</h4>
         <p></p>
         <hr>
         <p class="mb-0 text-center">Check each order when it is delivered</p>
@@ -28,7 +28,12 @@
         </tr>
         </thead>
         <tbody>
+        {% set continue = false %}
         {% for truckOrder in truckOrders %}
+            {% if truckOrder.orders.orderStatus == "delivered"  %}
+                {% set continue = true %}
+            {% endif %}
+            {% if not continue %}
             <tr>
                 <td>{{ truckOrder.getOrders().getId() }}</td>
                 <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
@@ -36,15 +41,50 @@
                 <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
                 <td><div><input class="checkbox" type="checkbox" id="checkbox" name="choices" value="{{ truckOrder.getOrders().getId()}}"></div></td>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">No records found</td>
-            </tr>
+            {% endif %}
+            {% if continue %}
+                {% set continue = false %}
+            {% endif %}
         {% endfor %}
 
         </tbody>
     </table>
+    <br>
+    <div class="alert alert-warning" role="alert">
+        <h4 class="text-center">Delivered orders</h4>
+    </div>
+    <div class="space2"></div>
 
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set continue = false %}
+        {% for truckOrder in truckOrders %}
+            {% if truckOrder.orders.orderStatus != "delivered"  %}
+                {% set continue = true %}
+            {% endif %}
+            {% if not continue %}
+                <tr>
+                    <td>{{ truckOrder.getOrders().getId() }}</td>
+                    <td>{{ truckOrder.getOrders().getCustomer().getFullName() }}</td>
+                    <td>{{ truckOrder.getOrders().getCustomer().getAddress() }}</td>
+                    <td>{{ truckOrder.getOrders().getCustomer().getPhoneNumbersAsString()}}</td>
+                </tr>
+            {% endif %}
+            {% if continue %}
+                {% set continue = false %}
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block javascripts %}

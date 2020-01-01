@@ -28,7 +28,8 @@ class OrdersRepository extends ServiceEntityRepository
                 inner join order_product op on o.id=op.orders_id 
                 inner join product p on p.id=op.product_id
                 inner join customer c on c.id=o.customer_id
-                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id
+                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id, o.order_status
+                having o.order_status='delivered'
                 order by year desc, month desc;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -100,7 +101,10 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->bindParam(1, $order_id);
         $stmt->execute();
         return $stmt->fetchAll();
+
     }
+
+    
     public function placeOrder(int $customer_id, int $route_id, string $status, string $date ){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "insert into orders (customer_id, route_id, order_status, date_placed) 
@@ -123,7 +127,7 @@ class OrdersRepository extends ServiceEntityRepository
                 p.name, p.unit_price from orders o 
                 inner join order_product op on o.id=op.orders_id
                 inner join product p on op.product_id=p.id
-                where o.customer_id=$customer_id";
+                where o.customer_id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(1, $customer_id);
         $stmt->execute();

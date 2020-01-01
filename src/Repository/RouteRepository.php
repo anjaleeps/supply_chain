@@ -62,10 +62,10 @@ class RouteRepository extends ServiceEntityRepository
     */
     public function fetchRoute(int $route_id){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "SELECT description FROM route WHERE id=? ";
+        $sql = "SELECT decription FROM route WHERE id=? ";
         $stmt = $conn->prepare($sql);
         $stmt -> bindParam(1,$route_id);
         $stmt->execute();
-        $stmt->fetchAll();
+        return $stmt->fetchAll();
     }
 }

@@ -72,7 +72,7 @@ class TruckRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt -> bindParam(1,$truck_id);
         $stmt->execute();
-        $stmt->fetchAll();
+        return $stmt->fetchAll();
     }
     
 }

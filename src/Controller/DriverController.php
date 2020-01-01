@@ -17,6 +17,7 @@ use App\Repository\TruckScheduleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -178,30 +179,27 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     * @Route("/driver_home", name="driver_home", methods={"GET"})
      */
-    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
+    public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
+        $driver=$this->getUser();
+        $id=$driver->getId();
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
 
-//        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-            'status' => 'scheduled',
-        ]);
         if ($truckSchedule!=null)
         {
-            $truck_schedule_id=$truckSchedule->getId();
-            $truck_no=$truckSchedule->getTruck()->getTruckNo();
-            $route=$truckSchedule->getRoute()->getDecription();
-//            $truck_schedule_id= $truckSchedule['id'];
-//            $truck_no=$truckRepository->fetchTruckNo($truckSchedule['truck_id']);
-//            $route=$routeRepository->fetchRoute($truckSchedule['route_id']);
+            $truck_schedule_id= $truckSchedule[0]['id'];
+            $truck_no=($truckRepository->fetchTruckNo($truckSchedule[0]['truck_id']))[0]['truck_no'];
+            $route=($routeRepository->fetchRoute($truckSchedule[0]['route_id']))[0]['decription'];
+            $status= $truckSchedule[0]['status'];
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver' => $driver,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
+                'status'=>$status,
             ]);
         }
         else
@@ -235,7 +233,7 @@ class DriverController extends AbstractController
             $truckScheduleRepository->setStatusDelivered($truck_schedule_id, $id,$driver_assistant_id,$truck_id);
         }
 
-        return new Response( 'success');
+        return new JsonResponse( 'success');
     }
 
     /**
@@ -268,13 +266,11 @@ class DriverController extends AbstractController
      */
     public function showOrdersToDriver( $id, Driver $driver,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
     {
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-            'status' => 'scheduled',
-        ]);
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
+
         if ($truckSchedule!=null) {
 
-            $truck_schedule_id = $truckSchedule->getId();
+            $truck_schedule_id= $truckSchedule[0]['id'];
 
             $truckOrders = $truckOrderRepository->findBy([
                 'truck_schedule' => $truck_schedule_id,
@@ -283,7 +279,6 @@ class DriverController extends AbstractController
             return $this->render('driver/view_order_list.html.twig', [
                 'truckOrders' => $truckOrders,
                 'driver' => $driver,
-
             ]);
         }
         else

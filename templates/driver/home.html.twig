@@ -23,7 +23,7 @@
 
 
 
-        <div class="container w-25 p-3">
+        <div class="container w-75 p-3">
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Truck:
@@ -36,22 +36,39 @@
 
             </ul>
         </div>
-        <div class="space2"></div>
 
-        <form>
-            <div class="container ">
-                <div class="row">
-                    <div class="col text-right">
-                        <input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Picked" id="Picked" value="Picked"><br><br>
+
+        {% if status == "scheduled" %}
+            <form>
+                <div class="container ">
+                    <div class="row">
+                        <div class="col text-center">
+                           <br><br><input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Picked" id="Picked" value="Picked"><br><br>
+                        </div>
                     </div>
-                    <div class="col text-left">
-                        <input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
+                    <div class="row">
+                        <div class="col text-center">
+                            <input class="deliver ajax btn btn-dark btn-lg w-50 p-3 " type="button" style="display: none;" name="Delivered" id="Delivered" value="Delivered">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <input id="user_id" type="hidden" value="{{ driver.id }}">
-            <input id="truck_schedule_id" type="hidden" value="{{ truck_schedule_id }}">
-        </form>
+                <input id="user_id" type="hidden" value="{{ driver.id }}">
+                <input id="truck_schedule_id" type="hidden" value="{{ truck_schedule_id }}">
+            </form>
+        {% endif %}
+        {% if status == "picked" %}
+            <form>
+                <div class="container ">
+                    <div class="row">
+                        <div class="col text-center">
+                            <br><br><br><br><input class="deliver ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
+                        </div>
+                    </div>
+                </div>
+                <input id="user_id" type="hidden" value="{{ driver.id }}">
+                <input id="truck_schedule_id" type="hidden" value="{{ truck_schedule_id }}">
+            </form>
+        {% endif %}
 
     {% else %}
         <div class="alert alert-warning" role="alert">
