@@ -29,26 +29,28 @@ use \DateTime;
 
 
 /**
- * @Route("/driver")
+ * @Route("/")
  * 
  */
 class DriverController extends AbstractController
 {
 
-    /**
-     * @Route("/", name="driver_index", methods={"GET"})
-     *
-     */
-    public function index(DriverRepository $driverRepository): Response
-    {
-        return $this->render('driver/index.html.twig', [
-            'drivers' => $driverRepository->findAll(),
-        ]);
+    // /**
+    //  * @Route("/", name="driver_index", methods={"GET"})
+    //  *
+    //  */
+    // public function index(DriverRepository $driverRepository): Response
+    // {
+    //     return $this->render('driver/index.html.twig', [
+    //         'drivers' => $driverRepository->findAll(),
+    //     ]);
 
-    }
+    // }
 
      /**
-     * @Route("/register", name="driver_registration")
+     * @Route("store_manager/driver/register", name="driver_registration")
+     * 
+     * @IsGranted("ROLE_STORE_MANAGER")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
@@ -68,12 +70,8 @@ class DriverController extends AbstractController
             $entityManager->persist($driver);
             $entityManager->flush();
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $driver,
-                $request,
-                $authenticator,
-                'driver_users'
-            );
+            return $this->redirectToRoute('driver_registration');
+
         }
 
         return $this->render(
@@ -84,7 +82,7 @@ class DriverController extends AbstractController
     
 
     /**
-     * @Route("/login", name="login_driver")
+     * @Route("driver/login", name="login_driver")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -101,38 +99,38 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout_driver")
+     * @Route("driver/logout", name="logout_driver")
      */
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
     
+    // /**
+    //  * @Route("/new", name="driver_new", methods={"GET","POST"})
+    //  */
+    // public function new(Request $request): Response
+    // {
+    //     $driver = new Driver();
+    //     $form = $this->createForm(DriverType::class, $driver);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($driver);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('driver_index');
+    //     }
+
+    //     return $this->render('driver/new.html.twig', [
+    //         'driver' => $driver,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/new", name="driver_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $driver = new Driver();
-        $form = $this->createForm(DriverType::class, $driver);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($driver);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('driver_index');
-        }
-
-        return $this->render('driver/new.html.twig', [
-            'driver' => $driver,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="driver_edit", methods={"GET","POST"})
+     * @Route("driver/{id}/edit", name="driver_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Driver $driver): Response
     {
@@ -164,8 +162,9 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+
     /**
-     * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
+     * @Route("driver/{id}/my-profile", name="driver_show", methods={"GET"})
      */
     public function show(Driver $driver): Response
     {
@@ -178,7 +177,7 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     * @Route("driver/{id}/driver_home", name="driver_home", methods={"GET"})
      */
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
@@ -215,7 +214,7 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
+     * @Route("driver/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
      */
     public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
     {
@@ -239,7 +238,7 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
+     * @Route("driver/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
      */
     public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
     {
@@ -249,7 +248,7 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/{status}/change-status", name="change-status", methods={"POST"})
+     * @Route("driver/{id}/{status}/change-status", name="change-status", methods={"POST"})
      */
     public function toggleAvailability($id,$status,DriverRepository $driverRepository, Request $request)
     {
@@ -264,7 +263,7 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/show_orders", name="orderList_show", methods={"GET"})
+     * @Route("driver/{id}/show_orders", name="orderList_show", methods={"GET"})
      */
     public function showOrdersToDriver( $id, Driver $driver,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
     {
