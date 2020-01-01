@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+{% apply inline_css %}
+
+<a href="{{ path('cart') }}"><button>cart</button></a>
+<h2 style="padding-left:180px; padding-top:20px">Place Order</h2>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 180px; padding-right:150px">
+
+<label>select route </label>
+<select style="width:400px" id="route" >
+    {% for route in routes %}
+      <option value={{route.id }}>{{ route.decription }}->maximum time:{{ route.max_time }}</option>
+    {% endfor %}
+  </select>
+
+<div style="padding-top:50px; padding-bottom:50px; padding-left: 50px" id="order_summary">
+    <label>total quantity: </label>
+    <label id="tot_q"></label>
+    <br>
+    <label>total price: </label>
+    <label id="tot_p"></label>
+</div>
+
+<div>
+<a><button style="width:150px" onClick="checkout()" >place order</button><a>
+</div>
+
+</div>
+<p id="customerId" style="display:none">{{ app.user.id }}</p>
+
+{% endapply %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    <script src="../../js/place_order.js"></script>
+{% endblock %}

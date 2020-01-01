@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Product index{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
     <link rel="stylesheet" type="text/css" href="../css/table.css">
+{#    <link rel="stylesheet" type="text/css" href="../../css/report.css">#}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+{% endblock %}
+{% block style %}
+    button {
+    background-color: #020657;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
 {% endblock %}
 
 {% block body %}
@@ -23,48 +43,59 @@
                     </button>
                 </div>
             </nav>
-            <h1>Product index</h1>
+            <div class="container my-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Product index</h1>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Unit_price</th>
-                        <th>Size</th>
-                        <th>Picture</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th>actions</th>
+                        <table width="100%" ID="Table2">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Unit_price</th>
+                                    <th>Size</th>
+                                    <th>Picture</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>actions</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td>{{ product.id }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.unitPrice }}</td>
-                        <td>{{ product.size }}</td>
-                        <td>{{ product.picture }}</td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.status }}</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.unitPrice }}</td>
+                                    <td>{{ product.size }}</td>
+                                    <td>{{ product.picture }}</td>
+                                    <td>{{ product.category }}</td>
+                                    <td>{{ product.status }}</td>
 
-                            <td>
-                                <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
-                                <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
-                            </td>
+                                        <td>
+                                            <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
+                                            <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
+                                        </td>
 
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8">no records found</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="8">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <br>
+                        <form action="{{ path('product_new') }}">
+                            <button class="button" type="submit">Create New</button>
+                        </form>
 
-                <a href="{{ path('product_new') }}">Create new</a>
+{#                            <a href="{{ path('product_new') }}">Create new</a>#}
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 {% endblock %}

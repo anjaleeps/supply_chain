@@ -3,31 +3,39 @@
 {% block title %}Driver Profile{% endblock %}
  {% block stylesheets %}
      {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
  {% endblock %}
-{% block body %}
-    <h1>My Profile</h1>
 
+{% block body %}
+    {% include 'driver/header.html.twig' %}
+
+    <div class="space"></div>
+    <div class="alert alert-dark" role="alert">
+        <h4 class="text-center">My Profile</h4>
+    </div>
+    <div class="space2"></div>
     <table class="table">
+
         <tbody>
-            <tr>
+            <tr bgcolor="#b3b3ff">
                 <th>Name</th>
                 <td>{{ driver.firstName ~' '~ driver.lastName }}</td>
             </tr>
-            <tr>
+            <tr bgcolor="#b3b3ff">
                 <th>Email</th>
                 <td>{{ driver.email }}</td>
             </tr>
-            <tr>
+            <tr bgcolor="#b3b3ff">
                 <th>Worked hours for this week</th>
                 <td>{{ driver.workHours ? driver.workHours|date('H:i:s') : '' }}</td>
             </tr>
-            <tr>
+            <tr bgcolor="#b3b3ff">
                 <th>Status</th>
                 <td>
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="customSwitches" value="">
-                        <label class="custom-control-label" for="customSwitches"></label>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <input type="checkbox" class="custom-control-input check" id="customSwitches" value="pop" >
+                        <label class="custom-control-label check" for="customSwitches"></label>
+                        <button class="navbar-toggler check" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" value="pop" >
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
@@ -36,12 +44,18 @@
         </tbody>
     </table>
     <input id="id" type="hidden" value="{{ driver.id }}">
+    <div class="space2"></div>
+    <div class="container ">
+        <div class="row">
+            <div class="col text-right">
+                <a class="btn btn-primary" href="{{ path('driver_edit', {'id': driver.id}) }}" role="button">Edit</a><br><br>
+            </div>
+            <div class="col text-left">
+                {{ include('driver/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('driver_home',{'id': driver.id}) }}">Back</a>
-
-    <a href="{{ path('driver_edit', {'id': driver.id}) }}">Edit</a>
-
-    {{ include('driver/_delete_form.html.twig') }}
 {% endblock %}
 {% block javascripts %}
     {{ parent()  }}

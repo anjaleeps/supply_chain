@@ -3,11 +3,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="../../css/side_bar.css">
-    <link rel="stylesheet" type="text/css" href="../../css/report.css">
-    {#    <link rel="stylesheet" type="text/css" href="../../css/table.css">#}
+{#    <link rel="stylesheet" type="text/css" href="../../css/report.css">#}
+    <link rel="stylesheet" type="text/css" href="../../css/table.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
-
+{% block style %}
+    {{ parent() }}
+{% endblock %}
 {% block body %}
     <div class="wrapper">
         {% include ('manager/managerSideBar.html.twig') %}

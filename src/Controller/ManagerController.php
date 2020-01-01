@@ -372,6 +372,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/work_dashboard", name="work_report", methods={"GET"})
+     *
+     * @IsGranted("ROLE_MANAGER")
      */
 
     public function getWorkDashboard(DriverRepository $driverRepository,DriverAssistantRepository $driverAssistantRepository,TruckRepository $truckRepository): Response
@@ -418,6 +420,8 @@ class ManagerController extends AbstractController
 
     /**
      * @Route("/report/sales_dashboard", name="sales_dashboard", methods={"GET"})
+     *
+     * @IsGranted("ROLE_MANAGER")
      */
     public function getSalesDashboard(ProductRepository $productRepository,OrdersRepository $ordersRepository)
     {
@@ -456,6 +460,61 @@ class ManagerController extends AbstractController
             'products' => $productSales,
             'sales'=>$dataSales,
             'highestSales'=>$data,
+        ]);
+    }
+
+    /**
+     * @Route("/report/customer_dashboard", name="customer_dashboard", methods={"GET"})
+     *
+     * @IsGranted("ROLE_MANAGER")
+     */
+    public function getCustomerDashboard(CustomerRepository $customerRepository)
+    {
+        $customerData = $customerRepository->getCustomerReport();
+        $customers = [];
+
+        foreach ($customerData as $customer) {
+            if (!(array_key_exists($customer['customer_type'], $customers))) {
+                $customers[$customer['customer_type']] = [];
+            }
+            array_push($customers[$customer['customer_type']], $customer);
+        }
+
+        return $this->render('report/customer_dashboard.html.twig', [
+            'customers' => $customers
+        ]);
+    }
+
+    /**
+     * @Route("/report/quarter_dashboard", name="quarterly_dashboard", methods={"GET", "POST"})
+     *
+     * @IsGranted("ROLE_MANAGER")
+     */
+    public function getQuarterlyDashboard($year = '2020', OrdersRepository $ordersRepository, Request $request)
+    {
+        if ($request->request->get('year')) {
+            $year = $request->request->get('year');
+        }
+        $quarterReportData = $ordersRepository->getQuarterlyReport($year);
+        $years = $ordersRepository->getRecordedYears();
+
+        $data = [
+            1 => [],
+            2 => [],
+            3 => [],
+            4 => []
+        ];
+
+        foreach ($quarterReportData as $row) {
+            $quarter = $row['quarter'];
+            $data[$quarter] = $row;
+        }
+
+
+        return $this->render('report/quarter_dashboard.html.twig', [
+            'sales' => $quarterReportData,
+            'years' => $years,
+            'cur_year' => $year
         ]);
     }
 }

@@ -28,7 +28,8 @@ class OrdersRepository extends ServiceEntityRepository
                 inner join order_product op on o.id=op.orders_id 
                 inner join product p on p.id=op.product_id
                 inner join customer c on c.id=o.customer_id
-                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id
+                group by YEAR(o.date_completed), MONTH(o.date_completed),c.city, o.route_id, o.order_status
+                having o.status='delivered'
                 order by year desc, month desc;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -86,7 +87,9 @@ class OrdersRepository extends ServiceEntityRepository
         $stmt->execute();
     }
 
-    public function getOrderById(string $order_id){
+
+    public function getOrderById(string $order_id)
+    {
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT o.id as order_id, o.route_id, o.order_status, 
                 o.date_placed, c.id as customer_id, c.first_name, c.last_name,
@@ -95,11 +98,12 @@ class OrdersRepository extends ServiceEntityRepository
                 inner join customer c on c.id=o.id
                 where o.id=?";
         $stmt = $conn->prepare($sql);
-        $stmt -> bindParam(1,$order_id);
+        $stmt->bindParam(1, $order_id);
         $stmt->execute();
         return $stmt->fetchAll();
 
     }
+
     
     public function placeOrder(int $customer_id, int $route_id, string $status, string $date ){
         $conn= $this->getEntityManager()->getConnection();
@@ -114,5 +118,21 @@ class OrdersRepository extends ServiceEntityRepository
 
         $last_id = $conn->lastInsertId();
         return $last_id;
+
+    }
+
+    public function getCustomerOrders(int $customer_id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select o.id, o.route_id, o.order_status, o.date_placed, o.date_completed, op.product_id, op.quantity, 
+                p.name, p.unit_price from orders o 
+                inner join order_product op on o.id=op.orders_id
+                inner join product p on op.product_id=p.id
+                where o.customer_id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $customer_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
     }
 }

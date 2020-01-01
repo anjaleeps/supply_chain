@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Entity\PhoneNumber;
+use App\Entity\Orders;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
 use App\Repository\PhoneNumberRepository;
+use App\Repository\OrdersRepository;
 use App\Security\CustomerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
@@ -31,6 +34,61 @@ class CustomerController extends AbstractController
         return $this->render('customer/index.html.twig', [
             'customers' => $customerRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/homePage", name="home_page", methods={"GET"})
+     */
+    public function homePage(UserInterface $user)
+    {
+        return $this->redirectToRoute('customer_account');
+    }
+
+    /**
+     * @Route("/account", name="customer_account", methods={"GET"})
+     * @IsGranted("ROLE_CUSTOMER")
+     */
+    public function account(UserInterface $user, OrdersRepository $ordersRepository)
+    {
+        $customer_id = $user->getId();
+        $order_details = $ordersRepository->getCustomerOrders($customer_id);
+        
+        $all_orders = [];
+        if($order_details){
+        $order = [];
+        $order_id = $order_details[0]['id'];
+        $order['order_id'] = $order_details[0]['id'];
+        $order['status'] = $order_details[0]['order_status'];
+        $order['date_placed'] = $order_details[0]['date_placed'];
+        $products = [];
+        foreach($order_details as $product){
+            $arr = [];
+            if($product['id']==$order_id){
+                $arr['pr_name'] = $product['name'];
+                $arr['quantity'] = $product['quantity'];
+                $arr['unit_price'] = $product['unit_price'];
+                array_push($products,$arr);
+            }
+            else{
+                $order['products'] = $products;
+                $products = [];
+                array_push($all_orders,$order);
+                $order = [];
+                $order_id = $product['id'];
+                $order['order_id'] = $product['id'];
+                $order['status'] = $product['order_status'];
+                $order['date_placed'] = $product['date_placed'];
+
+                $arr['pr_name'] = $product['name'];
+                $arr['quantity'] = $product['quantity'];
+                $arr['unit_price'] = $product['unit_price'];
+                array_push($products,$arr);
+            }
+        }
+        $order['products'] = $products;
+        array_push($all_orders,$order);
+    }
+        return $this->render('customer/customerAccount.html.twig',['orders'=>$all_orders]);
     }
 
 
@@ -163,4 +221,6 @@ class CustomerController extends AbstractController
 
         return $this->redirectToRoute('customer_index');
     }
+
+    
 }
