@@ -72,7 +72,7 @@ class TransportsRepository extends ServiceEntityRepository
 
     public function getExpectedTrains(string $id){
         $conn= $this->getEntityManager()->getConnection();
-        $sql = "select ts.id, t.date, ts.start_time, t.status, sm.id,
+        $sql = "select ts.id as train_id, t.date, ts.start_time, t.status, sm.id,
                 addtime(ts.start_time, ts.journey_time) as expected_arrival, count(distinct(t.orders_id)) as order_count
                 from transports t 
                 inner join train_schedule ts on t.train_schedule_id=ts.id
@@ -86,17 +86,19 @@ class TransportsRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
-    public function updateTrainStatus(string $train_id, string $user_id){
+    public function updateTrainStatus(string $train_id, string $date, string $start, string $user_id){
         $conn= $this->getEntityManager()->getConnection();
         $sql = "update transports t
         inner join train_schedule ts on ts.id=t.train_schedule_id
         inner join store s on s.city=ts.destination
         inner join store_manager sm on sm.store_id=s.id
         set t.status='arrived'
-        where t.status='scheduled' and ts.id=? and sm.id=?";
+        where t.status='scheduled' and ts.id=? and sm.id=? and ts.start_time=? and t.date=?";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(1, $train_id);
         $stmt->bindParam(2, $user_id);
+        $stmt->bindParam(3, $start);
+        $stmt->bindParam(4, $date);
         $stmt->execute();
         $stmt->rowCount();
     }

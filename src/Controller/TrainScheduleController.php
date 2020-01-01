@@ -50,9 +50,11 @@ class TrainScheduleController extends AbstractController
      */
     public function updateTrainStatus(Request $request, TransportsRepository $transportsRepository){
         $train_id = $request->request->get('train_id');
+        $date = $request->request->get('date');
+        $start = $request->request->get('start');
         $user_id = $this->getUser()->getId();
         
-        $rows = $transportsRepository->updateTrainStatus($train_id, $user_id);
+        $rows = $transportsRepository->updateTrainStatus($train_id, $date, $start, $user_id);
         
         return new Response('success');
       

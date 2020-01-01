@@ -473,6 +473,7 @@ class ManagerController extends AbstractController
         $customerData = $customerRepository->getCustomerReport();
         $customers = [];
 
+
         foreach ($customerData as $customer) {
             if (!(array_key_exists($customer['customer_type'], $customers))) {
                 $customers[$customer['customer_type']] = [];

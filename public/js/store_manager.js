@@ -1,14 +1,21 @@
 $('.arrived').on('click', function(e){
     e.preventDefault()
     train_id = $(this).data('id');
+    date = $(this).data('date');
+    console.log(date)
+
+    start = $(this).data('start');
     console.log(train_id)
     button = $(this)
+    console.log(start)
 
     $.ajax({
         url: '/store_manager/train/schedule/edit',
         type: 'POST',
         data: {
-            'train_id': train_id
+            'train_id': train_id,
+            'date': date,
+            'start': start
         },
         success: function (data){
             console.log(data)

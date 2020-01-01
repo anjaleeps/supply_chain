@@ -26,7 +26,7 @@ class CustomerType extends AbstractType
                 'choices' => array(
                     'Wholesaler'=> 'Wholesaler',
                     'Retailer'=> 'Retailer',
-                    'End Customer' => 'End Customer'
+                    'End Customer' => 'End-Customer'
                 )
             ))
             ->add('place_no', TextType::class)

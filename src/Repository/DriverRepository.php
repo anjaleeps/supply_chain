@@ -49,7 +49,7 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
 
     public function getAvailableDrivers(string $user_id ){
         $conn= $this->getEntityManager()->getConnection();
-        $sql = "select d.id, d.first_name, d.last_name from driver d 
+        $sql = "select distinct d.id, d.first_name, d.last_name from driver d 
                 inner join store_manager sm on sm.store_id=d.store_id 
                 inner join route r on r.store_id=d.store_id
                 where d.id <> (select driver_id from truck_schedule ts 

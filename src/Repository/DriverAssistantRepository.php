@@ -75,7 +75,7 @@ class DriverAssistantRepository extends ServiceEntityRepository implements Passw
 
     public function getAvailableAssistants(string $user_id){
         $conn= $this->getEntityManager()->getConnection();
-        $sql = "select da.id, da.first_name, da.last_name from driver_assistant da 
+        $sql = "select distinct da.id, da.first_name, da.last_name from driver_assistant da 
                 inner join store_manager sm on sm.store_id=da.store_id 
                 inner join route r on r.store_id=da.store_id
                 where ( not da.id <=> (select driver_assistant_id from truck_schedule ts 

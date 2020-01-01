@@ -358,7 +358,7 @@ class Customer implements UserInterface
         $metadata->addPropertyConstraint('street',  new Assert\NotBlank());
         
         $metadata->addPropertyConstraint('customer_type', new Assert\Choice([
-            'choices' => ['Wholesaler', 'Retailer', 'End Customer'],
+            'choices' => ['Wholesaler', 'Retailer', 'End-Customer'],
             'message' => 'Choose a valid customer type.',
         ]));
 

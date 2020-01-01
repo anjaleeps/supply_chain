@@ -94,12 +94,14 @@ class StoreManagerController extends AbstractController
                     TruckRepository $truckRepository)
     {
         $id = $this->getUser()->getId();
+
         $trainData = $transportsRepository->getExpectedTrains($id);
         $orderData = $ordersRepository->getStoredOrders($id);
         $driverData = $driverRepository->getAvailableDrivers($id);
         $driverAssistantData = $driverAssistantRepository->getAvailableAssistants($id);
         $truckData = $truckRepository->getAvailableTrucks($id);
         $data = [];
+
 
         foreach ($orderData as $order){
             if (!(array_key_exists($order['route_id'], $data))){

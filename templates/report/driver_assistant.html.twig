@@ -15,9 +15,9 @@
                                 {% for city, cityDriverAssistants in driverAssistants %}
                                     <li class="nav-item">
                                         {% if (loop.index)==1 %}
-                                            <a class="nav-link active" href="{{ '#'~city }}" id="{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
+                                            <a class="nav-link active" href="{{ '#da'~city }}" id="{{ city~'-tabda' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="true">{{ city }}</a>
                                         {% else %}
-                                            <a class="nav-link" href="{{ '#'~city }}" id= "{{ city~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
+                                            <a class="nav-link" href="{{ '#da'~city }}" id= "{{ city~'-tabda' }}" role="tab" data-toggle="tab" aria-controls="{{ city }}" aria-selected="false">{{ city }}</a>
                                         {% endif %}
                                     </li>
                                 {% endfor %}
@@ -25,9 +25,9 @@
                             <div class="tab-content" id="myTabContent">
                                 {% for city, cityDriverAssistants in driverAssistants %}
                                     {% if (loop.index)==1 %}
-                                        <div class="tab-pane show fade active" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
+                                        <div class="tab-pane show fade active" role="tabpanel" id= "{{'da'~ city }}" aria-labelledby="{{ city~'-tabda' }}">
                                     {% else %}
-                                        <div class="tab-pane fade" role="tabpanel" id= "{{ city }}" aria-labelledby="{{ city~'-tab' }}">
+                                        <div class="tab-pane fade" role="tabpanel" id= "{{ 'da'~city }}" aria-labelledby="{{ city~'-tab' }}">
                                     {% endif %}
                                     <table class="table table-striped">
                                         <thead class="col-names">
