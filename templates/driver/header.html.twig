@@ -34,20 +34,18 @@
                     <ul class="navbar-nav ml-auto">
 
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('driver_home',{'id': driver.id}) }}">Home
-                                <span class="sr-only">(current)</span>
-                            </a>
+                            <a class="nav-link" href="{{ path('driver_home',{'id': driver.id}) }}">Home</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('orderList_show',{'truck_schedule_id':truck_schedule_id}) }}">Orders</a>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('orderList_show',{'id': driver.id}) }}">Orders</a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a class="nav-link" href="{{ path('driver_show',{'id': driver.id}) }}">Account</a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a class="nav-link" href="#">Contact</a>
                         </li>
                     </ul>

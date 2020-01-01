@@ -1,4 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Driver{% endblock %}
+
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
+{% block body %}
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <button class="btn btn btn-primary">{{ button_label|default('Save') }}</button><br><br>
 {{ form_end(form) }}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()  }}
+{% endblock %}

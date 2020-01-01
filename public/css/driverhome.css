@@ -7,3 +7,8 @@
         max-width: 300px;
     }
 }
+.heading {
+    color: black;
+    font-size: 200%;
+    text-align: center;
+}
