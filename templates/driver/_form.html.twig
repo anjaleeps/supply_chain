@@ -7,10 +7,19 @@
      <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
  {% endblock %}
 {% block body %}
-
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn btn btn-primary">{{ button_label|default('Save') }}</button><br><br>
+
+    <div class="container ">
+        <div class="row">
+            <div class="col text-left">
+                <button class="btn btn btn-primary">{{ button_label|default('Save') }}</button><br><br>
+            </div>
+            <div class="col text-right">
+                <a class="nav-link" href="{{ path('driver_show',{'id': driver.id}) }}">Back</a>
+            </div>
+        </div>
+    </div>
 {{ form_end(form) }}
 
 {% endblock %}

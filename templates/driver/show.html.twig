@@ -14,6 +14,7 @@
         <h4 class="text-center">My Profile</h4>
     </div>
     <div class="space2"></div>
+<div class="container ">
     <table class="table">
 
         <tbody>
@@ -43,15 +44,13 @@
             </tr>
         </tbody>
     </table>
+</div>
     <input id="id" type="hidden" value="{{ driver.id }}">
     <div class="space2"></div>
     <div class="container ">
         <div class="row">
-            <div class="col text-right">
-                <a class="btn btn-primary" href="{{ path('driver_edit', {'id': driver.id}) }}" role="button">Edit</a><br><br>
-            </div>
-            <div class="col text-left">
-                {{ include('driver/_delete_form.html.twig') }}
+            <div class="col text-center">
+                <a class="btn btn-outline-primary " href="{{ path('driver_edit', {'id': driver.id}) }}" role="button">Edit</a><br><br>
             </div>
         </div>
     </div>
