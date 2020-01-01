@@ -63,41 +63,46 @@ class CustomerController extends AbstractController
     {
         $customer_id = $user->getId();
         $order_details = $ordersRepository->getCustomerOrders($customer_id);
-        
+
         $all_orders = [];
         if($order_details){
         $order = [];
-        $order_id = $order_details[0]['id'];
         $order['order_id'] = $order_details[0]['id'];
         $order['status'] = $order_details[0]['order_status'];
         $order['date_placed'] = $order_details[0]['date_placed'];
-        $products = [];
+        $order['products'] = [];
+        array_push($all_orders,$order);
         foreach($order_details as $product){
             $arr = [];
-            if($product['id']==$order_id){
-                $arr['pr_name'] = $product['name'];
-                $arr['quantity'] = $product['quantity'];
-                $arr['unit_price'] = $product['unit_price'];
-                array_push($products,$arr);
+            $T = 0;
+            foreach($all_orders as $added){
+                if($product['id']==$added['order_id']){
+                    $T = 1;
+                    $arr['pr_name'] = $product['name'];
+                    $arr['quantity'] = $product['quantity'];
+                    $arr['unit_price'] = $product['unit_price'];
+                    array_push($added['products'],$arr);
+                break;
+                }
             }
-            else{
-                $order['products'] = $products;
-                $products = [];
-                array_push($all_orders,$order);
+
+            if($T==0){
+
                 $order = [];
-                $order_id = $product['id'];
                 $order['order_id'] = $product['id'];
                 $order['status'] = $product['order_status'];
                 $order['date_placed'] = $product['date_placed'];
+                $order['products'] = [];
 
                 $arr['pr_name'] = $product['name'];
                 $arr['quantity'] = $product['quantity'];
                 $arr['unit_price'] = $product['unit_price'];
-                array_push($products,$arr);
+                array_push($order['products'],$arr);
+                array_push($all_orders,$order);
             }
+
         }
-        $order['products'] = $products;
-        array_push($all_orders,$order);
+        
     }
         return $this->render('customer/customerAccount.html.twig',['orders'=>$all_orders]);
     }
