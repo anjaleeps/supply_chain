@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 {% block body %}
-
+    {% include ('manager/header.html.twig') %}
+    <br><br><br><br>
     <div class="wrapper">
 
         {% include ('manager/managerSideBar.html.twig') %}
 
     <div id="content">
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
 

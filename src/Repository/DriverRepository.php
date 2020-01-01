@@ -69,7 +69,6 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $stmt->bindParam(1, $status);
         $stmt->bindParam(2, $id);
         $stmt->execute();
-        return $stmt->fetchAll();
     }
 
 }

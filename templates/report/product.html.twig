@@ -15,7 +15,6 @@
                         <thead class="col-names">
                             <tr>
                                 <th scope="col"> </th>
-                                <th scope="col"> </th>
                                 <th scope="col">Product</th>
                                 <th scope="col" >Category</th>
                                 <th scope="col" >Price</th>
@@ -26,7 +25,6 @@
                             {% for product in products %}
                                 <tr>
                                     <td class="text-center">{{ loop.index }}</td>
-                                    <td><img src="{{'../../' ~product['picture'] }}" /> </td>
                                     <td>{{  product['name'] }}</td>
                                     <td>{{  product['category'] }}</td>
                                     <td>{{ "Rs."~product['unit_price'] }}</td>

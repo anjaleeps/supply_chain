@@ -363,7 +363,7 @@ class Customer implements UserInterface
         ]));
 
         $metadata->addPropertyConstraint('city', new Assert\Choice([
-            'choices' => ['Colombo', 'Negombo', 'Galle', 'Jaffna', 'Matara', 'Trinco'],
+            'choices' => ['Colombo', 'Negombo', 'Galle', 'Jaffna', 'Matara', 'Trincomalee'],
             'message' => 'Choose a valid city.',
         ]));
 

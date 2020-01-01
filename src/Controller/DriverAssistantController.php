@@ -7,6 +7,9 @@ use App\Entity\DriverAssistant;
 use App\Form\DriverAssistantType;
 use App\Form\DriverButtonType;
 use App\Repository\DriverAssistantRepository;
+use App\Repository\RouteRepository;
+use App\Repository\TruckOrderRepository;
+use App\Repository\TruckRepository;
 use App\Repository\TruckScheduleRepository;
 use App\Security\DriverAssistantAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,22 +22,24 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
- * @Route("/driver_assistant")
+ * @Route("/")
  */
 class DriverAssistantController extends AbstractController
 {
-    /**
-     * @Route("/", name="driver_assistant_index", methods={"GET"})
-     */
-    public function index(DriverAssistantRepository $driverAssistantRepository): Response
-    {
-        return $this->render('driver_assistant/index.html.twig', [
-            'driver_assistants' => $driverAssistantRepository->findAll(),
-        ]);
-    }
+    // /**
+    //  * @Route("/", name="driver_assistant_index", methods={"GET"})
+    //  */
+    // public function index(DriverAssistantRepository $driverAssistantRepository): Response
+    // {
+    //     return $this->render('driver_assistant/index.html.twig', [
+    //         'driver_assistants' => $driverAssistantRepository->findAll(),
+    //     ]);
+    // }
 
     /**
-     * @Route("/register", name="driver_assistant_registration")
+     * @Route("store_manager/driver_assistant/register", name="driver_assistant_registration")
+     * 
+     * @IsGranted("ROLE_STORE_MANAGER")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAssistantAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
@@ -54,12 +59,8 @@ class DriverAssistantController extends AbstractController
             $entityManager->persist($driverAssistant);
             $entityManager->flush();
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                    $driverAssistant,
-                    $request,
-                    $authenticator,
-                    'driver_assistant_users'
-                );
+            return $this->redirectToRoute('driver_assistant_registration');
+
         }
         return $this->render(
             'registration/registerDriverAssistant.html.twig',
@@ -68,7 +69,7 @@ class DriverAssistantController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login_driver_assistant")
+     * @Route("driver_assistant/login", name="login_driver_assistant")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -85,38 +86,38 @@ class DriverAssistantController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout_driver_assistant")
+     * @Route("driver_assistant/logout", name="logout_driver_assistant")
      */
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
+    // /**
+    //  * @Route("/new", name="driver_assistant_new", methods={"GET","POST"})
+    //  */
+    // public function new(Request $request): Response
+    // {
+    //     $driverAssistant = new DriverAssistant();
+    //     $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($driverAssistant);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('driver_assistant_index');
+    //     }
+
+    //     return $this->render('driver_assistant/new.html.twig', [
+    //         'driver_assistant' => $driverAssistant,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/new", name="driver_assistant_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $driverAssistant = new DriverAssistant();
-        $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($driverAssistant);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('driver_assistant_index');
-        }
-
-        return $this->render('driver_assistant/new.html.twig', [
-            'driver_assistant' => $driverAssistant,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="driver_assistant_edit", methods={"GET","POST"})
+     * @Route("driver_assistant/{id}/edit", name="driver_assistant_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, DriverAssistant $driverAssistant): Response
     {
@@ -126,7 +127,9 @@ class DriverAssistantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('driver_assistant_index');
+            return $this->render('driver_assistant/show.html.twig', [
+                'driver_assistant' => $driverAssistant,
+            ]);
         }
 
         return $this->render('driver_assistant/edit.html.twig', [
@@ -135,22 +138,22 @@ class DriverAssistantController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="driver_assistant_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, DriverAssistant $driverAssistant): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $driverAssistant->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($driverAssistant);
-            $entityManager->flush();
-        }
+    // /**
+    //  * @Route("/{id}", name="driver_assistant_delete", methods={"DELETE"})
+    //  */
+    // public function delete(Request $request, DriverAssistant $driverAssistant): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete' . $driverAssistant->getId(), $request->request->get('_token'))) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->remove($driverAssistant);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('driver_assistant_index');
-    }
+    //     return $this->redirectToRoute('driver_assistant_index');
+    // }
 
     /**
-     * @Route("/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
+     * @Route("driver_assistant/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
      */
     public function show(DriverAssistant $driverAssistant): Response
     {
@@ -161,27 +164,27 @@ class DriverAssistantController extends AbstractController
 
 
     /**
-     * @Route("/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
+     * @Route("driver_assistant/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
      */
-    public function home($id, DriverAssistant $driverAssistant, TruckScheduleRepository $truckScheduleRepository): Response
+    public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
-
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_assistant' => $id,
-            'status' => 'ready',
-        ]);
+        $driverAssistant=$this->getUser();
+        $id=$driverAssistant->getId();
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredScheduleDriverAssistant($id);
 
         if ($truckSchedule!=null)
         {
-            $truck_schedule_id=$truckSchedule->getId();
-            $truck_no=$truckSchedule->getTruck()->getTruckNo();
-            $route=$truckSchedule->getRoute()->getDecription();
+            $truck_schedule_id= $truckSchedule[0]['id'];
+            $truck_no=($truckRepository->fetchTruckNo($truckSchedule[0]['truck_id']))[0]['truck_no'];
+            $route=($routeRepository->fetchRoute($truckSchedule[0]['route_id']))[0]['decription'];
+            $status= $truckSchedule[0]['status'];
 
             return $this->render('driver_assistant/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver_assistant' => $driverAssistant,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
+                'status'=>$status,
             ]);
         }
         else
@@ -193,20 +196,48 @@ class DriverAssistantController extends AbstractController
         }
     }
     /**
-     * @Route("/{id}/{status}/assistant-change-status", name="assistant-change-status", methods={"POST"})
+     * @Route("driver_assistant/{id}/{status}/assistant-change-status", name="assistant-change-status", methods={"POST"})
      */
     public function toggleAvailability($id,$status,DriverAssistantRepository $driverAssistantRepository, Request $request)
     {
         if ($status==1){
-            $state="Available";
+            $state="available";
         }
         else{
-            $state="Not available";
+            $state="not available";
         }
         $driverAssistantRepository->changeAvailability($state,$id);
         return new Response( 'success');
     }
 
+    /**
+     * @Route("/{id}/show_orders", name="orderList_show_", methods={"GET"})
+     */
+    public function showOrdersToDriver( $id, DriverAssistant $driverAssistant,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
+    {
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredScheduleDriverAssistant($id);
+
+        if ($truckSchedule!=null) {
+
+            $truck_schedule_id= $truckSchedule[0]['id'];
+
+            $truckOrders = $truckOrderRepository->findBy([
+                'truck_schedule' => $truck_schedule_id,
+            ]);
+
+            return $this->render('driver_assistant/view_order_list.html.twig', [
+                'truckOrders' => $truckOrders,
+                'driver_assistant' => $driverAssistant,
+            ]);
+        }
+        else
+        {
+            return $this->render('driver_assistant/home.html.twig', [
+                'driver_assistant' => $driverAssistant,
+                'truck_no'=>'null',
+            ]);
+        }
+    }
 
 
 

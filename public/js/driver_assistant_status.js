@@ -1,7 +1,9 @@
-$(document).on('change', '.customSwitches', function (e){
+
+$('.check').change(function(e){
     e.preventDefault();
     console.log('jer');
     $val = $(this).val();
+    console.log($val);
     $status = $(this).is(':checked') ? 1 : 0;
     console.log($status);
     $id = $('#id').val();

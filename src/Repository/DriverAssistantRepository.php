@@ -97,7 +97,6 @@ class DriverAssistantRepository extends ServiceEntityRepository implements Passw
         $stmt->bindParam(1, $status);
         $stmt->bindParam(2, $id);
         $stmt->execute();
-        return $stmt->fetchAll();
     }
     
 }
