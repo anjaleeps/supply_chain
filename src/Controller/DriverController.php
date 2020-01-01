@@ -181,7 +181,7 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("driver/{id}/driver_home", name="driver_home", methods={"GET"})
+     * @Route("driver/driver_home", name="driver_home", methods={"GET"})
      */
     public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {

@@ -164,7 +164,7 @@ class DriverAssistantController extends AbstractController
 
 
     /**
-     * @Route("driver_assistant/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
+     * @Route("driver_assistant/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
      */
     public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
@@ -201,10 +201,10 @@ class DriverAssistantController extends AbstractController
     public function toggleAvailability($id,$status,DriverAssistantRepository $driverAssistantRepository, Request $request)
     {
         if ($status==1){
-            $state="Available";
+            $state="available";
         }
         else{
-            $state="Not available";
+            $state="not available";
         }
         $driverAssistantRepository->changeAvailability($state,$id);
         return new Response( 'success');
