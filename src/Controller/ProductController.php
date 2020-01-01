@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\Customer;
 use App\Form\ProductType;
+use App\Form\CustomerType;
 use App\Repository\ProductRepository;
+use App\Repository\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Entity\Customer;
-use App\Form\CustomerType;
-use App\Repository\CustomerRepository;
 
 /**
  * @Route("/")
@@ -21,8 +21,6 @@ class ProductController extends AbstractController
 {
     /**
      * @Route("/product", name="product_index", methods={"GET"})
-     *
-     *
      *
      */
     public function index(ProductRepository $productRepository): Response
@@ -50,10 +48,8 @@ class ProductController extends AbstractController
      * @IsGranted("ROLE_CUSTOMER")
      */
     public function cart()
-    {
-        
-        return $this->render('product/cart.html.twig');
-        
+    {    
+        return $this->render('product/cart.html.twig');    
     }
 
 

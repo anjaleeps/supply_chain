@@ -8,7 +8,7 @@
 
 {% block body %}
     <h2>Sales Report</h2>
-            <div class="table-responsive report-table">
+            <div class="table-responsive report-table" style="overflow-y:auto;">
                 {% if sales|length > 0 %}
                     <ul class="nav nav-tabs" role="tablist" id="myTab">
                         {% for city, routeData in sales %}

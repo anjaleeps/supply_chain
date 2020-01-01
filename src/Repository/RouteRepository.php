@@ -19,6 +19,19 @@ class RouteRepository extends ServiceEntityRepository
         parent::__construct($registry, Route::class);
     }
 
+    public function getCustomerRoutes(int $customer_id){
+        $conn= $this->getEntityManager()->getConnection();
+        $sql = "select r.id,r.decription,r.max_time from 
+                customer c inner join store s on c.city=s.city 
+                inner join route r on s.id=r.store_id 
+                where c.id=$customer_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $customer_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Route[] Returns an array of Route objects
     //  */

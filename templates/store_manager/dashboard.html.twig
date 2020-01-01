@@ -79,7 +79,7 @@
 
                         {% for key in order|keys %}
                             <tr>
-                                <td class="order_id">{{ key }}</td>
+                                <td class="order_id"><a href="{{ path('orders_show', {'id': key})}}">{{ key }}</a></td>
                                 <td>{{ order[key]['first_name']~" "~ order[key]['last_name'] }}</td>
                                 <ul>
                                     <td>

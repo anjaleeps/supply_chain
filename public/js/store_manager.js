@@ -21,38 +21,44 @@ $('.arrived').on('click', function(e){
 })
 
 $('.schedule').on('click', function(e){
-    //e.preventDefault()
+    e.preventDefault()
 
-    route_id = $('#route_selection').val();
-    driver_id = $('#driver_selection').val();
-    assistant_id = $('#assistant_selection').val();
-    truck_id = $('#truck_selection').val()
+    route = $('#route_selection')
+    driver = $('#driver_selection')
+    assistant = $('#assistant_selection')
+    truck = $('#truck_selection')
 
-    console.log(route_id, driver_id, assistant_id, truck_id)
+    //console.log(route_id, driver_id, assistant_id, truck_id)
 
-    if (route_id != null && driver_id != null && assistant_id != null && truck_id != null){
+    if (route.val() != null && driver.val() != null && assistant.val() != null && truck.val() != null){
 
         $.ajax({
             url: '/store_manager/truck/schedule/new',
             type: 'POST',
             data: {
-                'route_id': route_id,
-                'driver_id': driver_id,
-                'assistant_id': assistant_id,
-                'truck_id': truck_id
+                'route_id': route.val(),
+                'driver_id': driver.val(),
+                'assistant_id': assistant.val(),
+                'truck_id': truck.val()
             },
             success: function(data){
+                route.find("option:selected").remove()
+                driver.find("option:selected").remove()
+                assistant.find("option:selected").remove()
+                truck.find("option:selected").remove()
 
+                route.find('option:eq(0)').prop('selected', true);                
+                driver.find('option:eq(0)').prop('selected', true);                
+                assistant.find('option:eq(0)').prop('selected', true);                
+                truck.find('option:eq(0)').prop('selected', true);               
+               
             },
             error: function(){
 
             }
         })
-        return false
     }
-    else{
-        e.preventDefault()
-    }
+    
 })
 
 
