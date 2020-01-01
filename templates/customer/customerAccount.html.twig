@@ -8,34 +8,101 @@
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
  {% endblock %}
  
-{% block body %}
+ {% block body %}
 
-{% include 'customer/header.html.twig' %}
+ {% include 'customer/header.html.twig' %}
 
 <h2 class="font" style="padding-left:180px; padding-top:130px">My Account</h2>
 
 <div class="column left">
-    <p>Edit Details</p>
+    <button class="button">Edit Details</button>
 </div>
 <div class="column right">
     <p>my orders</p>
     {% for order in orders %}
-        {% if order.status != "Delivery" %}
-            <p>date_placed:{{ order.date_placed }}</p> 
-            <p>status:{{ order.status }}</p> 
-        {% for product in order.products %}
+        {% if order.status != "delivered" %}
+            <label style="font-weight: bold">Order</label>
+            {% for product in order.products %}
+                <p>{{ product.pr_name }}-{{ product.quantity }}</p>
+            {% endfor %} 
+            <br> 
+
+{% if order.status == "placed" %}
+    <ol class="progtrckr" data-progtrckr-steps="5">
+    <li class="progtrckr-done">placed</li><!--
+ --><li class="progtrckr-todo">on train</li><!--
+ --><li class="progtrckr-todo">on store</li><!--
+ --><li class="progtrckr-todo">on truck</li><!--
+ --><li class="progtrckr-todo">delivered</li>
+    </ol>  
+{% elseif order.status == "on train" %}
+    <ol class="progtrckr" data-progtrckr-steps="5">
+    <li class="progtrckr-done">placed</li><!--
+ --><li class="progtrckr-done">on train</li><!--
+ --><li class="progtrckr-todo">on store</li><!--
+ --><li class="progtrckr-todo">on truck</li><!--
+ --><li class="progtrckr-todo">delivered</li>
+    </ol>
+{% elseif order.status == "on store" %}
+    <ol class="progtrckr" data-progtrckr-steps="5">
+    <li class="progtrckr-done">placed</li><!--
+ --><li class="progtrckr-done">on train</li><!--
+ --><li class="progtrckr-done">on store</li><!--
+ --><li class="progtrckr-todo">on truck</li><!--
+ --><li class="progtrckr-todo">delivered</li>
+    </ol>  
+{% elseif order.status == "on truck" %}
+    <ol class="progtrckr" data-progtrckr-steps="5">
+    <li class="progtrckr-done">placed</li><!--
+ --><li class="progtrckr-done">on train</li><!--
+ --><li class="progtrckr-done">on store</li><!--
+ --><li class="progtrckr-done">on truck</li><!--
+ --><li class="progtrckr-todo">delivered</li>
+    </ol>     
+{% endif %}
+<br>
+
+<button class="button" onclick="more()">details</button>
+<br><br>
+
+<div id="more" style="display:none">
+    <p>date_placed:{{ order.date_placed }}</p> 
+    <p>current status:{{ order.status }}</p> 
+    {% for product in order.products %}
         <p>product:{{ product.pr_name }}</p>
         <p>quantity:{{ product.quantity }}</p> 
         <p>price:{{ product.unit_price }}</p>
     {% endfor %} 
-    <br>   
-    {% endif %}  
+    <br>
+</div>
+
+        {% endif %}
+    {% endfor %}
+
+<button class="button" onclick="delivered()">Delivered Orders</button>
+<br><br>
+
+<div id="d_block" style="display:none">
+{% for order in orders %}
+    {% if order.status == "delivered" %}
+    <p style="font-weight: bold">Order</p>
+    <p>date_placed:{{ order.date_placed }}</p> 
+    <p>current status:{{ order.status }}</p> 
+    {% for product in order.products %}
+        <p>product:{{ product.pr_name }}</p>
+        <p>quantity:{{ product.quantity }}</p> 
+        <p>price:{{ product.unit_price }}</p>
+    {% endfor %} 
+    <br>
+    {% endif %}
 {% endfor %}
 </div>
 
+</div>
+ {% endblock %}
 
 
-
-
-
+{% block javascripts %}
+    {{ parent() }}
+    <script src="../../js/customer_account.js" ></script>
 {% endblock %}
