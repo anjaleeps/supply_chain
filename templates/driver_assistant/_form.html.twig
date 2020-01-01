@@ -1,4 +1,28 @@
-{{ form_start(form) }}
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Driver Assistant{% endblock %}
+
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
+{% block body %}
+    {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+    <div class="container ">
+        <div class="row">
+            <div class="col text-left">
+                <button class="btn btn btn-primary">{{ button_label|default('Save') }}</button><br><br>
+            </div>
+            <div class="col text-right">
+                <a class="nav-link" href="{{ path('driver_assistant_show',{'id': driver_assistant.id}) }}">Back</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()  }}
+{% endblock %}

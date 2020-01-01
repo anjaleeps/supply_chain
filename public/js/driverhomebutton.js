@@ -23,6 +23,7 @@ $(document).on('click','.ajax',function(e){
             // change button color
             console.log(data)
             button.hide()
+            $('#Delivered').show()
         },
         error: function() {
             // show alert or something

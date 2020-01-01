@@ -7,6 +7,9 @@ use App\Entity\DriverAssistant;
 use App\Form\DriverAssistantType;
 use App\Form\DriverButtonType;
 use App\Repository\DriverAssistantRepository;
+use App\Repository\RouteRepository;
+use App\Repository\TruckOrderRepository;
+use App\Repository\TruckRepository;
 use App\Repository\TruckScheduleRepository;
 use App\Security\DriverAssistantAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -161,25 +164,25 @@ class DriverAssistantController extends AbstractController
     /**
      * @Route("driver_assistant/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
      */
-    public function home($id, DriverAssistant $driverAssistant, TruckScheduleRepository $truckScheduleRepository): Response
+    public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
-
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver_assistant' => $id,
-            'status' => 'ready',
-        ]);
+        $driverAssistant=$this->getUser();
+        $id=$driverAssistant->getId();
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredScheduleDriverAssistant($id);
 
         if ($truckSchedule!=null)
         {
-            $truck_schedule_id=$truckSchedule->getId();
-            $truck_no=$truckSchedule->getTruck()->getTruckNo();
-            $route=$truckSchedule->getRoute()->getDecription();
+            $truck_schedule_id= $truckSchedule[0]['id'];
+            $truck_no=($truckRepository->fetchTruckNo($truckSchedule[0]['truck_id']))[0]['truck_no'];
+            $route=($routeRepository->fetchRoute($truckSchedule[0]['route_id']))[0]['decription'];
+            $status= $truckSchedule[0]['status'];
 
             return $this->render('driver_assistant/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver_assistant' => $driverAssistant,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
+                'status'=>$status,
             ]);
         }
         else
@@ -205,6 +208,34 @@ class DriverAssistantController extends AbstractController
         return new Response( 'success');
     }
 
+    /**
+     * @Route("/{id}/show_orders", name="orderList_show_", methods={"GET"})
+     */
+    public function showOrdersToDriver( $id, DriverAssistant $driverAssistant,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
+    {
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredScheduleDriverAssistant($id);
+
+        if ($truckSchedule!=null) {
+
+            $truck_schedule_id= $truckSchedule[0]['id'];
+
+            $truckOrders = $truckOrderRepository->findBy([
+                'truck_schedule' => $truck_schedule_id,
+            ]);
+
+            return $this->render('driver_assistant/view_order_list.html.twig', [
+                'truckOrders' => $truckOrders,
+                'driver_assistant' => $driverAssistant,
+            ]);
+        }
+        else
+        {
+            return $this->render('driver_assistant/home.html.twig', [
+                'driver_assistant' => $driverAssistant,
+                'truck_no'=>'null',
+            ]);
+        }
+    }
 
 
 

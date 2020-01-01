@@ -25,7 +25,7 @@
         </header>
         <nav class="navbar navbar-expand-lg navbar-dark mx-background-top-linear">
             <div class="container">
-                <a class="navbar-brand" href="{{ path('driver_home',{'id': driver.id}) }}" style="text-transform: uppercase; font-style: italic; font-family: 'Microsoft JhengHei Light'"> Express Supplies</a>
+                <a class="navbar-brand" href="{{ path('driver_home',{'id': driver_assistant.id}) }}" style="text-transform: uppercase; font-style: italic; font-family: 'Microsoft JhengHei Light'"> Express Supplies</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -34,15 +34,15 @@
                     <ul class="navbar-nav ml-auto">
 
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('driver_home',{'id': driver.id}) }}">Home</a>
+                            <a class="nav-link" href="{{ path('driver_assistant_home',{'id': driver_assistant.id}) }}">Home</a>
                         </li>
 
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('orderList_show',{'id': driver.id}) }}">Orders</a>
+                            <a class="nav-link" href="{{ path('orderList_show_',{'id': driver_assistant.id}) }}">Orders</a>
                         </li>
 
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('driver_show',{'id': driver.id}) }}">Account</a>
+                            <a class="nav-link" href="{{ path('driver_assistant_show',{'id': driver_assistant.id}) }}">Account</a>
                         </li>
 
                         <li class="nav-item active">

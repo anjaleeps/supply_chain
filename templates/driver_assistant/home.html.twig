@@ -1,19 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Home{% endblock %}
+ {% block stylesheets %}
+     {{ parent()  }}
+     <link rel="stylesheet" href="{{ asset('css/driverhome.css') }}">
+ {% endblock %}
 
 {% block body %}
-    <h4>Welcome {{ driver_assistant.firstName }}!</h4>
-    <a href="{{ path('driver_assistant_show',{'id': driver_assistant.id}) }}" class="w3-button w3-black">My profile</a>
+    {% include 'driver_assistant/header.html.twig' %}
+
+    <div class="space"></div>
 
     {% if truck_no!='null' %}
-        <h1>You have a delivery!</h1>
-        <p>Your truck number: {{ truck_no }}</p><br>
-        <p>Route: {{ route }}</p><br>
-        <a href="{{ path('orderList_show_driverAssistant',{'truck_schedule_id':truck_schedule_id}) }}" class="w3-button w3-black">View orders</a>
+    <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading text-center">You have a delivery!</h4>
+    </div>
+    <div class="space2"></div>
 
+    <div class="container w-75 p-3">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Truck:
+                <h3><span class="badge badge-primary badge-pill">{{ truck_no }}</span></h3>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Route:
+                <h3><span class="badge badge-primary badge-pill"> {{ route }}</span></h3>
+            </li>
+
+        </ul>
+    </div>
     {% else %}
-        <h1>You do not have any deliveries yet!</h1>
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading text-center">You do not have a delivery yet!</h4>
+            <p></p>
+            <hr>
+            <p class="mb-0 text-center">Check back in when you have a delivery</p>
+        </div>
     {% endif %}
 
 {% endblock %}
