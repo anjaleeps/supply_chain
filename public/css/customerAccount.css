@@ -1,0 +1,29 @@
+.content {
+    max-width: 900px;
+    margin: auto;
+    padding-top: 200px;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+  .font {
+    color: #585a5b;
+}
+
+.column {
+    float: left;
+    padding: 100px;
+  }
+  
+  .left {
+    width: 25%;
+  }
+  
+  .right {
+    width: 75%;
+  }
+  
