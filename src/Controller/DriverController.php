@@ -17,6 +17,7 @@ use App\Repository\TruckScheduleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -178,11 +179,12 @@ class DriverController extends AbstractController
 
 
     /**
-     * @Route("/{id}/driver_home", name="driver_home", methods={"GET"})
+     * @Route("/driver_home", name="driver_home", methods={"GET"})
      */
-    public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
+    public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
-
+        $driver=$this->getUser();
+        $id=$driver->getId();
         $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
 
         if ($truckSchedule!=null)
@@ -190,12 +192,14 @@ class DriverController extends AbstractController
             $truck_schedule_id= $truckSchedule[0]['id'];
             $truck_no=($truckRepository->fetchTruckNo($truckSchedule[0]['truck_id']))[0]['truck_no'];
             $route=($routeRepository->fetchRoute($truckSchedule[0]['route_id']))[0]['decription'];
+            $status= $truckSchedule[0]['status'];
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
                 'driver' => $driver,
                 'truck_no'=>$truck_no,
                 'route'=>$route,
+                'status'=>$status,
             ]);
         }
         else
@@ -229,7 +233,7 @@ class DriverController extends AbstractController
             $truckScheduleRepository->setStatusDelivered($truck_schedule_id, $id,$driver_assistant_id,$truck_id);
         }
 
-        return new Response( 'success');
+        return new JsonResponse( 'success');
     }
 
     /**
