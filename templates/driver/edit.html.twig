@@ -16,12 +16,9 @@
 
     <div class="space2"></div>
     <div class="container ">
-        <div class="row">
-            <div class="col text-right">
-                <a class="btn btn-primary" href="{{ path('orderList_show',{'id': driver.id}) }}" role="button">Back</a><br><br>
-            </div>
-            <div class="col text-left">
-                {{ include('driver/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('driver/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
             </div>
         </div>
     </div>
