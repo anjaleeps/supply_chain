@@ -61,6 +61,15 @@ class TruckScheduleRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function fetchUndeliveredScheduleDriverAssistant(string $driverAssistant_id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT id, truck_id, route_id, status FROM truck_schedule WHERE driver_assistant_id=? AND (status='scheduled' OR status='picked')";
+        $stmt = $conn->prepare($sql);
+        $stmt -> bindParam(1,$driverAssistant_id);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
     
 
 
