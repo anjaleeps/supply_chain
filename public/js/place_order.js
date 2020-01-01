@@ -44,7 +44,7 @@ function checkout(){
         },
         success: function () {
             alert("Order placed successfully");
-            window.location.href = "/all";
+            window.location.href = "/customerHome";
 
         },
         error: function () {
