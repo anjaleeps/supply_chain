@@ -179,7 +179,6 @@ class DriverController extends AbstractController
 
 
 
-
     /**
      * @Route("driver/driver_home", name="driver_home", methods={"GET"})
      */
