@@ -143,7 +143,9 @@ class DriverController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('driver_index');
+            return $this->render('driver/show.html.twig', [
+                'driver' => $driver,
+            ]);
         }
 
         return $this->render('driver/edit.html.twig', [
@@ -168,8 +170,9 @@ class DriverController extends AbstractController
     /**
      * @Route("/{id}/my-profile", name="driver_show", methods={"GET"})
      */
-    public function show(Driver $driver): Response
+    public function show($id, Driver $driver, DriverRepository $driverRepository): Response
     {
+
         return $this->render('driver/show.html.twig', [
             'driver' => $driver,
         ]);
@@ -252,10 +255,10 @@ class DriverController extends AbstractController
     public function toggleAvailability($id,$status,DriverRepository $driverRepository, Request $request)
     {
         if ($status==1){
-            $state="Available";
+            $state="available";
         }
         else{
-            $state="Not available";
+            $state="not available";
         }
         $driverRepository->changeAvailability($state,$id);
         return new Response( 'success');

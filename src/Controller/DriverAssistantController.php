@@ -129,7 +129,9 @@ class DriverAssistantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('driver_assistant_index');
+            return $this->render('driver_assistant/show.html.twig', [
+                'driver_assistant' => $driverAssistant,
+            ]);
         }
 
         return $this->render('driver_assistant/edit.html.twig', [
