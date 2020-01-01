@@ -183,19 +183,13 @@ class DriverController extends AbstractController
     public function home($id, Driver $driver, TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
 
-//        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-            'status' => 'scheduled',
-        ]);
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
+
         if ($truckSchedule!=null)
         {
-            $truck_schedule_id=$truckSchedule->getId();
-            $truck_no=$truckSchedule->getTruck()->getTruckNo();
-            $route=$truckSchedule->getRoute()->getDecription();
-//            $truck_schedule_id= $truckSchedule['id'];
-//            $truck_no=$truckRepository->fetchTruckNo($truckSchedule['truck_id']);
-//            $route=$routeRepository->fetchRoute($truckSchedule['route_id']);
+            $truck_schedule_id= $truckSchedule[0]['id'];
+            $truck_no=($truckRepository->fetchTruckNo($truckSchedule[0]['truck_id']))[0]['truck_no'];
+            $route=($routeRepository->fetchRoute($truckSchedule[0]['route_id']))[0]['decription'];
 
             return $this->render('driver/home.html.twig', [
                 'truck_schedule_id'=> $truck_schedule_id,
@@ -268,13 +262,11 @@ class DriverController extends AbstractController
      */
     public function showOrdersToDriver( $id, Driver $driver,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
     {
-        $truckSchedule = $truckScheduleRepository->findOneBy([
-            'driver' => $id,
-            'status' => 'scheduled',
-        ]);
+        $truckSchedule = $truckScheduleRepository->fetchUndeliveredSchedule($id);
+
         if ($truckSchedule!=null) {
 
-            $truck_schedule_id = $truckSchedule->getId();
+            $truck_schedule_id= $truckSchedule[0]['id'];
 
             $truckOrders = $truckOrderRepository->findBy([
                 'truck_schedule' => $truck_schedule_id,
@@ -283,7 +275,6 @@ class DriverController extends AbstractController
             return $this->render('driver/view_order_list.html.twig', [
                 'truckOrders' => $truckOrders,
                 'driver' => $driver,
-
             ]);
         }
         else
