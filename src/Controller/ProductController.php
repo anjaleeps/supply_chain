@@ -42,6 +42,20 @@ class ProductController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/search", name="product_search", methods={"GET"})
+     *
+     */
+    public function searchProducts(Request $request, ProductRepository $productRepository){
+        $keyword = $request->query->get('keyword');
+        $results = $productRepository->searchProducts($keyword);
+        
+        return $this->render('product/search_products.html.twig', [
+            'products' => $results,
+            'keyword' => $keyword
+        ]);
+    }
+
     /**
      * @Route("/cart", name="cart")
      * 
