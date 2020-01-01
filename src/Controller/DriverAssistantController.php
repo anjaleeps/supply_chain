@@ -22,22 +22,24 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
- * @Route("/driver_assistant")
+ * @Route("/")
  */
 class DriverAssistantController extends AbstractController
 {
-    /**
-     * @Route("/", name="driver_assistant_index", methods={"GET"})
-     */
-    public function index(DriverAssistantRepository $driverAssistantRepository): Response
-    {
-        return $this->render('driver_assistant/index.html.twig', [
-            'driver_assistants' => $driverAssistantRepository->findAll(),
-        ]);
-    }
+    // /**
+    //  * @Route("/", name="driver_assistant_index", methods={"GET"})
+    //  */
+    // public function index(DriverAssistantRepository $driverAssistantRepository): Response
+    // {
+    //     return $this->render('driver_assistant/index.html.twig', [
+    //         'driver_assistants' => $driverAssistantRepository->findAll(),
+    //     ]);
+    // }
 
     /**
-     * @Route("/register", name="driver_assistant_registration")
+     * @Route("store_manager/driver_assistant/register", name="driver_assistant_registration")
+     * 
+     * @IsGranted("ROLE_STORE_MANAGER")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  DriverAssistantAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
@@ -57,12 +59,8 @@ class DriverAssistantController extends AbstractController
             $entityManager->persist($driverAssistant);
             $entityManager->flush();
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                    $driverAssistant,
-                    $request,
-                    $authenticator,
-                    'driver_assistant_users'
-                );
+            return $this->redirectToRoute('driver_assistant_registration');
+
         }
         return $this->render(
             'registration/registerDriverAssistant.html.twig',
@@ -71,7 +69,7 @@ class DriverAssistantController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login_driver_assistant")
+     * @Route("driver_assistant/login", name="login_driver_assistant")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -88,38 +86,38 @@ class DriverAssistantController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout_driver_assistant")
+     * @Route("driver_assistant/logout", name="logout_driver_assistant")
      */
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
+    // /**
+    //  * @Route("/new", name="driver_assistant_new", methods={"GET","POST"})
+    //  */
+    // public function new(Request $request): Response
+    // {
+    //     $driverAssistant = new DriverAssistant();
+    //     $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($driverAssistant);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('driver_assistant_index');
+    //     }
+
+    //     return $this->render('driver_assistant/new.html.twig', [
+    //         'driver_assistant' => $driverAssistant,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/new", name="driver_assistant_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $driverAssistant = new DriverAssistant();
-        $form = $this->createForm(DriverAssistantType::class, $driverAssistant);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($driverAssistant);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('driver_assistant_index');
-        }
-
-        return $this->render('driver_assistant/new.html.twig', [
-            'driver_assistant' => $driverAssistant,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="driver_assistant_edit", methods={"GET","POST"})
+     * @Route("driver_assistant/{id}/edit", name="driver_assistant_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, DriverAssistant $driverAssistant): Response
     {
@@ -140,22 +138,22 @@ class DriverAssistantController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="driver_assistant_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, DriverAssistant $driverAssistant): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $driverAssistant->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($driverAssistant);
-            $entityManager->flush();
-        }
+    // /**
+    //  * @Route("/{id}", name="driver_assistant_delete", methods={"DELETE"})
+    //  */
+    // public function delete(Request $request, DriverAssistant $driverAssistant): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete' . $driverAssistant->getId(), $request->request->get('_token'))) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->remove($driverAssistant);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('driver_assistant_index');
-    }
+    //     return $this->redirectToRoute('driver_assistant_index');
+    // }
 
     /**
-     * @Route("/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
+     * @Route("driver_assistant/{id}/my-profile", name="driver_assistant_show", methods={"GET"})
      */
     public function show(DriverAssistant $driverAssistant): Response
     {
@@ -166,7 +164,7 @@ class DriverAssistantController extends AbstractController
 
 
     /**
-     * @Route("/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
+     * @Route("driver_assistant/{id}/driver_assistant_home", name="driver_assistant_home", methods={"GET"})
      */
     public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
@@ -198,7 +196,7 @@ class DriverAssistantController extends AbstractController
         }
     }
     /**
-     * @Route("/{id}/{status}/assistant-change-status", name="assistant-change-status", methods={"POST"})
+     * @Route("driver_assistant/{id}/{status}/assistant-change-status", name="assistant-change-status", methods={"POST"})
      */
     public function toggleAvailability($id,$status,DriverAssistantRepository $driverAssistantRepository, Request $request)
     {

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
- * @Route("/store_manager")
+ * @Route("/")
  */
 class StoreManagerController extends AbstractController
 {
@@ -36,7 +36,9 @@ class StoreManagerController extends AbstractController
     // }
 
     /**
-     * @Route("/register", name="store_manager_registration")
+     * @Route("manager/store_manager/register", name="store_manager_registration")
+     * 
+     * @IsGranted("ROLE_MANAGER")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, StoreManagerAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler)
     {
@@ -53,12 +55,7 @@ class StoreManagerController extends AbstractController
             $entityManager->persist($storeManager);
             $entityManager->flush();
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $storeManager,
-                $request,
-                $authenticator,
-                'store_manager_users'
-            );
+            return $this->redirectToRoute('store_manager_registration');
         }
 
         return $this->render(
@@ -68,7 +65,7 @@ class StoreManagerController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login_store_manager")
+     * @Route("store_manager/login", name="login_store_manager")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -80,7 +77,7 @@ class StoreManagerController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout_store_manager")
+     * @Route("store_manager/logout", name="logout_store_manager")
      */
     public function logout()
     {
@@ -88,7 +85,7 @@ class StoreManagerController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard", name="store_manager_dashboard", methods={"GET"})
+     * @Route("store_manager/dashboard", name="store_manager_dashboard", methods={"GET"})
      * 
      * @IsGranted("ROLE_STORE_MANAGER")
      */
