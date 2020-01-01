@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/orders")
+ * @Route("/")
  */
 class OrdersController extends AbstractController
 {
@@ -38,7 +38,7 @@ class OrdersController extends AbstractController
 
 
     /**
-     * @Route("/checkout/{id}", name="order_checkout", methods={"GET","POST"})
+     * @Route("orders/checkout/{id}", name="order_checkout", methods={"GET","POST"})
      */
     public function checkout(Customer $customer,Request $request,RouteRepository $routeRepository)
     {
@@ -50,7 +50,7 @@ class OrdersController extends AbstractController
     }
 
     /**
-     * @Route("/placeOrder/{id}", name="place_order", methods={"GET","POST"})
+     * @Route("orders/placeOrder/{id}", name="place_order", methods={"GET","POST"})
      * @IsGranted("ROLE_CUSTOMER")
      */
     public function place_order(Customer $customer, Request $request, OrdersRepository $ordersRepository, OrderProductRepository $orderProductRepository)
@@ -71,30 +71,30 @@ class OrdersController extends AbstractController
     }
 
 
-    /**
-     * @Route("/new", name="orders_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $order = new Orders();
-        $form = $this->createForm(OrdersType::class, $order);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order->setOrderStatus('Placed');
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($order);
-            $entityManager->flush();
-            return $this->redirectToRoute('orders_index');
-        }
-        return $this->render('orders/new.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]);
-   
-    }
+//    /**
+//     * @Route("/new", name="orders_new", methods={"GET","POST"})
+//     */
+//    public function new(Request $request): Response
+//    {
+//        $order = new Orders();
+//        $form = $this->createForm(OrdersType::class, $order);
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $order->setOrderStatus('Placed');
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->persist($order);
+//            $entityManager->flush();
+//            return $this->redirectToRoute('orders_index');
+//        }
+//        return $this->render('orders/new.html.twig', [
+//            'order' => $order,
+//            'form' => $form->createView(),
+//        ]);
+//
+//    }
 
     /**
-     * @Route("/{id}", name="orders_show", methods={"GET"})
+     * @Route("manager/orders/{id}", name="orders_show", methods={"GET"})
      * 
      * @IsGranted({"ROLE_MANAGER", "ROLE_DRIVER", "ROLE_DRIVER_ASSISTANT", "ROLE_STORE_MANAGER"})
      */
@@ -119,39 +119,39 @@ class OrdersController extends AbstractController
 
     }
 
-    /**
-     * @Route("/{id}/edit", name="orders_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Orders $order): Response
-    {
-        $form = $this->createForm(OrdersType::class, $order);
-        $form->handleRequest($request);
+//    /**
+//     * @Route("/{id}/edit", name="orders_edit", methods={"GET","POST"})
+//     */
+//    public function edit(Request $request, Orders $order): Response
+//    {
+//        $form = $this->createForm(OrdersType::class, $order);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            return $this->redirectToRoute('orders_index');
+//        }
+//
+//        return $this->render('orders/edit.html.twig', [
+//            'order' => $order,
+//            'form' => $form->createView(),
+//        ]);
+//    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('orders_index');
-        }
-
-        return $this->render('orders/edit.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="orders_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Orders $order): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($order);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('orders_index');
-    }
+//    /**
+//     * @Route("/{id}", name="orders_delete", methods={"DELETE"})
+//     */
+//    public function delete(Request $request, Orders $order): Response
+//    {
+//        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->request->get('_token'))) {
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->remove($order);
+//            $entityManager->flush();
+//        }
+//
+//        return $this->redirectToRoute('orders_index');
+//    }
 
 
     

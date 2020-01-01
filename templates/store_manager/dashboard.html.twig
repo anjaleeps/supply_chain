@@ -4,150 +4,180 @@
 {% block stylesheets %}
     {{ parent()  }}
     <link rel="stylesheet" type="text/css" href="../css/side_bar.css">
+    <link rel="stylesheet" type="text/css" href="../css/toggle_button.css">
+    <link rel="stylesheet" type="text/css" href="../css/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 {% endblock %}
 {% block body %}
+ {% include ('manager/header.html.twig') %}
+<br><br><br><br>
+<div class="wrapper">
 
-        <h1>Expected Train Deliveries</h1>
+    {% include ('store_manager/storeManagerSideBar.html.twig') %}
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Train ID</th>
-                <th>Date</th>
-                <th>Start Time</th>
-                <th>Expected Arrival</th>
-                <th>Number of Orders</th>
-                <th></th>
+    <div id="content">
 
-            </tr>
-            </thead>
-            <tbody>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
 
-            {% for train in trains %}
-                <tr>
-                    <td >{{ train['id'] }}</td>
-                    <td>{{ train['date'] }}</td>
-                    <td>{{ train['start_time'] }}</td>
-                    <td>{{ train['expected_arrival']}}</td>
-                    <td>{{ train['order_count'] }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger arrived" data-id="{{train['id'] }}">Arrived</button>
-                    </td>
-                </tr>
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>Collapse</span>
+                </button>
+            </div>
+        </nav>
+        <div class="container">
+                <h1>Expected Train Deliveries</h1>
 
-            {% else %}
-                <tr>
-                    <td colspan="5">no expected trains</td>
-                </tr>
-            {% endfor %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Train ID</th>
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th>Expected Arrival</th>
+                        <th>Number of Orders</th>
+                        <th></th>
 
-            </tbody>
-        </table>
-        <br>
-        <h1>Orders in Store</h1>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-        {% if (orders|length > 0) %}
-            <ul class="nav nav-tabs" role="tablist" id="myTab2">
-                {% for route, order in orders %}
-                    <li class="nav-item">
-                        {% if (loop.index)==1 %}
-                            <a class="nav-link active" href="{{ '#'~route }}" id="{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ "Route #"~route }}</a>
-                        {% else %}
-                            <a class="nav-link" href="{{ '#'~route }}" id= "{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ "Route #"~route }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-            <div class="tab-content" id="myTabContent2">
-                {% for route, order in orders %}
-                    {% if (loop.index)==1 %}
-                        <div class="tab-pane show fade active" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
-                    {% else %}
-                        <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
-                    {% endif %}
-
-                    <table class="table">
-                        <thead>
+                    {% for train in trains %}
                         <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Products</th>
-                          
+                            <td >{{ train['id'] }}</td>
+                            <td>{{ train['date'] }}</td>
+                            <td>{{ train['start_time'] }}</td>
+                            <td>{{ train['expected_arrival']}}</td>
+                            <td>{{ train['order_count'] }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger arrived" data-id="{{train['id'] }}">Arrived</button>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
 
-                        {% for key in order|keys %}
-                            <tr>
-                                <td class="order_id"><a href="{{ path('orders_show', {'id': key})}}">{{ key }}</a></td>
-                                <td>{{ order[key]['first_name']~" "~ order[key]['last_name'] }}</td>
-                                <ul>
-                                    <td>
-                                        {% for product in order[key]['products'] %}
-                                            <li>{{product.name~" - "~product.quantity }} </li>
-                                        {% endfor %}
-                                    </td>
-                                </ul>                            
-                            </tr>
-                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">no expected trains</td>
+                        </tr>
+                    {% endfor %}
 
-                        </tbody>
-                    </table>
-                </div>
-                {% endfor %}
-            </div>   
-            
-            <h4>Schedule Truck Deliveries</h4>
-            <form class="form-inline my-4">
-                <div class="form-group mx-3">
-                    <select id="route_selection" class="form-control">
-                        <option selected value=null>Choose Route</option>
-                        {% for route in orders|keys %}
-                            <option value="{{ route }}">{{ "Route #"~route}}</option>
+                    </tbody>
+                </table>
+                <br>
+                <h1>Orders in Store</h1>
+
+                {% if (orders|length > 0) %}
+                    <ul class="nav nav-tabs" role="tablist" id="myTab2">
+                        {% for route, order in orders %}
+                            <li class="nav-item">
+                                {% if (loop.index)==1 %}
+                                    <a class="nav-link active" href="{{ '#'~route }}" id="{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ "Route #"~route }}</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ '#'~route }}" id= "{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ "Route #"~route }}</a>
+                                {% endif %}
+                            </li>
                         {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group mx-3">
-                    <select id="driver_selection" class="form-control">
-                        <option selected value=null>Choose Driver</option>
-                        {% for driver in drivers %}
-                            <option value="{{ driver.id }}">{{ driver.first_name~" "~driver.last_name}}</option>
+                    </ul>
+                    <div class="tab-content" id="myTabContent2">
+                        {% for route, order in orders %}
+                            {% if (loop.index)==1 %}
+                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                            {% else %}
+                                <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                            {% endif %}
+
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for key in order|keys %}
+                                    <tr>
+                                        <td class="order_id"><a href="{{ path('orders_show', {'id': key})}}">{{ key }}</a></td>
+                                        <td>{{ order[key]['first_name']~" "~ order[key]['last_name'] }}</td>
+                                        <ul>
+                                            <td>
+                                                {% for product in order[key]['products'] %}
+                                                    <li>{{product.name~" - "~product.quantity }} </li>
+                                                {% endfor %}
+                                            </td>
+                                        </ul>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
                         {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group mx-3">
-                    <select id="assistant_selection" class="form-control">
-                        <option selected value=null>Choose Assistant</option>
-                        {% for assistant in assistants %}
-                            <option value="{{ assistant.id }}">{{ assistant.first_name~" "~assistant.last_name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group mx-3">
-                    <select id="truck_selection" class="form-control">
-                        <option selected value=null>Choose Truck</option>
-                        {% for truck in trucks %}
-                            <option value="{{ truck.id }}">{{ truck.truck_no }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group mx-3">
-                    <input type="submit" class="btn btn-sm btn-primary schedule">
-                </div>
-            </form>
-    
-    
-            {% else %}
-            <p class="lead">No Data available</p>
-             {% endif %} 
+                    </div>
+
+                    <h4>Schedule Truck Deliveries</h4>
+                    <form class="form-inline my-4">
+                        <div class="form-group mx-3">
+                            <select id="route_selection" class="form-control">
+                                <option selected value=null>Choose Route</option>
+                                {% for route in orders|keys %}
+                                    <option value="{{ route }}">{{ "Route #"~route}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mx-3">
+                            <select id="driver_selection" class="form-control">
+                                <option selected value=null>Choose Driver</option>
+                                {% for driver in drivers %}
+                                    <option value="{{ driver.id }}">{{ driver.first_name~" "~driver.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mx-3">
+                            <select id="assistant_selection" class="form-control">
+                                <option selected value=null>Choose Assistant</option>
+                                {% for assistant in assistants %}
+                                    <option value="{{ assistant.id }}">{{ assistant.first_name~" "~assistant.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mx-3">
+                            <select id="truck_selection" class="form-control">
+                                <option selected value=null>Choose Truck</option>
+                                {% for truck in trucks %}
+                                    <option value="{{ truck.id }}">{{ truck.truck_no }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mx-3">
+                            <input type="submit" class="btn btn-sm btn-primary schedule">
+                        </div>
+                    </form>
+
+
+                    {% else %}
+                    <p class="lead">No Data available</p>
+                     {% endif %}
+                    </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent()  }}
+    <script src="../js/button.js"></script>
     <script src="../js/side_bar.js"></script>
-    <script src="../js/store_manager.js"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 {% endblock %}
 
 
