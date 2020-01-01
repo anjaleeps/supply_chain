@@ -10,10 +10,12 @@
  
 {% block body %}
 
+
+
 <html>
 <body>
 <div>
-{% include 'customer/home_header.html.twig' %}
+{% include 'customer/header.html.twig' %}
 
 <a href="{{ path('cart') }}" ><button>cart</button></a>
 
@@ -21,6 +23,8 @@
 
 <div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right:150px">
 <div class="products">
+
+<div>{{ 'Results showing for: ' ~ keyword }}</div>
 {% for product in products %}
     {% set arr = [product.id,product.name] %}
     {% set foo = { details: arr} %}
@@ -31,8 +35,8 @@
     </box>
     <div class="textcard">
     <h5>{{ product.name }}</h5>
-    <p class="price">{{ product.unitPrice }}</p>
-    <p><button onclick="addItem({{product.id}}, '{{product.name}}',{{product.unitPrice}}, '{{product.picture}}')" >Add to Cart</button></p>
+    <p class="price">{{ product.unit_price }}</p>
+    <p><button onclick="addItem({{product.id}}, '{{product.name}}',{{product.unit_price}}, '{{product.picture}}')" >Add to Cart</button></p>
     </div>
     </div>
 

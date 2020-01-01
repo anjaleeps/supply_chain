@@ -61,7 +61,7 @@ security:
             logout:
                 path: logout_driver_assistant
                 # where to redirect after logout
-                # target: app_any_route
+                target: login_driver_assistant
         driver_area:
             anonymous: lazy
             pattern: ^/driver
@@ -73,7 +73,7 @@ security:
             logout:
                 path: logout_driver
                 # where to redirect after logout
-                # target: app_any_route
+                target: login_driver
         manager_area:
             anonymous: lazy
             pattern: ^/manager
@@ -85,7 +85,7 @@ security:
             logout:
                 path: logout_manager
                 # where to redirect after logout
-                # target: app_any_route
+                target: login_manager
         store_manager_area:
             anonymous: lazy
             pattern: ^/store_manager
@@ -107,7 +107,7 @@ security:
             logout:
                 path: logout_customer
                 # where to redirect after logout
-                # target: app_any_route
+                target: product_display
         
         
                 # where to redirect after logout
