@@ -9,6 +9,7 @@ use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
 use App\Repository\PhoneNumberRepository;
 use App\Repository\OrdersRepository;
+use App\Repository\ProductRepository;
 use App\Security\CustomerAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,16 @@ class CustomerController extends AbstractController
     public function homePage(UserInterface $user)
     {
         return $this->redirectToRoute('customer_account');
+    }
+
+    /**
+     * @Route("/customerHome", name="customer_home", methods={"GET"})
+     */
+    public function customerHome(ProductRepository $productRepository)
+    {
+        return $this->render('customer/home.html.twig', [
+            'products' => $productRepository->findAll(),
+        ]);
     }
 
     /**
@@ -152,7 +163,7 @@ class CustomerController extends AbstractController
      */
     public function logout()
     {
-        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+        return $this->redirectToRoute('product_display');
     }
 
     /**
