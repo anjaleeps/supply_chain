@@ -32,9 +32,9 @@
                                         {% for route, info in routeData %}
                                             <li class="nav-item">
                                                 {% if (loop.index)==1 %}
-                                                    <a class="nav-link active" href="{{ '#'~route }}" id="{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ route }}</a>
+                                                    <a class="nav-link active" href="{{ '#route'~route }}" id="{{ route~'-tabroute' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="true">{{ 'Route #' ~ route }}</a>
                                                 {% else %}
-                                                    <a class="nav-link" href="{{ '#'~route }}" id= "{{ route~'-tab' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ route }}</a>
+                                                    <a class="nav-link" href="{{ '#route'~route }}" id= "{{ route~'-tabroute' }}" role="tab" data-toggle="tab" aria-controls="{{ route }}" aria-selected="false">{{ 'Route #' ~ route }}</a>
                                                 {% endif %}
                                             </li>
                                         {% endfor %}
@@ -42,9 +42,9 @@
                                     <div class="tab-content" id="myTabContent2">
                                         {% for route, info in routeData %}
                                             {% if (loop.index)==1 %}
-                                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                                                <div class="tab-pane show fade active" role="tabpanel" id= "{{ 'route' ~ route }}" aria-labelledby="{{ route~'-tab' }}">
                                             {% else %}
-                                                <div class="tab-pane fade" role="tabpanel" id= "{{ route }}" aria-labelledby="{{ route~'-tab' }}">
+                                                <div class="tab-pane fade" role="tabpanel" id= "{{ 'route' ~ route }}" aria-labelledby="{{ route~'-tab' }}">
                                             {% endif %}
 
                                                 <table class="table table-striped">

@@ -132,6 +132,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{id}/edit", name="driver_edit", methods={"GET","POST"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function edit(Request $request, Driver $driver): Response
     {
@@ -168,6 +170,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{id}/my-profile", name="driver_show", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function show($id, Driver $driver, DriverRepository $driverRepository): Response
     {
@@ -182,6 +186,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/driver_home", name="driver_home", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function home( TruckScheduleRepository $truckScheduleRepository, TruckRepository $truckRepository, RouteRepository $routeRepository): Response
     {
@@ -216,6 +222,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{id}/{truck_schedule_id}/status", name="picked", methods={"POST"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function scheduleStatusPicked($id,$truck_schedule_id,TruckScheduleRepository $truckScheduleRepository, DriverRepository $driverRepository, Request $request)
     {
@@ -240,6 +248,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{order_id}/orderdelivered", name="orderdelivered", methods={"POST"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function orderDelivered($order_id,OrdersRepository $ordersRepository, Request $request)
     {
@@ -250,6 +260,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{id}/{status}/change-status", name="change-status", methods={"POST"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function toggleAvailability($id,$status,DriverRepository $driverRepository, Request $request)
     {
@@ -265,6 +277,8 @@ class DriverController extends AbstractController
 
     /**
      * @Route("driver/{id}/show_orders", name="orderList_show", methods={"GET"})
+     * 
+     * @IsGranted("ROLE_DRIVER")
      */
     public function showOrdersToDriver( $id, Driver $driver,TruckScheduleRepository $truckScheduleRepository,TruckOrderRepository $truckOrderRepository): Response
     {

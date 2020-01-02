@@ -52,8 +52,8 @@ class DriverRepository extends ServiceEntityRepository implements PasswordUpgrad
         $sql = "select distinct d.id, d.first_name, d.last_name from driver d 
                 inner join store_manager sm on sm.store_id=d.store_id 
                 inner join route r on r.store_id=d.store_id
-                where d.id <> (select driver_id from truck_schedule ts 
-                where ts.status='completed' order by ts.end_time desc, ts.start_time desc, ts.id desc limit 1) 
+                where (not d.id <=> (select driver_id from truck_schedule ts 
+                where ts.status='delivered' order by ts.end_time desc, ts.start_time desc, ts.id desc limit 1)) 
                 and sm.id=? and hour(addtime(r.max_time, d.work_hours)) < 40 and status='available'
                 order by d.work_hours";
         $stmt = $conn->prepare($sql);

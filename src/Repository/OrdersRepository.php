@@ -44,8 +44,8 @@ class OrdersRepository extends ServiceEntityRepository
                 inner join customer c on c.id=o.customer_id
                 inner join order_product op on op.orders_id=o.id
                 inner join product p on p.id=op.product_id
-                group by quarter(o.date_completed) 
-                having year(o.date_completed) = ? 
+                group by quarter(o.date_completed), o.order_status 
+                having year(o.date_completed) = ? and o.order_status='delivered'
                 order by quarter(o.date_completed)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(1, $year);

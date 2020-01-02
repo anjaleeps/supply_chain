@@ -96,6 +96,7 @@ security:
                 entry_point: App\Security\StoreManagerAuthenticator
             logout:
                 path: logout_store_manager
+                target: login_store_manager
         customer_area:
             anonymous: lazy
             pattern: ^/
