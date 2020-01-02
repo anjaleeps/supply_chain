@@ -48,7 +48,7 @@
                     </div>
                     <div class="row">
                         <div class="col text-center">
-                            <input class="deliver ajax btn btn-dark btn-lg w-50 p-3 " type="button" style="display: none;" name="Delivered" id="Delivered" value="Delivered">
+                            <input class="deliveredOrder deliver ajax btn btn-dark btn-lg w-50 p-3 " type="button" style="display: none;" name="Delivered" id="Delivered" value="Delivered">
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="container ">
                     <div class="row">
                         <div class="col text-center">
-                            <br><br><br><br><input class="deliver ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Delivered" id="Delivered" value="Delivered">
+                            <br><br><br><br><input class="ajax btn btn-dark btn-lg w-50 p-3" type="button" name="Deliver" id="Deliver" value="Delivered">
                         </div>
                     </div>
                 </div>
@@ -84,4 +84,5 @@
 {% block javascripts %}
     {{ parent()  }}
     <script src="{{ asset('js/driverhomebutton.js') }}"></script>
+{#    <script src="{{ asset('js/driverdeliveredbutton.js') }}"></script>#}
 {% endblock %}
